@@ -1,0 +1,21 @@
+Strona:
+- Logowanie
+- Powiadomienia
+- Autentykacja
+- Lista kamer
+- 
+
+Template:
+- Stron 
+    - Powiadomine
+    - Mail
+    - Lista kamer
+- Responsive
+
+Api:
+- Baza
+- Login
+- Wysylanie zdjęć
+- Przesylac wykrycie śmieci
+- Powiadomienia
+

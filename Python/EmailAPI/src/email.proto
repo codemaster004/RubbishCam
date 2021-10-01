@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcServiceEmail";
+
+
+service Emailer {
+  rpc SendEmail(EmailRequest) returns (WasSuccessful) {}
+}
+
+message EmailRequest {
+  string password = 1;
+  string receiver = 2;
+  string subject = 3;
+  string content = 4;
+}
+
+message WasSuccessful {
+  bool value = 1;
+}

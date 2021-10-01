@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  email_service:
+    build:
+      context: ./EmailAPI
+    ports:
+      - "50051:50051"
+    environment:
+      EMAIL: rubbish.camera@gmail.com
+      EMAIL_PASSWORD: qijjqgnhgqjdyyso
+      API_PASSWORD: HelloWorld123
+    command:
+      - "python"
+      - "/app/EmailAPI/src/email_server.py"

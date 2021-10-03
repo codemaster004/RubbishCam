@@ -1,5 +1,6 @@
 using HackathonE1.Api.Data;
 using HackathonE1.Api.Helpers;
+using HackathonE1.Api.Hubs.Notification;
 using HackathonE1.Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,8 @@ namespace HackathonE1.Api
 		{
 
 			_ = services.AddControllers();
+			_ = services.AddSignalR();
+
 			_ = services.AddSwaggerGen( c =>
 			   {
 				   c.SwaggerDoc( "v1", new OpenApiInfo { Title = "HackathonE1.Api", Version = "v1" } );
@@ -84,6 +87,7 @@ namespace HackathonE1.Api
 			_ = app.UseEndpoints( endpoints =>
 			   {
 				   _ = endpoints.MapControllers();
+				   _ = endpoints.MapHub<NotificationsHub>( "/notifications" );
 			   } );
 		}
 

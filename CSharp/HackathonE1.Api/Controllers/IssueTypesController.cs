@@ -35,15 +35,15 @@ namespace HackathonE1.Api.Controllers
 		[HttpGet( "{id}" )]
 		public async Task<ActionResult<GetIssueTypeDto>> GetIssueType( int id )
 		{
-			var issue = await _issueTypesService.GetIssueTypeAsync( id );
-			if ( issue is null )
+			var issueType = await _issueTypesService.GetIssueTypeAsync( id );
+			if ( issueType is null )
 			{
 				_logger.LogInformation( $"User {UserName} requested unknown issue type {id}." );
 				return NotFound( ProblemConstants.IssueNotFound );
 			}
 
 			_logger.LogInformation( $"User {UserName} requested issue type {id}." );
-			return issue;
+			return issueType;
 		}
 
 		[HttpPost]

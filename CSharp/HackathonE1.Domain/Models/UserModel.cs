@@ -35,5 +35,7 @@ namespace HackathonE1.Domain.Models
 		[Required]
 		[MaxLength( 88 )]
 		public string PasswordHash { get; set; }
+
+		public List<ObservedAreaModel> ObservedAreas { get; set; }
 	}
 }

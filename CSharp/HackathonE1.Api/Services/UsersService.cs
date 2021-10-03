@@ -12,9 +12,9 @@ namespace HackathonE1.Api.Services
 	public interface IUsersService
 	{
 		Task<GetUserDto> AddUserAsync( CreateUserDto Dto );
-		Task<bool> DeleteUser( string identifier );
-		Task<GetUserDto> GetUser( string identifier );
-		Task<GetUserDto[]> GetUsers();
+		Task<bool> DeleteUserAsync( string identifier );
+		Task<GetUserDto> GetUserAsync( string identifier );
+		Task<GetUserDto[]> GetUsersAsync();
 	}
 
 	public class UsersService : IUsersService
@@ -25,14 +25,14 @@ namespace HackathonE1.Api.Services
 		{
 			_dbContext = dbContext;
 		}
-		public async Task<GetUserDto[]> GetUsers()
+		public async Task<GetUserDto[]> GetUsersAsync()
 		{
 			return await _dbContext.Users
 				.Select( GetUserDto.FromUserModel )
 				.ToArrayAsync();
 		}
 
-		public async Task<GetUserDto> GetUser( string identifier )
+		public async Task<GetUserDto> GetUserAsync( string identifier )
 		{
 			return await _dbContext.Users
 				.Where( u => u.Identifier == identifier )
@@ -57,7 +57,7 @@ namespace HackathonE1.Api.Services
 
 			user.Identifier = await GenerateIdentifierAsync();
 
-			_ = await _dbContext.AddAsync( userDto );
+			_ = await _dbContext.Users.AddAsync( user );
 			_ = await _dbContext.SaveChangesAsync();
 
 			return (GetUserDto)user;
@@ -79,7 +79,7 @@ namespace HackathonE1.Api.Services
 		}
 
 
-		public async Task<bool> DeleteUser( string identifier )
+		public async Task<bool> DeleteUserAsync( string identifier )
 		{
 			var user = await _dbContext.Users
 				.Where( u => u.Identifier == identifier )

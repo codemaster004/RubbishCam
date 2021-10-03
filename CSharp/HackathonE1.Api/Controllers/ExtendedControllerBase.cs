@@ -34,5 +34,8 @@ namespace HackathonE1.Api.Controllers
 				StatusCode = 500
 			};
 		}
+
+		public string UserName => User.Identity.Name;
+
 	}
 }

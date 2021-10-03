@@ -35,6 +35,13 @@ namespace HackathonE1.Api
 			_ = services.AddSwaggerGen( c =>
 			   {
 				   c.SwaggerDoc( "v1", new OpenApiInfo { Title = "HackathonE1.Api", Version = "v1" } );
+				   c.AddSecurityDefinition( "Bearer", new OpenApiSecurityScheme
+				   {
+					   Description = "JWT Authorization header. Example: 'Authorization: Bearer {token}'",
+					   Name = "Authorization",
+					   In = ParameterLocation.Header,
+					   Type = SecuritySchemeType.ApiKey
+				   } );
 			   } );
 
 			_ = services.AddAuthentication( JwtHelper.ConfigureAuthOptions )
@@ -49,8 +56,11 @@ namespace HackathonE1.Api
 			} );
 
 			_ = services.AddSingleton<JwtHelper>();
+
 			_ = services.AddScoped<IJwtService, JwtService>();
 			_ = services.AddScoped<IUsersService, UsersService>();
+			_ = services.AddScoped<IIssuesService, IssuesService>();
+			_ = services.AddScoped<IIssueTypesService, IssueTypesService>();
 
 		}
 
@@ -69,6 +79,7 @@ namespace HackathonE1.Api
 			_ = app.UseRouting();
 
 			_ = app.UseAuthorization();
+			_ = app.UseAuthentication();
 
 			_ = app.UseEndpoints( endpoints =>
 			   {

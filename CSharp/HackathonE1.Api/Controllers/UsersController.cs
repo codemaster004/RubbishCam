@@ -28,21 +28,20 @@ namespace HackathonE1.Api.Controllers
 		[HttpGet( "current" )]
 		public async Task<ActionResult<GetUserDto>> GetCurrentUser()
 		{
-			var identifier = HttpContext.User.Identity.Name;
-			var user = await _usersService.GetUser( identifier );
+			var user = await _usersService.GetUserAsync( UserName );
 			if ( user is null )
 			{
-				_logger.LogInformation( $"Unknown user {identifier} requested their info." );
+				_logger.LogInformation( $"Unknown user {UserName} requested their info." );
 				return NotFound( ProblemConstants.UserNotFound );
 			}
 
-			_logger.LogInformation( $"User {identifier} requested their info." );
+			_logger.LogInformation( $"User {UserName} requested their info." );
 			return user;
 		}
 
 		[HttpPost]
 		[AllowAnonymous]
-		public async Task<ActionResult<GetUserDto>> CreateUser( CreateUserDto userDto )
+		public async Task<ActionResult<GetUserDto>> CreateUser( [FromBody] CreateUserDto userDto )
 		{
 			var user = await _usersService.AddUserAsync( userDto );
 			if ( user is null )
@@ -58,15 +57,14 @@ namespace HackathonE1.Api.Controllers
 		[HttpDelete( "current" )]
 		public async Task<IActionResult> DeleteCurrentUser()
 		{
-			var identifier = HttpContext.User.Identity.Name;
-			var deleted = await _usersService.DeleteUser( identifier );
+			var deleted = await _usersService.DeleteUserAsync( UserName );
 			if ( !deleted )
 			{
-				_logger.LogInformation( $"Failed deleting user account with identifier {identifier}: user not found." );
+				_logger.LogInformation( $"Failed deleting user account with identifier {UserName}: user not found." );
 				return NotFound( ProblemConstants.UserNotFound );
 			}
 
-			_logger.LogInformation( $"Deleted user account with identifier {identifier}." );
+			_logger.LogInformation( $"Deleted user account with identifier {UserName}." );
 			return NoContent();
 		}
 

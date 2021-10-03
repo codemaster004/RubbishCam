@@ -10,5 +10,11 @@ namespace HackathonE1.Api
 		public const string UserNotFound = "User does not exist";
 		public const string UserEmailTaken = "Given email is already taken";
 		public const string UnknownError = "Unidentified error occured";
+
+		public const string IssueNotFound = "Issue does not exist";
+		public const string IssueExists= "Issue already exists";
+
+		public const string IssueTypeNotFound = "Issue type does not exist";
+		public const string IssueTypeExists= "Issue type already exists";
 	}
 }

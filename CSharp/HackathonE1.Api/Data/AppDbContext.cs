@@ -15,6 +15,8 @@ namespace HackathonE1.Api.Data
 		}
 
 		public DbSet<UserModel> Users { get; set; }
+		public DbSet<IssueModel> Issues { get; set; }
+		public DbSet<IssueTypeModel> IssueTypes { get; set; }
 
 	}
 }

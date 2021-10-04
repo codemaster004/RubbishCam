@@ -25,6 +25,29 @@ namespace HackathonE1.Api.Controllers
 			_usersService = usersService;
 		}
 
+		[HttpGet]
+		[Authorize( Roles = "Admin" )]
+		public async Task<ActionResult<GetUserDto[]>> GetUsers()
+		{
+			_logger.LogInformation( $"User {UserName} requested al users' info." );
+			return await _usersService.GetUsersAsync();
+		}
+
+		[HttpGet( "{identifier}" )]
+		[Authorize( Roles = "Admin" )]
+		public async Task<ActionResult<GetUserDto>> GetUser( string identifier )
+		{
+			var user = await _usersService.GetUserAsync( identifier );
+			if ( user is null )
+			{
+				_logger.LogInformation( $"User {UserName} requested unknown user's {identifier} info." );
+				return NotFound( ProblemConstants.UserNotFound );
+			}
+
+			_logger.LogInformation( $"User {UserName} requested user's {identifier} info." );
+			return user;
+		}
+
 		[HttpGet( "current" )]
 		public async Task<ActionResult<GetUserDto>> GetCurrentUser()
 		{
@@ -52,6 +75,21 @@ namespace HackathonE1.Api.Controllers
 
 			_logger.LogInformation( $"Created user account for email {user.Email} with identifier {user.Identifier}." );
 			return CreatedAtAction( nameof( GetCurrentUser ), user );
+		}
+
+		[HttpDelete( "{identifier}" )]
+		[Authorize( Roles = "Admin" )]
+		public async Task<IActionResult> DeleteUser( string identifier )
+		{
+			var deleted = await _usersService.DeleteUserAsync( identifier );
+			if ( !deleted )
+			{
+				_logger.LogInformation( $"User {UserName} failed deleting user account with identifier {identifier}: user not found." );
+				return NotFound( ProblemConstants.UserNotFound );
+			}
+
+			_logger.LogInformation( $"User {UserName} Deleted user account with identifier {identifier}." );
+			return NoContent();
 		}
 
 		[HttpDelete( "current" )]

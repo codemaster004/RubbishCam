@@ -72,12 +72,19 @@ namespace HackathonE1.Api
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure( IApplicationBuilder app, IWebHostEnvironment env )
 		{
+			app.UseStaticFiles();
+
 			if ( env.IsDevelopment() )
 			{
 				_ = app.UseDeveloperExceptionPage();
-				_ = app.UseSwagger();
-				_ = app.UseSwaggerUI( c => c.SwaggerEndpoint( "/swagger/v1/swagger.json", "HackathonE1.Api v1" ) );
 			}
+
+			_ = app.UseSwagger();
+			_ = app.UseSwaggerUI( c =>
+			{
+				c.SwaggerEndpoint( "/swagger/v1/swagger.json", "HackathonE1.Api v1" );
+				c.InjectStylesheet( "/swagger-ui/SwaggerDark.css" );
+			} );
 
 			_ = app.UseHttpsRedirection();
 

@@ -21,4 +21,8 @@
     <ProjectReference Include="..\HackathonE1.Domain\HackathonE1.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\swagger-ui\" />
+  </ItemGroup>
+
 </Project>

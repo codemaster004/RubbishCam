@@ -6,11 +6,11 @@ services:
     build:
       context: ./EmailAPI
     ports:
-      - "50051:50051"
+      - "5000:5000"
     environment:
       EMAIL: rubbish.camera@gmail.com
       EMAIL_PASSWORD: qijjqgnhgqjdyyso
       API_PASSWORD: HelloWorld123
     command:
       - "python"
-      - "/app/EmailAPI/src/email_server.py"
+      - "/app/src/email_def.py"

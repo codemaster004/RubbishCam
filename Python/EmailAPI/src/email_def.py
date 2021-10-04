@@ -1,6 +1,9 @@
-import os
+from flask import Flask
+from flask import request
+from flask import jsonify
 import smtplib
 from email.message import EmailMessage
+import os
 
 
 email = os.environ.get('EMAIL')
@@ -8,9 +11,18 @@ email_password = os.environ.get('EMAIL_PASSWORD')
 api_password = os.environ.get('API_PASSWORD')
 
 
-def send_email(password, receiver, subject, content):
+app = Flask(__name__)
+
+
+@app.route("/send_mail", methods=['POST'])
+def send_email():
+    password = request.json['password']
+    subject = request.json['subject']
+    receiver = request.json['receiver']
+    content = request.json['content']
+    
     if password != api_password:
-        return False
+        return jsonify({'Status': False, 'Message': 'Incorrect password'})
     
     try:
         msg = EmailMessage()
@@ -25,6 +37,11 @@ def send_email(password, receiver, subject, content):
             smtp.send_message(msg)
     except Exception as e:
         print('Error in sending email:', e)
-        return False
+        return jsonify({'Status': False, 'Message': f'Error in sending email: {e}'})
     
-    return True
+    return jsonify({'Status': True, 'Message': 'OK'})
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
+    # app.run()

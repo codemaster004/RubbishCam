@@ -25,7 +25,7 @@ namespace HackathonE1.Api.Controllers
 			_issueTypesService = issueTypesService;
 		}
 
-		[HttpGet( "{id}" )]
+		[HttpGet]
 		public async Task<ActionResult<GetIssueTypeDto[]>> GetIssueTypes()
 		{
 			_logger.LogInformation( $"User {UserName} requested issue types." );

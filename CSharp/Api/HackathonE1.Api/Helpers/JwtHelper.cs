@@ -25,14 +25,14 @@ namespace HackathonE1.Api.Helpers
 
 		static SymmetricSecurityKey GetKey( IConfiguration configuration )
 		{
-			var secret = configuration["JwtConfig:Secret"] ?? Environment.GetEnvironmentVariable( "JWT_SECRET" );
+			var secret = Environment.GetEnvironmentVariable( "JWT_SECRET" ) ?? configuration["JwtConfig:Secret"];
 
 			var bytes = Encoding.UTF8.GetBytes( secret );
 			return new SymmetricSecurityKey( bytes );
 		}
 		static string GetIssuer( IConfiguration configuration )
 		{
-			return configuration["JwtConfig:Issuer"] ?? Environment.GetEnvironmentVariable( "JWT_ISSUER" );
+			return Environment.GetEnvironmentVariable( "JWT_ISSUER" ) ?? configuration["JwtConfig:Issuer"];
 		}
 
 

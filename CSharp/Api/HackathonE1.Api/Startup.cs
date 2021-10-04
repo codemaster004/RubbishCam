@@ -2,8 +2,11 @@ using HackathonE1.Api.Data;
 using HackathonE1.Api.Helpers;
 using HackathonE1.Api.Hubs.Notification;
 using HackathonE1.Api.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +51,7 @@ namespace HackathonE1.Api
 			   } );
 
 			_ = services.AddAuthentication( JwtHelper.ConfigureAuthOptions )
-				.AddJwtBearer( options => JwtHelper.ConfigureJwtOptions( options, Configuration ) );
+			.AddJwtBearer( options => JwtHelper.ConfigureJwtOptions( options, Configuration ) );
 
 
 			var connectionString = GetConnectionString();
@@ -72,7 +75,7 @@ namespace HackathonE1.Api
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure( IApplicationBuilder app, IWebHostEnvironment env )
 		{
-			app.UseStaticFiles();
+			_ = app.UseStaticFiles();
 
 			if ( env.IsDevelopment() )
 			{
@@ -90,8 +93,8 @@ namespace HackathonE1.Api
 
 			_ = app.UseRouting();
 
-			_ = app.UseAuthorization();
 			_ = app.UseAuthentication();
+			_ = app.UseAuthorization();
 
 			_ = app.UseEndpoints( endpoints =>
 			   {

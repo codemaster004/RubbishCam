@@ -14,6 +14,7 @@ namespace HackathonE1.Api.Services
 		Task<bool> DeleteIssueAsync( int id );
 		Task<GetIssueDto> GetIssueAsync( int id );
 		Task<GetIssueDto[]> GetIssuesAsync();
+		Task<GetIssueDto[]> GetIssuesAsync( string userIdentifier );
 	}
 
 	public class IssuesService : IIssuesService
@@ -28,6 +29,25 @@ namespace HackathonE1.Api.Services
 		{
 			return await _dbContext.Issues
 				.Select( GetIssueDto.FromIssueModel )
+				.ToArrayAsync();
+		}
+
+		public async Task<GetIssueDto[]> GetIssuesAsync( string userIdentifier )
+		{
+			var issues = from  area in _dbContext.ObservedAreas
+						 where area.UserIdentifier == userIdentifier
+						 let lat = area.Latitude
+						 let @long = area.Longitude
+
+						 from issue in _dbContext.Issues
+						 let x = Math.Abs( issue.Longitude - @long )
+						 let y = Math.Abs( issue.Latitude - lat )
+						 where Math.Sqrt( x * x + y * y ) < area.Radius
+
+						 select issue;
+
+			return await issues
+				.Select(GetIssueDto.FromIssueModel)
 				.ToArrayAsync();
 		}
 
@@ -81,6 +101,5 @@ namespace HackathonE1.Api.Services
 
 			return true;
 		}
-
 	}
 }

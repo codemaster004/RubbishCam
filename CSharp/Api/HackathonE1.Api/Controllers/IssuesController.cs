@@ -25,6 +25,20 @@ namespace HackathonE1.Api.Controllers
 			_issuesService = issuesService;
 		}
 
+		[HttpGet( "owned" )]
+		public async Task<ActionResult<GetIssueDto[]>> GetIssues()
+		{
+			var issues = await _issuesService.GetIssuesAsync( UserName );
+			if ( issues is null )
+			{
+				_logger.LogError( $"User {UserName} requested their issues, unknown errow occured." );
+				return InternalServerError( ProblemConstants.UnknownError );
+			}
+
+			_logger.LogInformation( $"User {UserName} requested their issues." );
+			return issues;
+		}
+
 		[HttpGet( "{id}" )]
 		public async Task<ActionResult<GetIssueDto>> GetIssue( int id )
 		{

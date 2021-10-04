@@ -16,5 +16,9 @@ namespace HackathonE1.Api
 
 		public const string IssueTypeNotFound = "Issue type does not exist";
 		public const string IssueTypeExists= "Issue type already exists";
+
+		public const string AreaNotFound = "Aera is not registered";
+		public const string AreaNotObserved = "Aera not observed by this user";
+		public const string AreaObserved = "Aera is already observed by this user";
 	}
 }

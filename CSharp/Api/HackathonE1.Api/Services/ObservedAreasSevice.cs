@@ -12,9 +12,11 @@ namespace HackathonE1.Api.Services
 	{
 		Task<bool> DeleteAreaAsync( int id );
 		Task<GetObservedAreaDto> GetAreaAsync( int id );
+		Task<GetObservedAreaDto> GetAreaAsync( int id, string userIdentifier );
 		Task<GetObservedAreaDto[]> GetAreasAsync();
 		Task<GetObservedAreaDto[]> GetUserAreasAsync( string userIdentifier );
 		Task<GetObservedAreaDto> ObserveAreaAsync( CreateObservedAreaDto areaDto, string userIdentifier );
+		Task<bool> DeleteAreaAsync( int id, string userIdentifier );
 	}
 
 	public class ObservedAreasService : IObservedAreasService
@@ -49,6 +51,14 @@ namespace HackathonE1.Api.Services
 				.FirstOrDefaultAsync();
 		}
 
+		public async Task<GetObservedAreaDto> GetAreaAsync( int id, string userIdentifier )
+		{
+			return await _dbContext.ObservedAreas
+				.Where( oa => oa.Id == id
+					&& oa.UserIdentifier == userIdentifier )
+				.Select( GetObservedAreaDto.FromObservedAreaModel )
+				.FirstOrDefaultAsync();
+		}
 
 		public async Task<GetObservedAreaDto> ObserveAreaAsync( CreateObservedAreaDto areaDto, string userIdentifier )
 		{
@@ -80,6 +90,24 @@ namespace HackathonE1.Api.Services
 		{
 			var area = await _dbContext.ObservedAreas
 				.Where( oa => oa.Id == id )
+				.FirstOrDefaultAsync();
+
+			if ( area is null )
+			{
+				return false;
+			}
+
+			_ = _dbContext.ObservedAreas.Remove( area );
+			_ = _dbContext.SaveChangesAsync();
+
+			return true;
+		}
+
+		public async Task<bool> DeleteAreaAsync( int id, string userIdentifier )
+		{
+			var area = await _dbContext.ObservedAreas
+				.Where( oa => oa.Id == id
+					&& oa.UserIdentifier == userIdentifier )
 				.FirstOrDefaultAsync();
 
 			if ( area is null )

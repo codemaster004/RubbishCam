@@ -9,7 +9,7 @@ namespace HackathonE1.Api.Data
 {
 	public class AppDbContext : DbContext
 	{
-		public AppDbContext( DbContextOptions<AppDbContext> options ) 
+		public AppDbContext( DbContextOptions<AppDbContext> options )
 			: base( options )
 		{
 		}
@@ -18,6 +18,16 @@ namespace HackathonE1.Api.Data
 		public DbSet<IssueModel> Issues { get; set; }
 		public DbSet<IssueTypeModel> IssueTypes { get; set; }
 		public DbSet<ObservedAreaModel> ObservedAreas { get; set; }
+
+		protected override void OnModelCreating( ModelBuilder modelBuilder )
+		{
+			_ = modelBuilder.Entity<ObservedAreaModel>()
+				.HasOne( oa => oa.User )
+				.WithMany( u => u.ObservedAreas )
+				.HasForeignKey( oa => oa.UserIdentifier )
+				.HasPrincipalKey( u => u.Identifier );
+
+		}
 
 	}
 }

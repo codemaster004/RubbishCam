@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HackathonE1.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,12 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HackathonE1.Domain.Models
+namespace HackathonE1.Domain.Dtos.ObservedArea
 {
-	public class ObservedAreaModel
+	public class CreateObservedAreaDto
 	{
-		[Key]
-		public int Id { get; set; }
 		[Required]
 		[Range( -90, 90 )]
 		public double Latitude { get; set; }
@@ -21,10 +20,15 @@ namespace HackathonE1.Domain.Models
 		[Required]
 		public double Radius { get; set; }
 
-		[Required]
-		[ForeignKey( nameof( User ) )]
-		[MaxLength( 24 )]
-		public string UserIdentifier { get; set; }
-		public UserModel User { get; set; }
+		public ObservedAreaModel ToObservedAreaModel()
+		{
+			return new()
+			{
+				Latitude = this.Latitude,
+				Longitude = this.Longitude,
+				Radius=this.Radius
+			};
+		}
+
 	}
 }

@@ -41,7 +41,7 @@ namespace HackathonE1.Api.Services
 
 			var users = from UserModel user in _dbContext.Users
 						join ObservedAreaModel area in _dbContext.ObservedAreas
-						on user.Id equals area.Id
+						on user.Identifier equals area.UserIdentifier
 						let x = Math.Abs( area.Longitude - @long )
 						let y = Math.Abs( area.Latitude - lat )
 						where Math.Sqrt( x * x + y * y ) < area.Radius

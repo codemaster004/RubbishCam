@@ -12,7 +12,12 @@ using System.Threading.Tasks;
 
 namespace HackathonE1.Api.Services
 {
-	public class NotificationsService
+	public interface INotificationsService
+	{
+		Task NotifyAsync( IssueModel issue );
+	}
+
+	public class NotificationsService : INotificationsService
 	{
 		private readonly IHubContext<NotificationsHub, INotificationClient> _hubContext;
 		private readonly AppDbContext _dbContext;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,17 +26,18 @@ namespace HackathonE1.Domain.Dtos.User
 
 		[Required]
 		[MaxLength( 88 )]
-		public string PasswordHash { get; set; }
+		public string Password { get; set; }
 
 
 		public UserModel ToUserModel()
 		{
+			var passwordHash = UserModel.HashPassword( this.Password );
 			return new()
 			{
 				FirstName = this.FirstName,
 				LastName = this.LastName,
 				Email = this.Email,
-				PasswordHash = this.PasswordHash
+				PasswordHash = passwordHash
 			};
 		}
 	}

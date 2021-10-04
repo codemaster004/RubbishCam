@@ -34,7 +34,7 @@ namespace HackathonE1.Api.Services
 		public async Task<string> AuthenticateAsync( string email, string password )
 		{
 			var user = await _dbContext.Users
-				.Where( u => u.Email == email && u.PasswordHash == password )
+				.Where( u => u.Email == email && u.PasswordHash == UserModel.HashPassword( password ) )
 				.FirstOrDefaultAsync();
 
 			if ( user is null )

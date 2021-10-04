@@ -72,7 +72,7 @@ namespace HackathonE1.Api.Controllers
 
 
 		[HttpPost( "owned" )]
-		public async Task<ActionResult<GetObservedAreaDto>> Observe( CreateObservedAreaDto areaDto )
+		public async Task<ActionResult<GetObservedAreaDto>> Observe( [FromBody] CreateObservedAreaDto areaDto )
 		{
 			var area = await _areasService.ObserveAreaAsync( areaDto, UserName );
 			if ( area is null )

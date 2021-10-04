@@ -25,7 +25,6 @@ namespace HackathonE1.Domain.Dtos.User
 		public string Email { get; set; }
 
 		[Required]
-		[MaxLength( 88 )]
 		public string Password { get; set; }
 
 

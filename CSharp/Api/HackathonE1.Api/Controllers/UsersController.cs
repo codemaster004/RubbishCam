@@ -69,7 +69,7 @@ namespace HackathonE1.Api.Controllers
 			var user = await _usersService.AddUserAsync( userDto );
 			if ( user is null )
 			{
-				_logger.LogInformation( $"Attempted creating user account for email {user.Email}." );
+				_logger.LogInformation( $"Attempted creating user account taken for email {userDto.Email}." );
 				return Conflict( ProblemConstants.UserEmailTaken );
 			}
 

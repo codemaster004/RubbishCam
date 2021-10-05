@@ -11,7 +11,7 @@ namespace HackathonE1.Api.Hubs.Notification
 	{
 		public static async Task NotifyUsers( this IHubContext<NotificationsHub, INotificationClient> context, IEnumerable<string> ids, GetIssueDto issue )
 		{
-			await context.Clients.Clients( ids ).ReciveIssue( issue );
+			await context.Clients.Users( ids ).ReciveIssue( issue );
 		}
 
 

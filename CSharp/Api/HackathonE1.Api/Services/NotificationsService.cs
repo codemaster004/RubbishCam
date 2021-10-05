@@ -32,7 +32,8 @@ namespace HackathonE1.Api.Services
 
 		public async Task NotifyAsync( IssueModel issue )
 		{
-			await Task.WhenAll( NotifySignalrAsync( issue ), NotifyEmailAsync( issue ) );
+			await NotifySignalrAsync( issue );
+			await NotifyEmailAsync( issue );
 		}
 
 		private async Task NotifySignalrAsync( IssueModel issue )

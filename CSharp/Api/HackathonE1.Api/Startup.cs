@@ -1,5 +1,6 @@
 using HackathonE1.Api.Data;
 using HackathonE1.Api.Helpers;
+using HackathonE1.Api.Hubs;
 using HackathonE1.Api.Hubs.Notification;
 using HackathonE1.Api.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,6 +64,7 @@ namespace HackathonE1.Api
 			} );
 
 			_ = services.AddSingleton<JwtHelper>();
+			_ = services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
 			_ = services.AddScoped<IJwtService, JwtService>();
 			_ = services.AddScoped<IUsersService, UsersService>();

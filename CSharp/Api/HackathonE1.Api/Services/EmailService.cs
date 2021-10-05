@@ -11,7 +11,7 @@ namespace HackathonE1.Api.Services
 {
 	public interface IEmailService
 	{
-		Task<bool> SendEmailAsync();
+		Task<bool> SendEmailAsync( string reciver, string subject, string content );
 	}
 
 	public class EmailService : IEmailService
@@ -29,14 +29,21 @@ namespace HackathonE1.Api.Services
 			_http.BaseAddress = new Uri( apiPath );
 		}
 
-		public async Task<bool> SendEmailAsync()
+		public async Task<bool> SendEmailAsync( string reciver, string subject, string content )
 		{
 			if ( string.IsNullOrEmpty( apiPath ) || string.IsNullOrEmpty( apiPassword ) )
 			{
 				return false;
 			}
 
-			EmailModel email = new();
+			EmailModel email = new()
+			{
+				Password = apiPassword,
+				Receiver = reciver,
+				Subject = subject,
+				Content = content
+			};
+
 			var resp = await _http.PostAsJsonAsync( "/sendMessage", email );
 
 			if ( !resp.IsSuccessStatusCode )

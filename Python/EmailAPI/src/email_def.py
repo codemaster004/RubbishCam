@@ -7,6 +7,7 @@ import os
 
 
 email = os.environ.get('EMAIL')
+port = os.environ.get('PORT')
 email_password = os.environ.get('EMAIL_PASSWORD')
 api_password = os.environ.get('API_PASSWORD')
 
@@ -43,5 +44,5 @@ def send_email():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=port)
     # app.run()

@@ -67,6 +67,7 @@ namespace HackathonE1.Api
 			_ = services.AddScoped<IUsersService, UsersService>();
 			_ = services.AddScoped<IIssuesService, IssuesService>();
 			_ = services.AddScoped<IIssueTypesService, IssueTypesService>();
+			_ = services.AddScoped<IEmailService, EmailService>();
 			_ = services.AddScoped<INotificationsService, NotificationsService>();
 			_ = services.AddScoped<IObservedAreasService, ObservedAreasService>();
 

@@ -22,7 +22,7 @@ def send_email():
     content = request.json['content']
     
     if password != api_password:
-        return '', 400
+        return jsonify({'status': 401, 'title': 'Unauthorized', 'detail': 'Incorrect password'}), 401
     
     try:
         msg = EmailMessage()
@@ -37,7 +37,7 @@ def send_email():
             smtp.send_message(msg)
     except Exception as e:
         print('Error in sending email:', e)
-        return '', 400
+        return jsonify({'status': 500, 'title': 'Initial Server Error'}), 500
     
     return '', 200
 

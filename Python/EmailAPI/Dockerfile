@@ -7,3 +7,6 @@ RUN pip install -r requirements.txt
 COPY ./src ./src
 
 EXPOSE 5000
+
+ENTRYPOINT ["python"]
+CMD ["/app/src/email_def.py" ]

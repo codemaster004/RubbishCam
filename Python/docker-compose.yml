@@ -11,6 +11,6 @@ services:
       EMAIL: rubbish.camera@gmail.com
       EMAIL_PASSWORD: qijjqgnhgqjdyyso
       API_PASSWORD: HelloWorld123
-    command:
-      - "python"
-      - "/app/src/email_def.py"
+#    command:
+#      - "python"
+#      - "/app/src/email_def.py"

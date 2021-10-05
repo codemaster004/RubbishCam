@@ -73,7 +73,7 @@ namespace HackathonE1.Api.Services
 			}
 
 			_ = _dbContext.IssueTypes.Remove( issueType );
-			_ = _dbContext.SaveChangesAsync();
+			_ = await _dbContext.SaveChangesAsync();
 
 			return true;
 		}

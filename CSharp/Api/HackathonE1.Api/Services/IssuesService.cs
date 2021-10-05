@@ -20,10 +20,12 @@ namespace HackathonE1.Api.Services
 	public class IssuesService : IIssuesService
 	{
 		private readonly AppDbContext _dbContext;
+		private readonly INotificationsService _notificationsService;
 
-		public IssuesService( AppDbContext dbContext )
+		public IssuesService( AppDbContext dbContext, INotificationsService notificationsService )
 		{
 			_dbContext = dbContext;
+			_notificationsService = notificationsService;
 		}
 		public async Task<GetIssueDto[]> GetIssuesAsync()
 		{
@@ -34,7 +36,7 @@ namespace HackathonE1.Api.Services
 
 		public async Task<GetIssueDto[]> GetIssuesAsync( string userIdentifier )
 		{
-			var issues = from  area in _dbContext.ObservedAreas
+			var issues = from area in _dbContext.ObservedAreas
 						 where area.UserIdentifier == userIdentifier
 						 let lat = area.Latitude
 						 let @long = area.Longitude
@@ -47,7 +49,7 @@ namespace HackathonE1.Api.Services
 						 select issue;
 
 			return await issues
-				.Select(GetIssueDto.FromIssueModel)
+				.Select( GetIssueDto.FromIssueModel )
 				.ToArrayAsync();
 		}
 
@@ -81,6 +83,8 @@ namespace HackathonE1.Api.Services
 			_ = await _dbContext.Issues.AddAsync( issue );
 			_ = await _dbContext.SaveChangesAsync();
 
+			_ = _notificationsService.NotifyAsync( issue );
+
 			return (GetIssueDto)issue;
 		}
 
@@ -97,7 +101,7 @@ namespace HackathonE1.Api.Services
 			}
 
 			_ = _dbContext.Issues.Remove( issue );
-			_ = _dbContext.SaveChangesAsync();
+			_ = await _dbContext.SaveChangesAsync();
 
 			return true;
 		}

@@ -91,7 +91,7 @@ namespace HackathonE1.Api.Services
 			}
 
 			_ = _dbContext.Users.Remove( user );
-			_ = _dbContext.SaveChangesAsync();
+			_ = await _dbContext.SaveChangesAsync();
 
 			return true;
 		}

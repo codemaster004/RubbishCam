@@ -78,6 +78,7 @@ namespace HackathonE1.Api.Services
 			}
 
 			var area = areaDto.ToObservedAreaModel();
+			area.UserIdentifier = userIdentifier;
 
 			_ = await _dbContext.ObservedAreas.AddAsync( area );
 			_ = await _dbContext.SaveChangesAsync();
@@ -98,7 +99,7 @@ namespace HackathonE1.Api.Services
 			}
 
 			_ = _dbContext.ObservedAreas.Remove( area );
-			_ = _dbContext.SaveChangesAsync();
+			_ = await _dbContext.SaveChangesAsync();
 
 			return true;
 		}
@@ -116,7 +117,7 @@ namespace HackathonE1.Api.Services
 			}
 
 			_ = _dbContext.ObservedAreas.Remove( area );
-			_ = _dbContext.SaveChangesAsync();
+			_ = await _dbContext.SaveChangesAsync();
 
 			return true;
 		}

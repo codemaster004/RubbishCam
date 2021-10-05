@@ -34,6 +34,7 @@ namespace HackathonE1.Api.Services
 		public async Task<string> AuthenticateAsync( string email, string password )
 		{
 			var user = await _dbContext.Users
+				.Include( u => u.Roles )
 				.Where( u => u.Email == email && u.PasswordHash == UserModel.HashPassword( password ) )
 				.FirstOrDefaultAsync();
 
@@ -53,10 +54,10 @@ namespace HackathonE1.Api.Services
 		{
 			yield return new Claim( type: ClaimTypes.Name, user.Identifier );
 
-			//foreach ( var role in user.Roles )
-			//{
-			//	yield return new Claim( type: ClaimTypes.Role, role.Name );
-			//}
+			foreach ( var role in user.Roles )
+			{
+				yield return new Claim( type: ClaimTypes.Role, role.Name );
+			}
 		}
 
 		public async Task<string> RefreshAsync( ClaimsPrincipal principal )

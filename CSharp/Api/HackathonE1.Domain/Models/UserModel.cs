@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HackathonE1.Domain.RelationModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -37,7 +38,13 @@ namespace HackathonE1.Domain.Models
 		[MaxLength( 88 )]
 		public string PasswordHash { get; set; }
 
+		[Required]
+		public bool ReciveEmails { get; set; }
+
+
 		public List<ObservedAreaModel> ObservedAreas { get; set; }
+		public List<RoleModel> Roles { get; set; }
+		public List<RoleUserRelation> RoleUsers { get; set; }
 
 
 		public static string HashPassword( string password )

@@ -1,4 +1,5 @@
 ﻿using HackathonE1.Domain.Models;
+using HackathonE1.Domain.RelationModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,26 @@ namespace HackathonE1.Api.Data
 				.WithMany( u => u.ObservedAreas )
 				.HasForeignKey( oa => oa.UserIdentifier )
 				.HasPrincipalKey( u => u.Identifier );
+
+			_ = modelBuilder.Entity<UserModel>()
+				.HasMany( u => u.Roles )
+				.WithMany( r => r.Owners )
+				.UsingEntity<RoleUserRelation>(
+					j => j
+						 .HasOne( ru => ru.Role )
+						 .WithMany( r => r.RoleUsers )
+						 .HasForeignKey( ru => ru.RoleId ),
+					j => j
+						 .HasOne( ru => ru.User )
+						 .WithMany( u => u.RoleUsers )
+						 .HasForeignKey( ru => ru.UserId ),
+					j => j
+						 .HasKey( ru => new { ru.UserId, ru.RoleId } )
+				);
+
+			_ = modelBuilder.Entity<UserModel>()
+				.Property( u=>u.ReciveEmails )
+				.HasDefaultValue( true );
 
 		}
 

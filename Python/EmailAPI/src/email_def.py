@@ -22,7 +22,7 @@ def send_email():
     content = request.json['content']
     
     if password != api_password:
-        return jsonify({'Status': False, 'Message': 'Incorrect password'})
+        return '', 400
     
     try:
         msg = EmailMessage()
@@ -37,9 +37,9 @@ def send_email():
             smtp.send_message(msg)
     except Exception as e:
         print('Error in sending email:', e)
-        return jsonify({'Status': False, 'Message': f'Error in sending email: {e}'})
+        return '', 400
     
-    return jsonify({'Status': True, 'Message': 'OK'})
+    return '', 200
 
 
 if __name__ == "__main__":

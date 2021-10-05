@@ -83,7 +83,7 @@ namespace HackathonE1.Api.Services
 			_ = await _dbContext.Issues.AddAsync( issue );
 			_ = await _dbContext.SaveChangesAsync();
 
-			_ = _notificationsService.NotifyAsync( issue );
+			await _notificationsService.NotifyAsync( issue );
 
 			return (GetIssueDto)issue;
 		}

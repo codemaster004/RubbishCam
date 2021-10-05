@@ -22,7 +22,7 @@ namespace HackathonE1.Api.Services
 		private readonly string apiPassword;
 		private readonly ILogger<EmailService> _logger;
 
-		public EmailService( IConfiguration configuration )
+		public EmailService( IConfiguration configuration, ILogger<EmailService> logger )
 		{
 			apiPath = Environment.GetEnvironmentVariable( "EMAIL_API_PATH" ) ?? configuration["ExternalServicesConfig:EmailApiPath"];
 			apiPassword = Environment.GetEnvironmentVariable( "EMAIL_API_PASSWORD" ) ?? configuration["ExternalServicesConfig:EmailApiPassword"];
@@ -38,6 +38,7 @@ namespace HackathonE1.Api.Services
 
 			_http = new();
 			_http.BaseAddress = new Uri( apiPath );
+			_logger = logger;
 		}
 
 		public async Task<bool> SendEmailAsync( string reciver, string subject, string content )
@@ -56,12 +57,12 @@ namespace HackathonE1.Api.Services
 				Content = content
 			};
 
-			var resp = await _http.PostAsJsonAsync( "/sendMessage", email );
+			var resp = await _http.PostAsJsonAsync( "/send_mail", email );
 
 			if ( !resp.IsSuccessStatusCode )
 			{
 				_logger.LogError( "Email sending failed." );
-				resp = await _http.PostAsJsonAsync( "/sendMessage", email );
+				resp = await _http.PostAsJsonAsync( "/send_mail", email );
 			}
 
 			return resp.IsSuccessStatusCode;
@@ -70,7 +71,7 @@ namespace HackathonE1.Api.Services
 
 		class EmailModel
 		{
-			[JsonPropertyName( "reciver" )]
+			[JsonPropertyName( "receiver" )]
 			public string Receiver { get; set; }
 			[JsonPropertyName( "subject" )]
 			public string Subject { get; set; }

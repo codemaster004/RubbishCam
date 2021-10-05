@@ -1,0 +1,10 @@
+requests~=2.26.0
+Flask~=2.0.2
+turicreate~=6.4.1
+numpy~=1.19.2
+tensorflow~=2.6.0
+scipy~=1.7.1
+scikit-image~=0.18.3
+pycocotools~=2.0.0
+Pillow~=8.3.2
+Werkzeug~=2.0.1

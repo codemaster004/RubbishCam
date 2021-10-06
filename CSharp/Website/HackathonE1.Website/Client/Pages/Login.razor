@@ -1,0 +1,49 @@
+﻿@page "/login"
+@layout AuthLayout
+@using System.ComponentModel.DataAnnotations
+
+@inject HttpClient http
+@inject AuthenticationStateProvider auth
+
+<EditForm Model="model" class="auth-form" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <div class="auth-form-box">
+        <label>
+            Email address: <ValidationMessage For="@(() => model.Email)" />
+            <InputText @bind-Value="model.Email" />
+        </label>
+    </div>
+    <div class="auth-form-box">
+        <label>
+            Password: <ValidationMessage For="@(() => model.Password)" />
+            <InputText type="password" @bind-Value="model.Password" />
+        </label>
+    </div>
+    <div class="auth-form-box">
+        <button type="submit" class="submit">Log in</button>
+    </div>
+</EditForm>
+
+
+@code {
+    class LoginModel
+    {
+        [Required( AllowEmptyStrings = false, ErrorMessage = "email is required" )]
+        [EmailAddress( ErrorMessage = "this is not a valid email address" )]
+        public string Email { get; set; }
+
+        [Required( AllowEmptyStrings = false, ErrorMessage = "password is required" )]
+        [MinLength( 8, ErrorMessage = "password must be at least 8 characters long" )]
+        public string Password { get; set; }
+    }
+
+    private readonly LoginModel model = new();
+
+    private async Task HandleSubmit()
+    {
+        var resp = await http.PostAsJsonAsync( "", model );
+        var token = await resp.Content.ReadAsStringAsync();
+        var jwtAuth = auth as JwtAuthenticationStateProvider;
+        jwtAuth.Token = token;
+    }
+}

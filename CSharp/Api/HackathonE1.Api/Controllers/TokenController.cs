@@ -57,5 +57,13 @@ namespace HackathonE1.Api.Controllers
 			return Ok( @new );
 		}
 
+
+		[HttpPost( "check" )]
+		public async Task<IActionResult> CheckToken()
+		{
+			await Task.CompletedTask;
+			return Ok();
+		}
+
 	}
 }

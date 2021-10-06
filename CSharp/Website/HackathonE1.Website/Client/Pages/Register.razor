@@ -1,0 +1,62 @@
+﻿@page "/register"
+@layout AuthLayout
+@using System.ComponentModel.DataAnnotations
+
+
+<EditForm Model="model" class="auth-form" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <div class="auth-form-box">
+        <label>
+            Email address: <ValidationMessage For="@(() => model.Email)" />
+            <InputText @bind-Value="model.Email" />
+        </label>
+    </div>
+    <div class="auth-form-box">
+        <label>
+            First name: <ValidationMessage For="@(() => model.FirstName)" />
+            <InputText @bind-Value="model.FirstName" />
+        </label>
+    </div>
+    <div class="auth-form-box">
+        <label>
+            Last name: <ValidationMessage For="@(() => model.LastName)" />
+            <InputText @bind-Value="model.LastName" />
+        </label>
+    </div>
+    <div class="auth-form-box">
+        <label>
+            Password: <ValidationMessage For="@(() => model.Password)" />
+            <InputText type="password" @bind-Value="model.Password" />
+        </label>
+    </div>
+    <div class="auth-form-box">
+        <button type="submit" class="submit">Register</button>
+    </div>
+</EditForm>
+
+
+@code {
+    class RegisterModel
+    {
+        [Required( AllowEmptyStrings = false, ErrorMessage = "email is required" )]
+        [EmailAddress( ErrorMessage = "this is not a valid email address" )]
+        public string Email { get; set; }
+
+        [Required( AllowEmptyStrings = false, ErrorMessage = "name is required" )]
+        public string FirstName { get; set; }
+
+        [Required( AllowEmptyStrings = false, ErrorMessage = "name is required" )]
+        public string LastName { get; set; }
+
+        [Required( AllowEmptyStrings = false, ErrorMessage = "password is required" )]
+        [MinLength( 8, ErrorMessage = "password must be at least 8 characters long" )]
+        public string Password { get; set; }
+    }
+
+    private readonly RegisterModel model = new();
+
+    private async Task HandleSubmit()
+    {
+        await Task.CompletedTask;
+    }
+}

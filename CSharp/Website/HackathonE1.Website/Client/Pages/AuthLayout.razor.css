@@ -1,0 +1,86 @@
+﻿.login-bg {
+    width: 80vw;
+    height: 80vh;
+    background-color: #D0D0D0;
+    border-radius: 10px;
+    padding: 60px 80px;
+}
+
+.auth-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-box ::deep form {
+    display: block;
+}
+
+.auth-button-box {
+    margin-bottom: 30px;
+}
+
+    .auth-button-box ::deep * {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 3rem;
+        line-height: 5rem;
+    }
+
+::deep button, ::deep .auth-button {
+    border-radius: 9px;
+    margin-right: 20px;
+    font-family: Bai Jamjuree;
+    text-decoration: none;
+    padding: 0 20px;
+}
+
+::deep .auth-button {
+    display: inline-block;
+    transition: .5s;
+    /* max-width: 45%; */
+}
+
+    ::deep .auth-button.active {
+        display: inline-block;
+        background-color: #AEC55D;
+        color: #FFF;
+    }
+
+    ::deep .auth-button:not(.active) {
+        transform: scale(.8);
+        background-color: #739C3E;
+        color: #000;
+    }
+
+::deep .auth-form-box {
+    margin-bottom: 20px;
+}
+
+::deep .auth-form {
+    display: block;
+    margin-top: 10px;
+}
+
+    ::deep .auth-form input {
+        display: block;
+        background-color: #D0D0D0;
+        border: none;
+        border-bottom: 2.5px solid #A6A289;
+        width: 350px;
+        outline: none;
+        line-height: 36px;
+        padding: 10px 5px;
+        padding-bottom: 0;
+    }
+
+    ::deep .auth-form button.submit {
+        background-color: #AEC55D;
+        color: #FFF;
+        border: none;
+        font-size: 1.5rem;
+    }
+
+::deep .validation-message {
+    display: inline;
+}

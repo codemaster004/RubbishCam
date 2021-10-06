@@ -1,4 +1,4 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@*<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">HackathonE1.Website</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -23,7 +23,38 @@
             </NavLink>
         </li>
     </ul>
-</div>
+</div>*@
+<nav class="navbar-single">
+    <a href="/">
+        <img src="images/Logo.png" class="logo" alt="Logo">
+        <h3>Garbage Cam</h3>
+    </a>
+</nav>
+
+<nav class="navbar-landing">
+    <div class="row">
+        <div class="col-6"></div>
+        <div class="col-6">
+            <div class="row link-box">
+                <div class="col-2">
+                    <NavLink href="purpose">Purpose</NavLink>
+                </div>
+                <div class="col-2">
+                    <NavLink href="tech">Tech</NavLink>
+                </div>
+                <div class="col-2">
+                    <NavLink href="team">Team</NavLink>
+                </div>
+                <div class="col-2">
+                    <NavLink href="garbage">Garbage</NavLink>
+                </div>
+                <div class="col-3">
+                    <NavLink href="register" class="button-capsule">Sign-Up</NavLink>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 
 @code {
     private bool collapseNavMenu = true;

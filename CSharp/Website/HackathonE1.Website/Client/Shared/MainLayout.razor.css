@@ -1,4 +1,4 @@
-.page {
+/*.page {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -67,4 +67,16 @@
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
+}
+*/
+
+.content {
+    display: flex;
+    justify-content: center;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
 }

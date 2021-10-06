@@ -23,9 +23,16 @@ namespace HackathonE1.Website.Client
 			_ = builder.Services.AddAuthorizationCore();
 			_ = builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 
-
-			var http = new HttpClient { BaseAddress = new Uri( builder.HostEnvironment.BaseAddress ) };
-			EnvVars env = new() { Variables = await http.GetFromJsonAsync<Dictionary<string, string>>( "/api/Environment" ) };
+			EnvVars env;
+			try
+			{
+				var http = new HttpClient { BaseAddress = new Uri( builder.HostEnvironment.BaseAddress ) };
+				env = new() { Variables = await http.GetFromJsonAsync<Dictionary<string, string>>( "/api/Environment" ) };
+			}
+			catch ( Exception )
+			{
+				env = new() { Variables = new() };
+			}
 
 			_ = builder.Services.AddSingleton( env );
 

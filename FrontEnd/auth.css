@@ -35,10 +35,11 @@
 }
 .auth-box .auth-button {
     display: inline-block;
-    background: #739C3E;
+    background-color: #739C3E;
     border-radius: 9px;
     margin-right: 20px;
     color: #FFF;
+    /* max-width: 45%; */
 }
 
 .auth-box .auth-button.active a {

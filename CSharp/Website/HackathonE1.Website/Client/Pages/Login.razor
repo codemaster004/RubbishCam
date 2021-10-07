@@ -1,9 +1,14 @@
 ﻿@page "/login"
 @layout AuthLayout
-@using System.ComponentModel.DataAnnotations
 
-@inject HttpClient http
+@using System.ComponentModel.DataAnnotations
+@using System.Text.Json.Serialization
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Web
+
+@inject IHttpClientFactory httpFactory
 @inject AuthenticationStateProvider auth
+@inject NavigationManager navMan
 
 <EditForm Model="model" class="auth-form" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
@@ -28,6 +33,7 @@
 @code {
     class LoginModel
     {
+        [JsonPropertyName( "username" )]
         [Required( AllowEmptyStrings = false, ErrorMessage = "email is required" )]
         [EmailAddress( ErrorMessage = "this is not a valid email address" )]
         public string Email { get; set; }
@@ -41,9 +47,28 @@
 
     private async Task HandleSubmit()
     {
-        var resp = await http.PostAsJsonAsync( "", model );
+        var http = httpFactory.CreateClient( "api" );
+        var resp = await http.PostAsJsonAsync( "auth/token", model );
+
+        if ( !resp.IsSuccessStatusCode )
+        {
+            return;
+        }
+
         var token = await resp.Content.ReadAsStringAsync();
+
         var jwtAuth = auth as JwtAuthenticationStateProvider;
         jwtAuth.Token = token;
+
+        string cont = null;
+
+        var uri = new Uri( navMan.Uri );
+        var queryStrings = QueryHelpers.ParseQuery( uri.Query );
+        if ( queryStrings.TryGetValue( "continue", out var c ) )
+        {
+            cont = HttpUtility.UrlDecode( c );
+        }
+
+        navMan.NavigateTo( cont ?? "/" );
     }
 }

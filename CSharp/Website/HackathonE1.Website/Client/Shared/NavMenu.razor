@@ -1,29 +1,5 @@
-﻿@*<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">HackathonE1.Website</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿@inject AuthenticationStateProvider auth
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>*@
 <nav class="navbar-single">
     <a href="/">
         <img src="images/Logo.png" class="logo" alt="Logo">
@@ -33,7 +9,13 @@
 
 <nav class="navbar-landing">
     <div class="row">
-        <div class="col-6"></div>
+        <div class="col-6">
+            <div class="col-2">
+                <div class="row link-box">
+                    <NavLink href="observed">observed areas</NavLink>
+                </div>
+            </div>
+        </div>
         <div class="col-6">
             <div class="row link-box">
                 <div class="col-2">
@@ -49,7 +31,14 @@
                     <NavLink href="garbage">Garbage</NavLink>
                 </div>
                 <div class="col-3">
-                    <NavLink href="register" class="button-capsule">Sign-Up</NavLink>
+                    <AuthorizeView>
+                        <Authorized>
+                            <button @onclick="Logout" class="button-capsule">Log out</button>
+                        </Authorized>
+                        <NotAuthorized>
+                            <NavLink href="register" class="button-capsule">Sign-Up</NavLink>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </div>
             </div>
         </div>
@@ -57,6 +46,14 @@
 </nav>
 
 @code {
+
+    private async Task Logout()
+    {
+        await Task.CompletedTask;
+        var jwtAuth = auth as JwtAuthenticationStateProvider;
+        jwtAuth.Token = null;
+    }
+
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;

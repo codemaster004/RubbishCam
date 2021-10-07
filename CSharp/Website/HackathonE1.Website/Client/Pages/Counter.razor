@@ -12,6 +12,11 @@
         The User is not authorized
     </NotAuthorized>
 </AuthorizeView>
+
+<button @onclick="LogUsername">Log username</button>
+
+<p>@_authMessage</p>
+
 <h1>Counter</h1>
 
 <p>Current count: @currentCount</p>
@@ -19,6 +24,26 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private string _authMessage;
+
+    private async Task LogUsername()
+    {
+        var authState = await authenticationStateTask;
+        var user = authState.User;
+
+        if ( user.Identity.IsAuthenticated )
+        {
+            _authMessage = $"{user.Identity.Name} is authenticated.";
+        }
+        else
+        {
+            _authMessage = "The user is NOT authenticated.";
+        }
+    }
+
     private int currentCount = 0;
 
     private void IncrementCount()

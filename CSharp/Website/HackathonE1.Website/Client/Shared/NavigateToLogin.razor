@@ -1,0 +1,14 @@
+﻿@inject NavigationManager navMan
+
+@using System.Web
+
+@code{
+    [Parameter]
+    public string ContinueWith { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.CompletedTask;
+        navMan.NavigateTo( $"/login?continue={HttpUtility.UrlEncode( ContinueWith )}" );
+    }
+}

@@ -8,5 +8,5 @@ COPY ./src ./src
 
 EXPOSE 5000
 
-ENTRYPOINT ["python"]
-CMD ["/app/src/email_def.py" ]
+#ENTRYPOINT ["python"]
+#CMD ["/app/src/email_def.py" ]

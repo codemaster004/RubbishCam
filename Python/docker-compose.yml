@@ -2,15 +2,24 @@ version: '3'
 
 services:
 
-  email_service:
-    build:
-      context: ./EmailAPI
-    ports:
-      - "5000:5000"
-    environment:
-      EMAIL: rubbish.camera@gmail.com
-      EMAIL_PASSWORD: qijjqgnhgqjdyyso
-      API_PASSWORD: HelloWorld123
+#  email_service:
+#    build:
+#      context: ./EmailAPI
+#    ports:
+#      - "5000:5000"
+#    environment:
+#      EMAIL: rubbish.camera@gmail.com
+#      EMAIL_PASSWORD: qijjqgnhgqjdyyso
+#      API_PASSWORD: HelloWorld123
 #    command:
 #      - "python"
 #      - "/app/src/email_def.py"
+
+  object_detection:
+    build:
+      context: ./ObjectDetection
+    ports:
+      - "5000:5000"
+    command:
+      - "python"
+      - "/app/src/upload_file.py"

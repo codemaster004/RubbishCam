@@ -21,8 +21,25 @@
 </head>
 
 <body>
+    <div id="bgc">
+        <div id="circle-1"></div>
+        <div id="circle-2"></div>
+    </div>
 
-    <div id="map"></div>
+    <div class="map-container">
+        <div class="map-box">
+            <div id="map"></div>
+        </div>
+
+        <div class="map-points-box">
+            <h3>Garbage points</h3>
+            <ul>
+                <li>
+                    <p>45.3127643 - 68.3867345</p>
+                </li>
+            </ul>
+        </div>
+    </div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=API-KEY&callback=initMap&libraries=&v=weekly"
         async></script>

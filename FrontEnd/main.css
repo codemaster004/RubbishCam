@@ -1,6 +1,40 @@
+.map-container {
+   display: flex;
+   justify-content: space-around;
+}
+
+.map-box {
+   height: 700px;
+   width: 60%;
+   margin-top: calc((100vh - 700px) / 2);
+   display: inline-block;
+   box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
+   border-radius: 10px;
+   overflow: hidden;
+}
+
 #map {
-    height: 600px;
-    /* The height is 400 pixels */
-    width: 100%;
-    /* The width is the width of the web page */
-  }
+   width: 100%;
+   height: 100%;
+}
+
+.map-points-box {
+   height: 700px;
+   width: 30%;
+   background-color: #fcfcfc;
+   display: inline-block;
+   margin-top: calc((100vh - 700px) / 2);
+   box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
+   border-radius: 5px;
+   padding: 10px 20px;
+   color: var(--dark-green);
+   overflow: scroll;
+}
+
+.map-points-box ul {
+   color: rgb(131, 131, 131)
+}
+
+.map-points-box ul li {
+   padding: 10px 0;
+}

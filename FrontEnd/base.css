@@ -1,3 +1,11 @@
+:root {
+    --dark-green: #739C3E;
+    --light-green: #AEC55D;
+    --weird-yellow: #DCD294;
+    --light-yellow: #F8FFCD;
+    --greenish-gray: #708262;
+}
+
 body {
     margin: 0;
     padding: 0;

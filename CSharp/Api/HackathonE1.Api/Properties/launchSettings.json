@@ -27,7 +27,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "JWT_SECRET": "12345678-1234-1234-1234-123456789012",
         "JWT_ISSUER": "myself",
-        "EMAIL_API_PATH": "https://xeo-emailer.herokuapp.com/",
+        "EMAIL_API_PATH": "https://rubbishcamemailer.herokuapp.com/",
+        "IMG_AI_API_PATH": "https://rubbishcamemailer.herokuapp.com/",
         "EMAIL_API_PASSWORD": "HelloWorld123"
       }
     }

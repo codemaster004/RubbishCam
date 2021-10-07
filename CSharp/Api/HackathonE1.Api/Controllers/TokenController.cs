@@ -37,18 +37,22 @@ namespace HackathonE1.Api.Controllers
 				return Unauthorized();
 			}
 
-			Response.Cookies.Append( "clientIdentifier", token, new()
+			Response.Cookies.Append( "client_identifier", token, new()
 			{
-				HttpOnly = true,
 				Expires = DateTime.UtcNow.AddMinutes( 15 ),
 				Path = "/",
+				Domain = "",
+				IsEssential = true,
+				HttpOnly = true,
+				Secure = true,
+				SameSite = SameSiteMode.None
 			} );
 
 			_logger.LogInformation( $"User {model.Username} requested token" );
 			return token;
 		}
 
-		[HttpPost("Logout")]
+		[HttpPost( "Logout" )]
 		public async Task<IActionResult> Logout()
 		{
 			await Task.CompletedTask;

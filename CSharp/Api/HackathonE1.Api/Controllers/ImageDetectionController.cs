@@ -26,7 +26,7 @@ namespace HackathonE1.Api.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CheckImage( List<IFormFile> files )
 		{
-			MemoryStream stream = new();
+			using MemoryStream stream = new();
 
 			var file = files.FirstOrDefault();
 

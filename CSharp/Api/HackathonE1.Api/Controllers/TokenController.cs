@@ -37,6 +37,13 @@ namespace HackathonE1.Api.Controllers
 				return Unauthorized();
 			}
 
+			Response.Cookies.Append( "clientIdentifier", token, new()
+			{
+				HttpOnly = true,
+				Expires = DateTime.UtcNow.AddMinutes( 15 ),
+				Path = "/",
+			} );
+
 			_logger.LogInformation( $"User {model.Username} requested token" );
 			return token;
 		}

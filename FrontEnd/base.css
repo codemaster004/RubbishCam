@@ -8,18 +8,23 @@ body {
     font-family: Bai Jamjuree;
 }
 
+.pl-sm {
+    padding-left: 30px !important;
+}
+
+
 .navbar-single {
     padding-top: 10px;
     display: flex;
     justify-content: center;
 }
 
-.navbar-single .logo {
+nav .logo {
     height: 66px;
     display: inline-block;
 }
 
-.navbar-single h3 {
+nav h3 {
     display: inline-block;
     padding-left: 10px;
 
@@ -30,17 +35,17 @@ body {
     text-align: center;
 }
 
-.navbar-landing .link-box {
+nav .link-box {
     display: flex;
     justify-content: flex-end;
 }
 
-.navbar-landing .link-box a {
+nav .link-box a {
     color: #000000;
     text-decoration: none;
 }
 
-.navbar-landing .link-box .button-capsule {
+nav .link-box .button-capsule {
     padding: 4px 25px;
     background: #739C3E;
     border-radius: 22px;

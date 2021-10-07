@@ -53,6 +53,9 @@ namespace HackathonE1.Api.Services
 		public static IEnumerable<Claim> GetClaims( UserModel user )
 		{
 			yield return new Claim( type: ClaimTypes.Name, user.Identifier );
+			yield return new Claim( type: ClaimTypes.GivenName, user.FirstName);
+			yield return new Claim( type: ClaimTypes.Surname, user.LastName);
+			yield return new Claim( type: ClaimTypes.Email, user.Email);
 
 			foreach ( var role in user.Roles )
 			{

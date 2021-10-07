@@ -15,7 +15,7 @@ namespace HackathonE1.Api.Services
 		Task<bool> SendEmailAsync( string reciver, string subject, string content );
 	}
 
-	public class EmailService : IEmailService
+	public class EmailService : IEmailService, IDisposable
 	{
 		private readonly HttpClient _http;
 		private readonly string apiPath;
@@ -79,6 +79,12 @@ namespace HackathonE1.Api.Services
 			public string Content { get; set; }
 			[JsonPropertyName( "password" )]
 			public string Password { get; set; }
+		}
+
+		public void Dispose()
+		{
+			( _http as IDisposable ).Dispose();
+			GC.SuppressFinalize( this );
 		}
 	}
 }

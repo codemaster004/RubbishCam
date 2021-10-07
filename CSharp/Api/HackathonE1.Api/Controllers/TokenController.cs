@@ -37,8 +37,25 @@ namespace HackathonE1.Api.Controllers
 				return Unauthorized();
 			}
 
+			Response.Cookies.Append( "clientIdentifier", token, new()
+			{
+				HttpOnly = true,
+				Expires = DateTime.UtcNow.AddMinutes( 15 ),
+				Path = "/",
+			} );
+
 			_logger.LogInformation( $"User {model.Username} requested token" );
 			return token;
+		}
+
+		[HttpPost("Logout")]
+		public async Task<IActionResult> Logout()
+		{
+			await Task.CompletedTask;
+
+			Response.Cookies.Delete( "clientIdentifier" );
+
+			return NoContent();
 		}
 
 
@@ -58,7 +75,7 @@ namespace HackathonE1.Api.Controllers
 		}
 
 
-		[HttpPost( "check" )]
+		[HttpGet( "check" )]
 		public async Task<IActionResult> CheckToken()
 		{
 			await Task.CompletedTask;

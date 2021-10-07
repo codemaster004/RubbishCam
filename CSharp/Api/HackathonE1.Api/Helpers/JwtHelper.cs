@@ -86,7 +86,26 @@ namespace HackathonE1.Api.Helpers
 
 				ClockSkew = TimeSpan.FromSeconds( 5 ),
 			};
+			options.Events = new();
 
+			options.Events.OnMessageReceived = ReadFromCookie;
+
+		}
+
+		static async Task ReadFromCookie( MessageReceivedContext context )
+		{
+			await Task.CompletedTask;
+
+			var token = context.HttpContext.Request
+				.Cookies
+				.Where( x => x.Key == "clientIdentifier" )
+				.FirstOrDefault()
+				.Value;
+
+			if ( !string.IsNullOrEmpty( token ) )
+			{
+				context.Token = token;
+			}
 		}
 	}
 }

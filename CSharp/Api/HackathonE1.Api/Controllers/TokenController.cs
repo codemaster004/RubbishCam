@@ -48,6 +48,16 @@ namespace HackathonE1.Api.Controllers
 			return token;
 		}
 
+		[HttpPost("Logout")]
+		public async Task<IActionResult> Logout()
+		{
+			await Task.CompletedTask;
+
+			Response.Cookies.Delete( "clientIdentifier" );
+
+			return NoContent();
+		}
+
 
 		[HttpPost( "refresh" )]
 		public async Task<IActionResult> RefreshToken()

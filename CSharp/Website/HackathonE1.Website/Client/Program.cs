@@ -15,6 +15,8 @@ namespace HackathonE1.Website.Client
 {
 	public class Program
 	{
+		private static EnvVars environmentVars;
+
 		public static async Task Main( string[] args )
 		{
 			var builder = WebAssemblyHostBuilder.CreateDefault( args );
@@ -23,20 +25,26 @@ namespace HackathonE1.Website.Client
 			_ = builder.Services.AddAuthorizationCore();
 			_ = builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 
-			EnvVars env;
 			try
 			{
 				var http = new HttpClient { BaseAddress = new Uri( builder.HostEnvironment.BaseAddress ) };
-				env = new() { Variables = await http.GetFromJsonAsync<Dictionary<string, string>>( "/api/Environment" ) };
+				environmentVars = new() { Variables = await http.GetFromJsonAsync<Dictionary<string, string>>( "/api/Environment" ) };
 			}
 			catch ( Exception )
 			{
-				env = new() { Variables = new() };
+				environmentVars = new() { Variables = new() };
 			}
 
-			_ = builder.Services.AddSingleton( env );
 
+			_ = builder.Services.AddSingleton( environmentVars );
 			_ = builder.Services.AddScoped( sp => new HttpClient { BaseAddress = new Uri( builder.HostEnvironment.BaseAddress ) } );
+
+			_ = builder.Services.AddHttpClient( "api", http =>
+			{
+				http.BaseAddress = new( environmentVars["API_PATH"] );
+				http.DefaultRequestHeaders.Authorization = new( "Bearer", JwtAuthenticationStateProvider.TokenValue );
+			} );
+
 
 			await builder.Build().RunAsync();
 		}

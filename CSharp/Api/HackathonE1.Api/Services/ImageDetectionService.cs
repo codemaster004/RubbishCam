@@ -12,10 +12,10 @@ namespace HackathonE1.Api.Services
 {
 	public interface IImageDetectionService
 	{
-		Task<bool> SendEmailAsync( byte[] content, string mediatype );
+		Task<bool> CheckImageAsync( byte[] content, string mediatype );
 	}
 
-	public class ImageDetectionService : IDisposable, IImageDetectionService
+	public class ImageDetectionService : IImageDetectionService, IDisposable
 	{
 		private readonly HttpClient _http;
 		private readonly string apiPath;
@@ -35,7 +35,7 @@ namespace HackathonE1.Api.Services
 			_logger = logger;
 		}
 
-		public async Task<bool> SendEmailAsync( byte[] content, string mediatype )
+		public async Task<bool> CheckImageAsync( byte[] content, string mediatype )
 		{
 			if ( string.IsNullOrEmpty( apiPath ) )
 			{

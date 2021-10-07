@@ -13,6 +13,37 @@ body {
 }
 
 
+#bgc {
+    position: absolute;
+    background-color: #E5E5E5;
+    height: 100vh;
+    width: 100vw;
+    z-index: -3;
+ }
+   
+ #bgc #circle-1 {
+    height: 320px;
+    width: 320px;
+    border-radius: 50%;
+    position: fixed;
+    top: -5%;
+    left: 55%;
+    background-color: #708262;
+    opacity: 0.15;
+ }
+   
+ #bgc #circle-2 {
+    width: 988px;
+    height: 988px;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    background: #DCD294;
+    opacity: 0.15;
+ }
+
+
 .navbar-single {
     padding-top: 10px;
     display: flex;

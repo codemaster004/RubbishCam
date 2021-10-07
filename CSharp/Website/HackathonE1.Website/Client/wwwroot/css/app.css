@@ -9,6 +9,10 @@ html, body {
     background-color: #E5E5E5;
 }
 
+button{
+    border: none;
+}
+
 /*a, .btn-link {
     color: #0366d6;
 }

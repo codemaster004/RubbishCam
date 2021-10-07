@@ -1,5 +1,9 @@
 ﻿@page "/register"
 @layout AuthLayout
+
+@inject IHttpClientFactory httpFactory
+@inject NavigationManager navMan
+
 @using System.ComponentModel.DataAnnotations
 
 
@@ -57,6 +61,13 @@
 
     private async Task HandleSubmit()
     {
-        await Task.CompletedTask;
+        var http = httpFactory.CreateClient( "api" );
+        var resp = await http.PostAsJsonAsync( "api/users", model );
+
+        if ( resp.IsSuccessStatusCode )
+        {
+            navMan.NavigateTo( "/login" );
+        }
+
     }
 }

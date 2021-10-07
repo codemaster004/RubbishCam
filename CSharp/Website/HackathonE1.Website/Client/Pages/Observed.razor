@@ -1,0 +1,74 @@
+﻿@page "/observed"
+
+@using System.ComponentModel.DataAnnotations;
+
+@inject IHttpClientFactory httpFactory
+@inject NavigationManager navMan
+
+
+<h3>Observed</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <NavigateToLogin ContinueWith="/observed"/>
+    </NotAuthorized>
+    <Authorized Context="authContext">
+        <div class="container-md">
+            <EditForm Model="model" OnValidSubmit="HandleSubmit">
+                <div class="row">
+                    <label>
+                        Latitude: <ValidationMessage For="@(() => model.Latitude)" />
+                        <InputNumber @bind-Value="model.Latitude" />
+                    </label>
+                </div>
+                <div class="row">
+                    <label>
+                        Longitude: <ValidationMessage For="@(() => model.Longitude)" />
+                        <InputNumber @bind-Value="model.Longitude" />
+                    </label>
+                </div>
+                <div class="row">
+                    <label>
+                        Radius: <ValidationMessage For="@(() => model.Radius)" />
+                        <InputNumber @bind-Value="model.Radius" />
+                    </label>
+                </div>
+                <div class="row">
+                    <button type="submit" class="submit">Success</button>
+                </div>
+            </EditForm>
+            @status
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    class ObservedModel
+    {
+        [Required]
+        [Range( -90, 90 )]
+        public double Latitude { get; set; }
+        [Required]
+        [Range( -180, 180 )]
+        public double Longitude { get; set; }
+        [Required]
+        public double Radius { get; set; }
+    }
+
+    private readonly ObservedModel model = new();
+    private string status = "";
+
+    private async Task HandleSubmit()
+    {
+        var http = httpFactory.CreateClient( "api" );
+        var resp = await http.PostAsJsonAsync( "api/ObservedAreas/owned", model );
+        if ( resp.IsSuccessStatusCode )
+        {
+            status = "success";
+            return;
+        }
+
+        status = "somthing went wrong";
+    }
+
+}

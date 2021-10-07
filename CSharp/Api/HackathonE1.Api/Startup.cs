@@ -36,6 +36,7 @@ namespace HackathonE1.Api
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices( IServiceCollection services )
 		{
+			_ = services.AddCors();
 
 			_ = services.AddControllers();
 			_ = services.AddSignalR();
@@ -71,6 +72,7 @@ namespace HackathonE1.Api
 			_ = services.AddScoped<IIssuesService, IssuesService>();
 			_ = services.AddScoped<IIssueTypesService, IssueTypesService>();
 			_ = services.AddScoped<IEmailService, EmailService>();
+			_ = services.AddScoped<IImageDetectionService, ImageDetectionService>();
 			_ = services.AddScoped<INotificationsService, NotificationsService>();
 			_ = services.AddScoped<IObservedAreasService, ObservedAreasService>();
 
@@ -79,6 +81,10 @@ namespace HackathonE1.Api
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure( IApplicationBuilder app, IWebHostEnvironment env )
 		{
+			_ = app.UseCors(
+				options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+			);
+
 			_ = app.UseStaticFiles();
 
 			if ( env.IsDevelopment() )

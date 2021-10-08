@@ -11,4 +11,4 @@ files = {'file': ('test.jpg', open('/Users/filip/GitHub/RubbishCam/Python/Object
 r = requests.post('http://0.0.0.0:5000/upload', files=files)
 
 print(r)
-# print(r.json())
+print(r.json())

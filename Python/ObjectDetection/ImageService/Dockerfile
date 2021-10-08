@@ -8,5 +8,5 @@ COPY ./src ./src
 
 EXPOSE 5000
 
-#ENTRYPOINT ["python"]
-#CMD ["/app/src/upload_file.py" ]
+ENTRYPOINT ["python"]
+CMD ["/app/src/upload_file.py" ]

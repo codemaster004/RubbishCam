@@ -26,10 +26,27 @@ def upload():
         image = [tc.Image(path=f'/app/src/images/{filename}')]
         test = tc.SFrame({'image': image})
         predictions = model.predict(test)
-        print(predictions)
-        print(predictions[0])
+        # print(predictions)
+        # print(predictions[0])
+        
+        rubbish_types = {
+            'metal': ['Aluminiumfoil', 'Can', 'Metalbottlecap'],
+            'plastic': ['Cup', 'Plasticbottle', 'Plasticbottlecap', 'Plasticcontainer', 'Plasticfilm', 'Plasticlid', 'Straw'],
+            'paper': ['Carton', 'Paper', 'Wrapper'],
+            'glass': ['Glassbottle'],
+            'normal': ['Styrofoampiece']
+        }
+        
+        my_pred = []
+        for data in predictions:
+            new_data = data[0]
+            for k, v in rubbish_types.items():
+                if new_data['label'] in v:
+                    new_data['rubbish_type'] = k
+            
+            my_pred.append(new_data)
 
-        return '', 200
+        return jsonify(my_pred), 200
 
     except Exception as e:
         print('Error with file:', e)

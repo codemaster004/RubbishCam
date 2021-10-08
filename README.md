@@ -61,11 +61,13 @@ Our websites allows you to mark found rubbish and illegal garbage dumps, whitch 
 <br>
 
 - We created backend and **API** in **C#**
-- **Machine Learning** Model in **Python** with Apple's **TuriCreate**
+- **Machine Learning** Model in **Python** with Apple's **TuriCreate** [Prototype Problems With hosting]
 - For data storage we use **Posgres database**
 - Everything is hosted inside **Docker** containers
 - In order to show location data we implemented **Google Maps JS**
 - All the design before coding website was done inside **Figma**
+- **WASM**
+- Single Page Application
 
 <br>
 

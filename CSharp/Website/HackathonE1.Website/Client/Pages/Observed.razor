@@ -12,7 +12,7 @@
     </NotAuthorized>
 
     <Authorized Context="authContext">
-        <div class="form-bg">
+        <div class="form-bg row">
             <div class="col-6">
 
                 <EditForm Model="model" class="container-md" OnValidSubmit="HandleSubmit">
@@ -39,15 +39,62 @@
                     </div>
                 </EditForm>
 
-                @status
+                @if ( !string.IsNullOrEmpty( status ) )
+                {
+                    <div class="alert alert-danger">
+                        @status
+                    </div>
+                }
 
             </div>
+            @if ( MyAreas is not null )
+            {
+                <div class="col-6">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Id</td>
+                                <td>Latitude</td>
+                                <td>Longitude</td>
+                                <td>Radius</td>
+                                <td>Delete</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <Virtualize Items="MyAreas" Context="area">
+                                <tr>
+                                    <td>@area.Id</td>
+                                    <td>@area.Latitude</td>
+                                    <td>@area.Longitude</td>
+                                    <td>@area.Radius</td>
+                                    <td><button @onclick="()=>DeleteObserved(area.Id)">X</button></td>
+                                </tr>
+                            </Virtualize>
+                        </tbody>
+                    </table>
+                </div>
+            }
+
         </div>
     </Authorized>
 </AuthorizeView>
 
 @code {
-    class ObservedModel
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if ( (await authenticationStateTask)?.User?.Identity?.IsAuthenticated is not true )
+        {
+            return;
+        }
+
+        await GetObserved();
+    }
+
+
+    class CreateObservedAreaDto
     {
         [Required]
         [Range( -90, 90 )]
@@ -59,20 +106,78 @@
         public double Radius { get; set; }
     }
 
-    private readonly ObservedModel model = new();
-    private string status = "";
+    public class GetObservedAreaDto
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        [Range( -90, 90 )]
+        public double Latitude { get; set; }
+        [Required]
+        [Range( -180, 180 )]
+        public double Longitude { get; set; }
+        //in kilometers
+        [Required]
+        public double Radius { get; set; }
+    }
+
+    private readonly CreateObservedAreaDto model = new();
+    private string status = null;
 
     private async Task HandleSubmit()
+    {
+        await CreateObserved();
+    }
+
+    private List<GetObservedAreaDto> MyAreas;
+
+    private async Task GetObserved()
+    {
+        var http = httpFactory.CreateClient( "api" );
+        MyAreas = await http.GetFromJsonAsync<List<GetObservedAreaDto>>( "api/ObservedAreas/owned" );
+    }
+
+    private async Task DeleteObserved( int id )
+    {
+        var http = httpFactory.CreateClient( "api" );
+        var resp = await http.DeleteAsync( $"api/ObservedAreas/owned/{id}" );
+
+        if ( resp.IsSuccessStatusCode )
+        {
+            MyAreas.RemoveAll( x => x.Id == id );
+            return;
+        }
+
+        if ( resp.StatusCode is System.Net.HttpStatusCode.NotFound )
+        {
+            MyAreas.RemoveAll( x => x.Id == id );
+            return;
+        }
+
+        await InformError();
+    }
+
+    private async Task CreateObserved()
     {
         var http = httpFactory.CreateClient( "api" );
         var resp = await http.PostAsJsonAsync( "api/ObservedAreas/owned", model );
         if ( resp.IsSuccessStatusCode )
         {
-            status = "success";
+            var item = await resp.Content.ReadFromJsonAsync<GetObservedAreaDto>();
+            MyAreas.Add( item );
             return;
         }
 
-        status = "somthing went wrong";
+        await InformError();
+    }
+
+    private async Task InformError()
+    {
+        status = "something went wrong";
+        StateHasChanged();
+        await Task.Delay( 3000 );
+        status = null;
+        StateHasChanged();
     }
 
 }

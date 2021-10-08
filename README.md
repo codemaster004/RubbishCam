@@ -66,6 +66,8 @@ Our websites allows you to mark found rubbish and illegal garbage dumps, whitch 
 - Everything is hosted inside **Docker** containers
 - In order to show location data we implemented **Google Maps JS**
 - All the design before coding website was done inside **Figma**
+- **WASM**
+- Single Page Application
 
 <br>
 

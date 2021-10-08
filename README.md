@@ -2,7 +2,7 @@
 <h1 align="center"><b>Garbage Cam</b></h1>
 
 <center>
-<img src="images/Logo.png" height="200px">
+<img src="Design/images/GrbageCam.png" height="200px">
 </center>
 
 

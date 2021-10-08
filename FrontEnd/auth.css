@@ -54,19 +54,15 @@
     padding: 20px 20px;
 }
 
-.auth-box form {
-    display: block;
-}
-
-.auth-form {
+.form {
     display: block;
     margin-top: 50px;
 }
-.auth-form-box {
+.form-box {
     margin-bottom: 40px;
 }
 
-.auth-form input {
+.form input {
     display: block;
     background-color: #D0D0D0;
     border: none;

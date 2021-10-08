@@ -16,6 +16,9 @@ body {
     font-family: Bai Jamjuree;
 }
 
+.p-0 {
+    padding: 0 !important;
+}
 .pl-sm {
     padding-left: 30px !important;
 }
@@ -29,6 +32,17 @@ body {
     padding-top: 15px !important;
 }
 
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.ox-hidden {
+    overflow-x: hidden;
+}
 
 #bgc {
     position: absolute;
@@ -69,6 +83,14 @@ body {
     display: inline-block;
     padding: 5px 30px;
     text-decoration: none;
+ }
+ 
+ p {
+    font-size: 22px;
+    line-height: 32px;
+    color: var(--greenish-gray);
+    padding: 25px 0;
+    font-weight: 400;
  }
  
  
@@ -188,7 +210,7 @@ nav .link-box .button-capsule {
         opacity: 0;
         width: 0;
         height: 0;
-      }
+    }
     
     .hamburger {
         display: inline-block;

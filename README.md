@@ -10,7 +10,7 @@
 <br>
 
 <center>
-<h2><b>Garbage location website</b> | <b><a href="">Visit the website here</a></b></h2>
+<h2><b>Garbage location website</b> | <b><a href="https://rubbishcam.herokuapp.com">Visit the website here</a></b></h2>
 <h2><b>Everyone can contribute to helping clean our planet</b></h2>
 </center>
 

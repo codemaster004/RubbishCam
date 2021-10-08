@@ -19,6 +19,7 @@ namespace HackathonE1.Domain.Dtos.ObservedArea
 		[Required]
 		[Range( -180, 180 )]
 		public double Longitude { get; set; }
+		//in kilometers
 		[Required]
 		public double Radius { get; set; }
 
@@ -32,7 +33,7 @@ namespace HackathonE1.Domain.Dtos.ObservedArea
 			Id = area.Id,
 			Latitude = area.Latitude,
 			Longitude = area.Longitude,
-			Radius = area.Radius,
+			Radius = area.Radius * Functions.kmPerDeg,
 			UserIdentifier = area.UserIdentifier
 		};
 

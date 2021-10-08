@@ -18,6 +18,7 @@ namespace HackathonE1.Domain.Models
 		[Required]
 		[Range( -180, 180 )]
 		public double Longitude { get; set; }
+		//in degrees
 		[Required]
 		public double Radius { get; set; }
 

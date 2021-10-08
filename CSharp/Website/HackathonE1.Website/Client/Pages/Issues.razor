@@ -1,4 +1,4 @@
-﻿@page "/observed"
+﻿@page "/issues"
 
 @using System.ComponentModel.DataAnnotations;
 
@@ -8,7 +8,7 @@
 
 <AuthorizeView>
     <NotAuthorized>
-        <NavigateToLogin ContinueWith="/observed" />
+        <NavigateToLogin ContinueWith="/issues" />
     </NotAuthorized>
 
     <Authorized Context="authContext">
@@ -30,12 +30,24 @@
                     </div>
                     <div class="row mb-3">
                         <label>
-                            Radius: <ValidationMessage For="@(() => model.Radius)" />
-                            <InputNumber @bind-Value="model.Radius" />
+                            Radius: <ValidationMessage For="@(() => model.TypeId)" />
+                            <InputSelect @bind-Value="model.TypeId">
+                                @if ( types is null )
+                                {
+                                    <option value="-1">Loading...</option>
+                                }
+                                else
+                                {
+                                    @foreach ( var type in types )
+                                    {
+                                        <option value="@type.Id">@type.Name</option>
+                                    }
+                                }
+                            </InputSelect>
                         </label>
                     </div>
                     <div class="row mb-3">
-                        <button type="submit" class="submit">Observe</button>
+                        <button type="submit" class="submit">Send issue</button>
                     </div>
                 </EditForm>
 
@@ -47,7 +59,7 @@
                 }
 
             </div>
-            @if ( MyAreas is not null )
+            @if ( issues is not null )
             {
                 <div class="col-6">
                     <table>
@@ -56,18 +68,23 @@
                                 <td>Id</td>
                                 <td>Latitude</td>
                                 <td>Longitude</td>
-                                <td>Radius</td>
-                                <td>Delete</td>
+                                <td>Type</td>
+                                <td>Mark as solved</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <Virtualize Items="MyAreas" Context="area">
+                            <Virtualize Items="issues" Context="issue">
                                 <tr>
-                                    <td>@area.Id</td>
-                                    <td>@area.Latitude</td>
-                                    <td>@area.Longitude</td>
-                                    <td>@area.Radius</td>
-                                    <td><button @onclick="()=>DeleteObserved(area.Id)">X</button></td>
+                                    <td>@issue.Id</td>
+                                    <td>@issue.Latitude</td>
+                                    <td>@issue.Longitude</td>
+                                    <td>
+                                        @if ( types is not null )
+                                        {
+                                            @ReadType( issue.TypeId ).Name
+                                        }
+                                    </td>
+                                    <td><button @onclick="()=>DeleteIssue(issue.Id)">X</button></td>
                                 </tr>
                             </Virtualize>
                         </tbody>
@@ -85,16 +102,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if ( (await authenticationStateTask)?.User?.Identity?.IsAuthenticated is not true )
+        if ( ( await authenticationStateTask )?.User?.Identity?.IsAuthenticated is not true )
         {
             return;
         }
 
-        await GetObserved();
+        await Task.WhenAll(
+            GetIssue(),
+            GetTypes() );
     }
 
 
-    class CreateObservedAreaDto
+    class CreateIssueDto
     {
         [Required]
         [Range( -90, 90 )]
@@ -102,11 +121,13 @@
         [Required]
         [Range( -180, 180 )]
         public double Longitude { get; set; }
+
         [Required]
-        public double Radius { get; set; }
+        [Range( 1, int.MaxValue, ErrorMessage = "type is required" )]
+        public int TypeId { get; set; }
     }
 
-    class GetObservedAreaDto
+    class GetIssueDto
     {
         [Key]
         public int Id { get; set; }
@@ -116,55 +137,77 @@
         [Required]
         [Range( -180, 180 )]
         public double Longitude { get; set; }
-        //in kilometers
+
         [Required]
-        public double Radius { get; set; }
+        public int TypeId { get; set; }
     }
 
-    private readonly CreateObservedAreaDto model = new();
+    class GetIssueTypeDto
+    {
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        [MaxLength( 24 )]
+        public string Name { get; set; }
+        [MaxLength( 256 )]
+        public string Description { get; set; }
+    }
+
+    private readonly CreateIssueDto model = new();
     private string status = null;
 
     private async Task HandleSubmit()
     {
-        await CreateObserved();
+        await CreateIssue();
     }
 
-    private List<GetObservedAreaDto> MyAreas;
-
-    private async Task GetObserved()
+    private List<GetIssueDto> issues;
+    private List<GetIssueTypeDto> types;
+    private GetIssueTypeDto ReadType( int id )
     {
-        var http = httpFactory.CreateClient( "api" );
-        MyAreas = await http.GetFromJsonAsync<List<GetObservedAreaDto>>( "api/ObservedAreas/owned" );
+        return types.Where( x => x.Id == id ).FirstOrDefault();
     }
 
-    private async Task DeleteObserved( int id )
+    private async Task GetTypes()
     {
         var http = httpFactory.CreateClient( "api" );
-        var resp = await http.DeleteAsync( $"api/ObservedAreas/owned/{id}" );
+        types = await http.GetFromJsonAsync<List<GetIssueTypeDto>>( "api/issuetypes" );
+    }
+
+    private async Task GetIssue()
+    {
+        var http = httpFactory.CreateClient( "api" );
+        issues = await http.GetFromJsonAsync<List<GetIssueDto>>( "api/issues/owned" );
+    }
+
+    private async Task DeleteIssue( int id )
+    {
+        var http = httpFactory.CreateClient( "api" );
+        var resp = await http.DeleteAsync( $"api/issues/{id}" );
 
         if ( resp.IsSuccessStatusCode )
         {
-            MyAreas.RemoveAll( x => x.Id == id );
+            issues.RemoveAll( x => x.Id == id );
             return;
         }
 
         if ( resp.StatusCode is System.Net.HttpStatusCode.NotFound )
         {
-            MyAreas.RemoveAll( x => x.Id == id );
+            issues.RemoveAll( x => x.Id == id );
             return;
         }
 
         await InformError();
     }
 
-    private async Task CreateObserved()
+    private async Task CreateIssue()
     {
         var http = httpFactory.CreateClient( "api" );
-        var resp = await http.PostAsJsonAsync( "api/ObservedAreas/owned", model );
+        var resp = await http.PostAsJsonAsync( "api/issues", model );
         if ( resp.IsSuccessStatusCode )
         {
-            var item = await resp.Content.ReadFromJsonAsync<GetObservedAreaDto>();
-            MyAreas.Add( item );
+            var item = await resp.Content.ReadFromJsonAsync<GetIssueDto>();
+            issues.Add( item );
             return;
         }
 

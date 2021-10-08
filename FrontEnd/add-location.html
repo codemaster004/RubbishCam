@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Location</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="auth.css">
+
+    <script src="location.js"></script>
+</head>
+
+<body>
+    <div id="bgc">
+        <div id="circle-1"></div>
+        <div id="circle-2"></div>
+    </div>
+
+    <nav class="navbar-normal">
+        <div class="row">
+            <div class="col-5 col-m-12 pl-sm spread-on-m">
+                <img src="images/Logo.png" alt="Logo" class="logo">
+                <h3>Garbage Cam</h3>
+                <label class="switch" onclick="checkIfMenu()">
+                    <input type="checkbox" id="navToggle">
+                    <div class="hamburger pr-s">
+                        <div class="burger-line"></div>
+                        <div class="burger-line"></div>
+                        <div class="burger-line"></div>
+                    </div>
+                </label>
+            </div>
+            <div class="col-7 col-m-12 pr-sm pt-s" id="nav-link-box">
+                <div class="row link-box">
+                    <div class="col-2">
+                        <a href="#">Purpose</a>
+                    </div>
+                    <div class="col-2">
+                        <a href="#">Tech</a>
+                    </div>
+                    <div class="col-2">
+                        <a href="#">Team</a>
+                    </div>
+                    <div class="col-2">
+                        <a href="#">Garbage</a>
+                    </div>
+                    <div class="col-3">
+                        <a href="#" class="button-capsule">Sign-Up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="map-container">
+        <div class="map-box">
+            <div id="map"></div>
+        </div>
+
+        <div class="map-points-box">
+            <h3>Add Location</h3>
+            <form action="" class="form">
+                <div class="form-box">
+                    <label for="">Lon</label>
+                    <input type="text" id="lon">
+                </div>
+                <div class="form-box">
+                    <label for="">Lat</label>
+                    <input type="text" id="lat">
+                </div>
+                <div class="form-box">
+                    <label for="">Distance</label>
+                    <input type="text" id="distance">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyARLiAK-bnBH095AUSANvdsNTMVFzCBScQ&callback=initMap&libraries=&v=weekly"
+        async></script>
+
+    <script>
+        function checkIfMenu() {
+            let hidingNav = document.getElementById("nav-link-box")
+            let navToggle = document.getElementById("navToggle")
+
+            if (navToggle.checked) {
+                hidingNav.style.height = "430px"
+                hidingNav.style.opacity = "1"
+            } else {
+                hidingNav.style.height = "0"
+                hidingNav.style.opacity = "0"
+            }
+        }
+    </script>
+</body>
+
+</html>
+<!-- AIzaSyARLiAK-bnBH095AUSANvdsNTMVFzCBScQ -->

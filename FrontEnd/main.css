@@ -5,9 +5,10 @@
 }
 
 .map-box {
-   height: 700px;
+   height: 90vh;
+   max-height: 600px;
+   margin-top: calc((100vh - 90vh - 70px) / 2);
    width: 60%;
-   margin-top: calc((100vh - 700px - 100px) / 2);
    display: inline-block;
    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
    border-radius: 10px;
@@ -20,16 +21,25 @@
 }
 
 .map-points-box {
-   height: 700px;
+   height: 90vh;
+   max-height: 600px;
+   margin-top: calc((100vh - 90vh - 70px) / 2);
    width: 30%;
    background-color: #fcfcfc;
    display: inline-block;
-   margin-top: calc((100vh - 700px - 100px) / 2);
    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
    border-radius: 5px;
    padding: 10px 20px;
    color: var(--dark-green);
    overflow: scroll;
+}
+
+.map-points-box .form label {
+   color:rgba(0, 0, 0)
+}
+
+.map-points-box .form input {
+   background-color: #fcfcfc;
 }
 
 .map-points-box ul {

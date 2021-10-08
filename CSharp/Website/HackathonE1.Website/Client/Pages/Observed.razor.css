@@ -1,8 +1,13 @@
-﻿input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+﻿::deep input::-webkit-outer-spin-button,
+::deep input::-webkit-inner-spin-button {
     -webkit-appearance: none;
 }
 
-input[type=number] {
+::deep input[type=number] {
     -moz-appearance: textfield;
+}
+
+td {
+    padding: .5rem;
+    border: #999 .5px dotted;
 }

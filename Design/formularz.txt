@@ -1,0 +1,11 @@
+1. Rozwiązanie które zaproponowaliśmy wpisuje się w troskę mieszkańców i tym którym zależy na utrzymaniu otoczenia w porządku i czystości.
+
+2. mail, ai, python, c#, html
+
+3. Nasza aplikacja zbiera dane o nielegalnych wysypiskach i zaśmieconych obszarach od użytkowników i pokazuje te miejsca na mapie przez co umożliwia łatwiejsze ich sprzątnięcie. Aplikacja ma też własny model (AI) do wykrywania i rozpoznawania śmieci na zdjęciu. Aktualnie służy on do pomocy w segregacji śmieci. W aplikacji jest możliwość powiadomienia użytkownika o nowo znalezionych wysypiskach i zaśmieconych obszarach.
+
+4. Dzięki oddzieleniu backendu i architekturze wykorzystującej mikroserwisy możliwe jest łatwe rozbudowanie aplikacji na mnóstwo różnych sposobów, jak np:
+- dodanie licznika zgłoszeń przez użytkownika i uczynienie z aplikacji swoistej gry
+- dodanie opcji powiadamiania np o siedzibach dzikich zwierząt lub o znalezionych porzuconych zwierzętach i automatycznego informowania odpowiednich służb
+
+Udoskonalenie wersji mobilnej aplikacji o możliwość wklejenia zdjęcia nielegalnego wysypiska i automatycznego określenia współrzędnych geograficznych tego miejsca. Partnerami naszego projektu mogą być nadleśnictwa, urzędy gminy, duże parki miejskie i fundacje ekologiczne

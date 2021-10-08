@@ -61,10 +61,30 @@ body {
  }
 
 
+ .button-main {
+    background: #739C3E;
+    border-radius: 5px;
+    font-size: 24px;
+    color: #FFFFFF;
+    display: inline-block;
+    padding: 5px 30px;
+    text-decoration: none;
+ }
+ 
+ 
 .navbar-single {
     padding-top: 10px;
     display: flex;
     justify-content: center;
+}
+
+.navbar-landing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    padding-top: 15px;
 }
 
 nav .logo {

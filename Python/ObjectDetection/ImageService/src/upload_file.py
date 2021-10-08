@@ -6,6 +6,8 @@ from werkzeug.utils import secure_filename
 import os
 
 
+port = os.environ.get('PORT')
+
 app = Flask(__name__)
 
 model = tc.load_model('/app/src/models/taco.model')
@@ -55,4 +57,4 @@ def upload():
 
 if __name__ == '__main__':
     # app.run()
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=port)

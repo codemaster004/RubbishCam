@@ -1,0 +1,9 @@
+﻿.row-no-pad > ::deep * {
+    padding: 0;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}

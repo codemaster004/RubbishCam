@@ -75,6 +75,7 @@ namespace HackathonE1.Api
 			_ = services.AddScoped<IImageDetectionService, ImageDetectionService>();
 			_ = services.AddScoped<INotificationsService, NotificationsService>();
 			_ = services.AddScoped<IObservedAreasService, ObservedAreasService>();
+			_ = services.AddScoped<IImageDetectionService, ImageDetectionService>();
 
 		}
 

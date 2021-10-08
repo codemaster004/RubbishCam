@@ -7,6 +7,8 @@ html, body {
     overflow-x: hidden;
     box-sizing: border-box;
     background-color: #E5E5E5;
+    position: relative;
+    z-index: -10;
 }
 
 button {

@@ -17,18 +17,18 @@ namespace HackathonE1.Api.Controllers
 		private readonly ILogger<ImageDetectionController> _logger;
 		private readonly IImageDetectionService _imageService;
 
-		public ImageDetectionController( ILogger<ImageDetectionController> logger, ImageDetectionService imageService )
+		public ImageDetectionController( ILogger<ImageDetectionController> logger, IImageDetectionService imageService )
 		{
 			_logger = logger;
 			_imageService = imageService;
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> CheckImage( List<IFormFile> files )
+		public async Task<IActionResult> CheckImage( IFormFile file )
 		{
 			using MemoryStream stream = new();
 
-			var file = files.FirstOrDefault();
+			//var file = files.FirstOrDefault();
 
 			file.CopyTo( stream );
 			stream.Position = 0;

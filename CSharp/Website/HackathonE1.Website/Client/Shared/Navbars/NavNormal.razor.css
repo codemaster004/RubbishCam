@@ -7,7 +7,7 @@
     padding-top: 10px;
     display: flex;
     justify-content: center;
-    align-content:center;
+    align-content: center;
     font-family: Bai Jamjuree;
 }
 
@@ -38,3 +38,15 @@
         color: #FFFFFF;
         font-weight: normal;
     }
+
+
+::deep a.active {
+    display: inline-block;
+    padding: .35em .65em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-bottom: #739C3E 2px dotted;
+}

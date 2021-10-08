@@ -7,5 +7,6 @@
 4. Dzięki oddzieleniu backendu i architekturze wykorzystującej mikroserwisy możliwe jest łatwe rozbudowanie aplikacji na mnóstwo różnych sposobów, jak np:
 - dodanie licznika zgłoszeń przez użytkownika i uczynienie z aplikacji swoistej gry
 - dodanie opcji powiadamiania np o siedzibach dzikich zwierząt lub o znalezionych porzuconych zwierzętach i automatycznego informowania odpowiednich służb
-
 Udoskonalenie wersji mobilnej aplikacji o możliwość wklejenia zdjęcia nielegalnego wysypiska i automatycznego określenia współrzędnych geograficznych tego miejsca. Partnerami naszego projektu mogą być nadleśnictwa, urzędy gminy, duże parki miejskie i fundacje ekologiczne
+
+5. 

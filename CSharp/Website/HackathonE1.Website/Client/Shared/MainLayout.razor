@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+
+@using HackathonE1.Website.Client.Shared.Navbars
+
 @*<div class="page">
         <div class="sidebar">
             <NavMenu />
@@ -15,10 +18,10 @@
         </div>
     </div>*@
 
-<div class="page">
-    <NavMenu />
+<div class="page container-fluid">
+    <NavNormal/>
 
-    <div class="content p-4">
+    <div class="row flex-grow-1 py-2">
         @Body
     </div>
 </div>

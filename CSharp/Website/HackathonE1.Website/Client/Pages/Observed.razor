@@ -6,38 +6,42 @@
 @inject NavigationManager navMan
 
 
-<h3>Observed</h3>
-
 <AuthorizeView>
     <NotAuthorized>
-        <NavigateToLogin ContinueWith="/observed"/>
+        <NavigateToLogin ContinueWith="/observed" />
     </NotAuthorized>
+
     <Authorized Context="authContext">
-        <div class="container-md">
-            <EditForm Model="model" OnValidSubmit="HandleSubmit">
-                <div class="row">
-                    <label>
-                        Latitude: <ValidationMessage For="@(() => model.Latitude)" />
-                        <InputNumber @bind-Value="model.Latitude" />
-                    </label>
-                </div>
-                <div class="row">
-                    <label>
-                        Longitude: <ValidationMessage For="@(() => model.Longitude)" />
-                        <InputNumber @bind-Value="model.Longitude" />
-                    </label>
-                </div>
-                <div class="row">
-                    <label>
-                        Radius: <ValidationMessage For="@(() => model.Radius)" />
-                        <InputNumber @bind-Value="model.Radius" />
-                    </label>
-                </div>
-                <div class="row">
-                    <button type="submit" class="submit">Success</button>
-                </div>
-            </EditForm>
-            @status
+        <div class="form-bg">
+            <div class="col-6">
+
+                <EditForm Model="model" class="container-md" OnValidSubmit="HandleSubmit">
+                    <div class="row mb-3">
+                        <label>
+                            Latitude: <ValidationMessage For="@(() => model.Latitude)" />
+                            <InputNumber @bind-Value="model.Latitude" />
+                        </label>
+                    </div>
+                    <div class="row mb-3">
+                        <label>
+                            Longitude: <ValidationMessage For="@(() => model.Longitude)" />
+                            <InputNumber @bind-Value="model.Longitude" />
+                        </label>
+                    </div>
+                    <div class="row mb-3">
+                        <label>
+                            Radius: <ValidationMessage For="@(() => model.Radius)" />
+                            <InputNumber @bind-Value="model.Radius" />
+                        </label>
+                    </div>
+                    <div class="row mb-3">
+                        <button type="submit" class="submit">Observe</button>
+                    </div>
+                </EditForm>
+
+                @status
+
+            </div>
         </div>
     </Authorized>
 </AuthorizeView>

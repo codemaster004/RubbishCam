@@ -1,0 +1,39 @@
+﻿.navbar-normal > *,
+.navbar-normal > div > * {
+    width: auto;
+}
+
+.navbar-normal {
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+    font-family: Bai Jamjuree;
+}
+
+    .navbar-normal .logo {
+        height: 66px;
+        display: inline-block;
+    }
+
+    .navbar-normal h3 {
+        display: inline-block;
+        padding-left: 10px;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 1.65rem;
+        line-height: 2rem;
+        text-align: center;
+    }
+
+    .navbar-normal ::deep a {
+        color: #000000;
+        text-decoration: none;
+    }
+
+    .navbar-normal ::deep .button-capsule {
+        padding: 4px 25px;
+        background: #739C3E;
+        border-radius: 22px;
+        color: #FFFFFF;
+        font-weight: normal;
+    }

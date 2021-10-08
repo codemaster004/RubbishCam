@@ -1,0 +1,16 @@
+﻿@page "/logout"
+
+@inject AuthenticationStateProvider auth
+@inject NavigationManager navMan
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.CompletedTask;
+        var jwtAuth = auth as JwtAuthenticationStateProvider;
+        jwtAuth.Token = null;
+
+        navMan.NavigateTo( "/" );
+    }
+}

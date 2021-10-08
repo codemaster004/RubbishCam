@@ -1,59 +1,75 @@
-﻿@inject AuthenticationStateProvider auth
-
-<nav class="navbar-single">
-    <a href="/">
-        <img src="images/Logo.png" class="logo" alt="Logo">
-        <h3>Garbage Cam</h3>
-    </a>
+﻿<nav class="row navbar-single">
+    <div>
+        <a href="/">
+            <img src="images/Logo.png" class="logo" alt="Logo">
+            <h3>Garbage Cam</h3>
+        </a>
+    </div>
 </nav>
 
-<nav class="navbar-landing">
-    <div class="row">
-        <div class="col-6">
+<nav class="row navbar-landing">
+    @*<div class="col-6">
             <div class="col-2">
                 <div class="row link-box">
                     <NavLink href="observed">observed areas</NavLink>
                 </div>
             </div>
-        </div>
-        <div class="col-6">
-            <div class="row link-box">
-                <div class="col-2">
-                    <NavLink href="purpose">Purpose</NavLink>
-                </div>
-                <div class="col-2">
-                    <NavLink href="tech">Tech</NavLink>
-                </div>
-                <div class="col-2">
-                    <NavLink href="team">Team</NavLink>
-                </div>
-                <div class="col-2">
-                    <NavLink href="garbage">Garbage</NavLink>
-                </div>
-                <div class="col-3">
-                    <AuthorizeView>
-                        <Authorized>
-                            <button @onclick="Logout" class="button-capsule">Log out</button>
-                        </Authorized>
-                        <NotAuthorized>
-                            <NavLink href="register" class="button-capsule">Sign-Up</NavLink>
-                        </NotAuthorized>
-                    </AuthorizeView>
-                </div>
-            </div>
-        </div>
+        </div>*@
+    <div>
+        <NavLink href="purpose">Purpose</NavLink>
+    </div>
+    <div>
+        <NavLink href="tech">Tech</NavLink>
+    </div>
+    <div>
+        <NavLink href="team">Team</NavLink>
+    </div>
+    <div>
+        <NavLink href="garbage">Garbage</NavLink>
+    </div>
+    <div>
+        <AuthorizeView>
+            <Authorized>
+                <NavLink href="logout" class="button-capsule">Log out</NavLink>
+            </Authorized>
+            <NotAuthorized>
+                <NavLink href="register" class="button-capsule">Sign-Up</NavLink>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</nav>
+
+<nav class="row navbar-normal">
+    <div>
+        <img src="images/Logo.png" alt="Logo" class="logo">
+        <h3>Garbage Cam</h3>
+    </div>
+    <div class="flex-spacer" />
+    <div>
+        <NavLink href="purpose">Purpose</NavLink>
+    </div>
+    <div>
+        <NavLink href="tech">Tech</NavLink>
+    </div>
+    <div>
+        <NavLink href="team">Team</NavLink>
+    </div>
+    <div>
+        <NavLink href="garbage">Garbage</NavLink>
+    </div>
+    <div>
+        <AuthorizeView>
+            <Authorized>
+                <NavLink href="logout" class="button-capsule">Log out</NavLink>
+            </Authorized>
+            <NotAuthorized>
+                <NavLink href="register" class="button-capsule">Sign-Up</NavLink>
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
 </nav>
 
 @code {
-
-    private async Task Logout()
-    {
-        await Task.CompletedTask;
-        var jwtAuth = auth as JwtAuthenticationStateProvider;
-        jwtAuth.Token = null;
-    }
-
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;

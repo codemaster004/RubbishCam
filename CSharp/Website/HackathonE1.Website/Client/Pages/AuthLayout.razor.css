@@ -1,12 +1,4 @@
-﻿.login-bg {
-    width: 80vw;
-    height: 80vh;
-    background-color: #D0D0D0;
-    border-radius: 10px;
-    padding: 60px 80px;
-}
-
-.auth-box {
+﻿.auth-box {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,7 +19,7 @@
         line-height: 5rem;
     }
 
-::deep button, ::deep .auth-button {
+::deep .auth-button {
     border-radius: 9px;
     margin-right: 20px;
     font-family: Bai Jamjuree;
@@ -61,25 +53,6 @@
     display: block;
     margin-top: 10px;
 }
-
-    ::deep .auth-form input {
-        display: block;
-        background-color: #D0D0D0;
-        border: none;
-        border-bottom: 2.5px solid #A6A289;
-        width: 350px;
-        outline: none;
-        line-height: 36px;
-        padding: 10px 5px;
-        padding-bottom: 0;
-    }
-
-    ::deep .auth-form button.submit {
-        background-color: #AEC55D;
-        color: #FFF;
-        border: none;
-        font-size: 1.5rem;
-    }
 
 ::deep .validation-message {
     display: inline;

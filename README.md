@@ -44,7 +44,7 @@ Our websites allows you to mark found rubbish and illegal garbage dumps, whitch 
 
 <center>
 
-![](https://img.shields.io/badge/Language-C_Sharm-informational?style=flat&logo=csharp&logoColor=white&color=)
+![](https://img.shields.io/badge/Language-C_Sharp-informational?style=flat&logo=csharp&logoColor=white&color=)
 ![](https://img.shields.io/badge/Language-Python-informational?style=flat&logo=python&logoColor=white&color=)
 ![](https://img.shields.io/badge/Language-JS-informational?style=flat&logo=JavaScript&logoColor=white&color=)
 

@@ -1,12 +1,13 @@
 .map-container {
    display: flex;
+   flex-wrap: wrap;
    justify-content: space-around;
 }
 
 .map-box {
    height: 700px;
    width: 60%;
-   margin-top: calc((100vh - 700px) / 2);
+   margin-top: calc((100vh - 700px - 100px) / 2);
    display: inline-block;
    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
    border-radius: 10px;
@@ -23,7 +24,7 @@
    width: 30%;
    background-color: #fcfcfc;
    display: inline-block;
-   margin-top: calc((100vh - 700px) / 2);
+   margin-top: calc((100vh - 700px - 100px) / 2);
    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.1);
    border-radius: 5px;
    padding: 10px 20px;
@@ -37,4 +38,16 @@
 
 .map-points-box ul li {
    padding: 10px 0;
+}
+
+@media screen and (max-width: 1000px) {
+   .map-box {
+      width: 90%;
+      margin-top: 20px;
+   }
+   
+   .map-points-box {
+      width: 90%;
+      margin-top: 20px;
+   }
 }

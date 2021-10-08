@@ -18,18 +18,10 @@ function initMap() {
             map: map
         });
 
+        document.getElementById("lon").value = location.lat();
+        document.getElementById("lat").value = location.lng();
+
         return location
-    }
-
-    function addMarker(position) {
-        const marker = new google.maps.Marker({
-            position,
-            map,
-            optimized: false,
-        });
-
-        document.getElementById("lon").value = position.coords.lng
-        document.getElementById("lat").value = position.coords.lat
     }
 
 }

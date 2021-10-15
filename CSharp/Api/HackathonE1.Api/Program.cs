@@ -25,7 +25,13 @@ namespace HackathonE1.Api
 
 					 _ = webBuilder.UseKestrel( options =>
 					 {
-						 options.Listen( IPAddress.Any, GetKestrelPort()/*, options => options.UseHttps()*/ );
+						 options.Listen( IPAddress.Any, GetKestrelPort(), options =>
+						 {
+							 if ( Environment.GetEnvironmentVariable( "ASPNETCORE_ENVIRONMENT" ) is "Development" )
+							 {
+								 _ = options.UseHttps();
+							 }
+						 } );
 					 } );
 
 					 _ = webBuilder.UseIIS();

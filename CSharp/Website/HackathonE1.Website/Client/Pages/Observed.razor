@@ -8,7 +8,7 @@
 
 <AuthorizeView>
     <NotAuthorized>
-        <NavigateToLogin ContinueWith="/observed" />
+        <RedirectToLogin ContinueWith="/observed" />
     </NotAuthorized>
 
     <Authorized Context="authContext">

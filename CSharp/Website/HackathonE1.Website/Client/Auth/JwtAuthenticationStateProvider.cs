@@ -70,7 +70,7 @@ namespace HackathonE1.Website.Client.Auth
 
 		public async Task Logout()
 		{
-			using HttpRequestMessage msg = new( HttpMethod.Post, new Uri( "auth/logout", UriKind.Relative ) );
+			using HttpRequestMessage msg = new( HttpMethod.Post, new Uri( "auth/token/logout", UriKind.Relative ) );
 			_ = msg.SetBrowserRequestCredentials( BrowserRequestCredentials.Include );
 			var resp = await HttpClient.SendAsync( msg );
 

@@ -25,6 +25,7 @@
         "JWT_SECRET": "12345678-1234-1234-1234-123456789012",
         "EMAIL_API_PATH": "https://rubbishcamemailer.herokuapp.com/",
         "JWT_ISSUER": "myself",
+        "CORS_ORIGINS": "https://localhost:44384",
         "EMAIL_API_PASSWORD": "HelloWorld123",
         "IMG_AI_API_PATH": "https://rubbishcamemailer.herokuapp.com/",
         "ASPNETCORE_ENVIRONMENT": "Development"

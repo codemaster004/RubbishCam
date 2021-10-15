@@ -26,6 +26,8 @@ namespace HackathonE1.Api
 {
 	public class Startup
 	{
+		const string defaultCorsPolicy = "corsPolicy";
+
 		public Startup( IConfiguration configuration )
 		{
 			Configuration = configuration;
@@ -36,7 +38,15 @@ namespace HackathonE1.Api
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices( IServiceCollection services )
 		{
-			_ = services.AddCors();
+			_ = services.AddCors( options =>
+			{
+				var origins = Environment.GetEnvironmentVariable( "CORS_ORIGINS" ).Split( ' ' );
+				options.AddPolicy( defaultCorsPolicy, builder =>
+					builder.WithOrigins( origins )
+						.AllowAnyMethod()
+						.AllowAnyHeader()
+						.AllowCredentials() );
+			} );
 
 			_ = services.AddControllers();
 			_ = services.AddSignalR();
@@ -82,9 +92,7 @@ namespace HackathonE1.Api
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure( IApplicationBuilder app, IWebHostEnvironment env )
 		{
-			_ = app.UseCors(
-				options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
-			);
+			_ = app.UseCors( defaultCorsPolicy );
 
 			_ = app.UseStaticFiles();
 

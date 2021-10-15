@@ -1,15 +1,14 @@
 ﻿@page "/logout"
 
-@inject AuthenticationStateProvider auth
 @inject NavigationManager navMan
+
+@inject ILoginManager logMan
 
 @code {
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.CompletedTask;
-        var jwtAuth = auth as JwtAuthenticationStateProvider;
-        jwtAuth.Token = null;
+        await logMan.Logout();
 
         navMan.NavigateTo( "/" );
     }

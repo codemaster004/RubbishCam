@@ -1,5 +1,6 @@
 ﻿using HackathonE1.Api.Services;
 using HackathonE1.Domain.Dtos;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace HackathonE1.Api.Controllers
 				return Unauthorized();
 			}
 
-			Response.Cookies.Append( "client_identifier", token, new()
+			Response.Cookies.Append( Constants.AuthCookieName, token, new()
 			{
 				Expires = DateTime.UtcNow.AddMinutes( 15 ),
 				Path = "/",
@@ -57,7 +58,7 @@ namespace HackathonE1.Api.Controllers
 		{
 			await Task.CompletedTask;
 
-			Response.Cookies.Delete( "clientIdentifier" );
+			Response.Cookies.Delete( Constants.AuthCookieName );
 
 			return NoContent();
 		}
@@ -80,10 +81,16 @@ namespace HackathonE1.Api.Controllers
 
 
 		[HttpGet( "check" )]
-		public async Task<IActionResult> CheckToken()
+		public async Task<ActionResult<string>> CheckToken()
 		{
 			await Task.CompletedTask;
-			return Ok();
+			var accessToken = await HttpContext.GetTokenAsync( "access_token" );
+			if ( string.IsNullOrEmpty(accessToken) )
+			{
+				return Unauthorized();
+			}
+
+			return accessToken;
 		}
 
 	}

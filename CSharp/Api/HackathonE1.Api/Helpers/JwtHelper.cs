@@ -85,6 +85,7 @@ namespace HackathonE1.Api.Helpers
 				ValidateAudience = false,
 
 				ClockSkew = TimeSpan.FromSeconds( 5 ),
+				SaveSigninToken = true,
 			};
 			options.Events = new();
 
@@ -98,7 +99,7 @@ namespace HackathonE1.Api.Helpers
 
 			var token = context.HttpContext.Request
 				.Cookies
-				.Where( x => x.Key == "clientIdentifier" )
+				.Where( x => x.Key == Constants.AuthCookieName )
 				.FirstOrDefault()
 				.Value;
 

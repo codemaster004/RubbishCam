@@ -129,18 +129,18 @@
         await CreateObserved();
     }
 
+    public HttpClient HttpClient => httpFactory.CreateClient( "api" );
+
     private List<GetObservedAreaDto> MyAreas;
 
     private async Task GetObserved()
     {
-        var http = httpFactory.CreateClient( "api" );
-        MyAreas = await http.GetFromJsonAsync<List<GetObservedAreaDto>>( "api/ObservedAreas/owned" );
+        MyAreas = await HttpClient.GetFromJsonAsync<List<GetObservedAreaDto>>( "api/ObservedAreas/owned", BrowserRequestCredentials.Include );
     }
 
     private async Task DeleteObserved( int id )
     {
-        var http = httpFactory.CreateClient( "api" );
-        var resp = await http.DeleteAsync( $"api/ObservedAreas/owned/{id}" );
+        var resp = await HttpClient.DeleteAsync( $"api/ObservedAreas/owned/{id}", BrowserRequestCredentials.Include );
 
         if ( resp.IsSuccessStatusCode )
         {
@@ -159,8 +159,7 @@
 
     private async Task CreateObserved()
     {
-        var http = httpFactory.CreateClient( "api" );
-        var resp = await http.PostAsJsonAsync( "api/ObservedAreas/owned", model );
+        var resp = await HttpClient.PostAsJsonAsync( "api/ObservedAreas/owned", model, BrowserRequestCredentials.Include );
         if ( resp.IsSuccessStatusCode )
         {
             var item = await resp.Content.ReadFromJsonAsync<GetObservedAreaDto>();

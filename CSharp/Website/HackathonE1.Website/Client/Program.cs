@@ -24,6 +24,7 @@ namespace HackathonE1.Website.Client
 
 			_ = builder.Services.AddAuthorizationCore();
 			_ = builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+			_ = builder.Services.AddScoped<ILoginManager>( provider => provider.GetService<AuthenticationStateProvider>() as JwtAuthenticationStateProvider );
 
 			try
 			{
@@ -42,7 +43,6 @@ namespace HackathonE1.Website.Client
 			_ = builder.Services.AddHttpClient( "api", http =>
 			{
 				http.BaseAddress = new( environmentVars["API_PATH"] );
-				http.DefaultRequestHeaders.Authorization = new( "Bearer", JwtAuthenticationStateProvider.TokenValue );
 			} );
 
 

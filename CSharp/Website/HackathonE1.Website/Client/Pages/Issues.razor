@@ -161,6 +161,8 @@
         await CreateIssue();
     }
 
+    public HttpClient HttpClient => httpFactory.CreateClient( "api" );
+
     private List<GetIssueDto> issues;
     private List<GetIssueTypeDto> types;
     private GetIssueTypeDto ReadType( int id )
@@ -170,20 +172,17 @@
 
     private async Task GetTypes()
     {
-        var http = httpFactory.CreateClient( "api" );
-        types = await http.GetFromJsonAsync<List<GetIssueTypeDto>>( "api/issuetypes" );
+        types = await HttpClient.GetFromJsonAsync<List<GetIssueTypeDto>>( "api/issuetypes", BrowserRequestCredentials.Include );
     }
 
     private async Task GetIssue()
     {
-        var http = httpFactory.CreateClient( "api" );
-        issues = await http.GetFromJsonAsync<List<GetIssueDto>>( "api/issues/owned" );
+        issues = await HttpClient.GetFromJsonAsync<List<GetIssueDto>>( "api/issues/owned", BrowserRequestCredentials.Include );
     }
 
     private async Task DeleteIssue( int id )
     {
-        var http = httpFactory.CreateClient( "api" );
-        var resp = await http.DeleteAsync( $"api/issues/{id}" );
+        var resp = await HttpClient.DeleteAsync( $"api/issues/{id}", BrowserRequestCredentials.Include );
 
         if ( resp.IsSuccessStatusCode )
         {
@@ -202,8 +201,7 @@
 
     private async Task CreateIssue()
     {
-        var http = httpFactory.CreateClient( "api" );
-        var resp = await http.PostAsJsonAsync( "api/issues", model );
+        var resp = await HttpClient.PostAsJsonAsync( "api/issues", model, BrowserRequestCredentials.Include );
         if ( resp.IsSuccessStatusCode )
         {
             var item = await resp.Content.ReadFromJsonAsync<GetIssueDto>();

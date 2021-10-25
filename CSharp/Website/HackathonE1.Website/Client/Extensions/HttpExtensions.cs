@@ -24,7 +24,7 @@ namespace HackathonE1.Website.Client.Extensions
 
 		public static Task<HttpResponseMessage> DeleteAsync( this HttpClient http, string requestUri, BrowserRequestCredentials credentials )
 		{
-			return http.GetAsync( ToUri( requestUri ), credentials );
+			return http.DeleteAsync( ToUri( requestUri ), credentials );
 		}
 		public static async Task<HttpResponseMessage> DeleteAsync( this HttpClient http, Uri requestUri, BrowserRequestCredentials credentials )
 		{

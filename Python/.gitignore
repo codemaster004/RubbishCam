@@ -1,8 +1,0 @@
-
-venv/
-
-.idea
-
-ObjectDetection/dataset/batch*
-
-*.jpg

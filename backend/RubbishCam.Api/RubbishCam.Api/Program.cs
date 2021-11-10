@@ -1,3 +1,6 @@
+using Microsoft.Extensions.DependencyInjection;
+using RubbishCam.Data;
+
 var builder = WebApplication.CreateBuilder( args );
 
 // Add services to the container.
@@ -7,19 +10,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddNpgsql<AppDbContext>(
+	builder.Configuration.GetConnectionString( "postgresConnection" ),
+	pgob => pgob.MigrationsAssembly( "RubbishCam.Migrations.Pg" ),
+	ob => ob.UseLoggerFactory( LoggerFactory.Create( factoryBuilder => factoryBuilder.AddConsole() ) )
+	);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if ( app.Environment.IsDevelopment() )
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+	_ = app.UseSwagger();
+	_ = app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+_ = app.UseHttpsRedirection();
 
-app.UseAuthorization();
+_ = app.UseAuthorization();
 
-app.MapControllers();
+_ = app.MapControllers();
 
 app.Run();

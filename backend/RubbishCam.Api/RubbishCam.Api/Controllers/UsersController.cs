@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RubbishCam.Api.Services;
+using RubbishCam.Domain.Dtos.User;
 using RubbishCam.Domain.Models;
 
 namespace RubbishCam.Api.Controllers;
@@ -20,16 +21,16 @@ public class UsersController : ExtendedControllerBase
 
 	// GET: api/<UsersController>
 	[HttpGet]
-	public async Task<ActionResult<UserModel[]>> GetAll()
+	public async Task<ActionResult<GetUserDto[]>> GetAll()
 	{
 		return await _usersService.GetUsersAsync();
 	}
 
 	// GET api/<UsersController>/5
 	[HttpGet( "{uuid}" )]
-	public async Task<ActionResult<UserModel>> Get( string uuid )
+	public async Task<ActionResult<GetUserDetailsDto>> Get( string uuid )
 	{
-		UserModel? user = await _usersService.GetUserAsync( uuid );
+		GetUserDetailsDto? user = await _usersService.GetUserAsync( uuid );
 
 		if ( user is null )
 		{
@@ -41,11 +42,12 @@ public class UsersController : ExtendedControllerBase
 
 	// POST api/<UsersController>
 	[HttpPost]
-	public async Task<ActionResult<UserModel>> Create( [FromBody] UserModel user )
+	public async Task<ActionResult<GetUserDto>> Create( [FromBody] CreateUserDto dto )
 	{
+		GetUserDto user;
 		try
 		{
-			user = await _usersService.CreateUserAsync( user );
+			user = await _usersService.CreateUserAsync( dto );
 		}
 		catch ( Exception )
 		{

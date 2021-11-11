@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using RubbishCam.Data;
+using RubbishCam.Domain.Dtos.User;
 using RubbishCam.Domain.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace RubbishCam.Api.Services;
 
 public interface IUsersService
 {
-	Task<UserModel[]> GetUsersAsync();
-	Task<UserModel?> GetUserAsync( string uuid );
-	Task<UserModel> CreateUserAsync( UserModel user );
+	Task<GetUserDto[]> GetUsersAsync();
+	Task<GetUserDetailsDto?> GetUserAsync( string uuid );
+	Task<GetUserDto> CreateUserAsync( CreateUserDto user );
 	Task DeleteUserAsync( string uuid );
 }
 
@@ -23,12 +26,14 @@ public class UsersService : IUsersService
 		_logger = logger ?? throw new ArgumentNullException( nameof( logger ) );
 	}
 
-	public Task<UserModel[]> GetUsersAsync()
+	public Task<GetUserDto[]> GetUsersAsync()
 	{
-		return _dbContext.Users.ToArrayAsync();
+		return _dbContext.Users
+			.Select( GetUserDto.FromUserExp )
+			.ToArrayAsync();
 	}
 
-	public Task<UserModel?> GetUserAsync( string uuid )
+	public Task<GetUserDetailsDto?> GetUserAsync( string uuid )
 	{
 		if ( uuid is null )
 		{
@@ -37,15 +42,18 @@ public class UsersService : IUsersService
 
 		return _dbContext.Users
 			.Where( u => u.Uuid == uuid )
+			.Select( GetUserDetailsDto.FromUserExp )
 			.FirstOrDefaultAsync();
 	}
 
-	public async Task<UserModel> CreateUserAsync( UserModel user )
+	public async Task<GetUserDto> CreateUserAsync( CreateUserDto dto )
 	{
-		if ( user is null )
+		if ( dto is null )
 		{
-			throw new ArgumentNullException( nameof( user ) );
+			throw new ArgumentNullException( nameof( dto ) );
 		}
+
+		var user = await dto.ToUserAsync( HashPassword, GenerateUuid );
 
 		user.Uuid = await GenerateUuid();
 
@@ -61,7 +69,7 @@ public class UsersService : IUsersService
 			throw;
 		}
 
-		return user;
+		return GetUserDto.FromUser( user );
 	}
 
 	public async Task DeleteUserAsync( string uuid )
@@ -71,7 +79,10 @@ public class UsersService : IUsersService
 			throw new ArgumentNullException( nameof( uuid ) );
 		}
 
-		var user = await GetUserAsync( uuid );
+		var user = await _dbContext.Users
+			.Where( u => u.Uuid == uuid )
+			.FirstOrDefaultAsync();
+
 		if ( user is null )
 		{
 			throw new NotFoundException();
@@ -104,5 +115,15 @@ public class UsersService : IUsersService
 		return encoded;
 	}
 
+
+	static readonly SHA512 sha = SHA512.Create();
+	private static async Task<string> HashPassword( string password )
+	{
+		await Task.CompletedTask;
+		// todo: change to proper algorythm
+
+		var passwordHash = sha.ComputeHash( Encoding.UTF8.GetBytes( password ) );
+		return Convert.ToBase64String( passwordHash );
+	}
 
 }

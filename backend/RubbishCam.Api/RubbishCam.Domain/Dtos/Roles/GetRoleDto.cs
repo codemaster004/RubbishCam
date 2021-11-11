@@ -19,16 +19,16 @@ public record GetRoleDto
 	[StringLength( 24 )]
 	public string Name { get; set; }
 
-	public static Expression<Func<RoleModel, GetRoleDto>> FromUserExp { get; set; } = role => new GetRoleDto()
+	public static Expression<Func<RoleModel, GetRoleDto>> FromRoleExp { get; set; } = role => new GetRoleDto()
 	{
 		Id = role.Id,
 		Name = role.Name,
 	};
 
-	private static readonly Func<RoleModel, GetRoleDto> fromUserFunc = FromUserExp.Compile();
+	private static readonly Func<RoleModel, GetRoleDto> fromRoleFunc = FromRoleExp.Compile();
 	public static GetRoleDto FromUser( RoleModel role )
 	{
-		return fromUserFunc( role );
+		return fromRoleFunc( role );
 	}
 
 }

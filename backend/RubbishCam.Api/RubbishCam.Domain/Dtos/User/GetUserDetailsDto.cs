@@ -41,7 +41,7 @@ public record GetUserDetailsDto
 		FirstName = user.FirstName,
 		LastName = user.LastName,
 		UserName = user.UserName,
-		Roles = user.Roles.AsQueryable().Select( GetRoleDto.FromUserExp ).ToList()
+		Roles = user.Roles.AsQueryable().Select( GetRoleDto.FromRoleExp ).ToList()
 	};
 
 	private static readonly Func<UserModel, GetUserDetailsDto> fromUserFunc = FromUserExp.Compile();

@@ -11,7 +11,7 @@ namespace RubbishCam.Domain.Dtos.Roles;
 
 #nullable disable warnings
 
-public class GetRoleDto
+public record GetRoleDto
 {
 	public int Id { get; set; }
 

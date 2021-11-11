@@ -7,10 +7,19 @@ using System.Threading.Tasks;
 
 namespace RubbishCam.Domain.Models;
 
-#nullable disable warnings
-
 public class RoleModel
 {
+	public RoleModel( string name, List<UserModel> users )
+	{
+		Name = name;
+		Users = users;
+	}
+
+	public RoleModel( string name )
+		: this( name, new() )
+	{
+	}
+
 	[Key]
 	public int Id { get; set; }
 
@@ -19,5 +28,5 @@ public class RoleModel
 	public string Name { get; set; }
 
 
-	public List<UserModel>? Users { get; set; }
+	public List<UserModel> Users { get; set; }
 }

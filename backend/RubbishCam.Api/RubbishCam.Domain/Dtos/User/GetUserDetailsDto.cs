@@ -12,7 +12,7 @@ namespace RubbishCam.Domain.Dtos.User;
 
 #nullable disable warnings
 
-public class GetUserDetailsDto
+public record GetUserDetailsDto
 {
 	[Required]
 	[StringLength( 24 )]

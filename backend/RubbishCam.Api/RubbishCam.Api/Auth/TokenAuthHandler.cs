@@ -31,8 +31,8 @@ public class TokenAuthHandler<T> : AuthenticationHandler<TokenOptions> where T :
 		}
 
 		TokenModel? foundToken = _provider.Tokens
-			.Include( t => t.User )
-			.ThenInclude( u => u.Roles )
+			.Include( t => t.User! )
+			.ThenInclude( u => u.Roles! )
 			.Where( t => t.Token == sentTokenValue )
 			.FirstOrDefault();
 
@@ -41,7 +41,12 @@ public class TokenAuthHandler<T> : AuthenticationHandler<TokenOptions> where T :
 			return AuthenticateResult.NoResult();
 		}
 
-		Claim[] claims = GetClaims( foundToken ).ToArray();
+		if ( foundToken.User is null )
+		{
+			throw new NullReferenceException();
+		}
+
+		Claim[] claims = GetClaims( foundToken.User ).ToArray();
 
 		ClaimsIdentity identity = new( claims, "Bearer" );
 
@@ -77,13 +82,13 @@ public class TokenAuthHandler<T> : AuthenticationHandler<TokenOptions> where T :
 		return token;
 	}
 
-	private static IEnumerable<Claim> GetClaims( TokenModel token )
+	private static IEnumerable<Claim> GetClaims( UserModel user )
 	{
-		yield return new( ClaimTypes.Name, token.UserUuid );
-		yield return new( ClaimTypes.GivenName, token.User.FirstName );
-		yield return new( ClaimTypes.Surname, token.User.LastName );
+		yield return new( ClaimTypes.Name, user.Uuid );
+		yield return new( ClaimTypes.GivenName, user.FirstName );
+		yield return new( ClaimTypes.Surname, user.LastName );
 
-		foreach ( var role in token.User.Roles! )
+		foreach ( var role in user.Roles )
 		{
 			yield return new( ClaimTypes.Role, role.Name );
 		}

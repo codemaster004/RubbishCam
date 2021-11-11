@@ -10,7 +10,7 @@ namespace RubbishCam.Domain.Dtos.User;
 
 #nullable disable warnings
 
-public class CreateUserDto
+public record CreateUserDto
 {
 	[Required]
 	[StringLength( 50 )]
@@ -34,15 +34,13 @@ public class CreateUserDto
 		string passwordHash = await hashFunction( Password );
 		string uuid = await generateUuid();
 
-		return new UserModel()
-		{
-			Uuid = uuid,
-			FirstName = FirstName,
-			LastName = LastName,
-			PasswordHash = passwordHash,
-			UserName = UserName,
-			Roles = new List<RoleModel>(),
-			Tokens = new List<TokenModel>()
-		};
+		return new UserModel(
+			uuid: uuid,
+			firstName: FirstName,
+			lastName: LastName,
+			passwordHash: passwordHash,
+			userName: UserName,
+			tokens: new(),
+			roles: new() );
 	}
 }

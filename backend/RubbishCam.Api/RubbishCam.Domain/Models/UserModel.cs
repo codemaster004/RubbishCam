@@ -9,12 +9,25 @@ using System.Threading.Tasks;
 namespace RubbishCam.Domain.Models;
 
 
-#nullable disable warnings
-
 [Index( nameof( Uuid ), IsUnique = true )]
 [Index( nameof( UserName ), IsUnique = true )]
 public class UserModel
 {
+	public UserModel( string uuid, string firstName, string lastName, string passwordHash, string userName, List<TokenModel> tokens, List<RoleModel> roles )
+	{
+		Uuid = uuid;
+		FirstName = firstName;
+		LastName = lastName;
+		PasswordHash = passwordHash;
+		UserName = userName;
+		Tokens = tokens;
+		Roles = roles;
+	}
+	public UserModel( string uuid, string firstName, string lastName, string passwordHash, string userName )
+		: this( uuid, firstName, lastName, passwordHash, userName, new(), new() )
+	{
+	}
+
 	[Key]
 	public int Id { get; set; }
 	[Required]

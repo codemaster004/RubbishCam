@@ -53,7 +53,7 @@ public class UsersService : IUsersService
 			throw new ArgumentNullException( nameof( dto ) );
 		}
 
-		var user = await dto.ToUserAsync( HashPassword, GenerateUuid );
+		var user = await dto.ToUserAsync( AuthService.HashPasswordAsync, GenerateUuid );
 
 		user.Uuid = await GenerateUuid();
 
@@ -110,20 +110,9 @@ public class UsersService : IUsersService
 			var guid = Guid.NewGuid();
 			encoded = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
 
-		} while ( ( await GetUserAsync( encoded ) ) is not null );
+		} while ( await _dbContext.Users.AnyAsync( u => u.Uuid == encoded ) );
 
 		return encoded;
-	}
-
-
-	static readonly SHA512 sha = SHA512.Create();
-	private static async Task<string> HashPassword( string password )
-	{
-		await Task.CompletedTask;
-		// todo: change to proper algorythm
-
-		var passwordHash = sha.ComputeHash( Encoding.UTF8.GetBytes( password ) );
-		return Convert.ToBase64String( passwordHash );
 	}
 
 }

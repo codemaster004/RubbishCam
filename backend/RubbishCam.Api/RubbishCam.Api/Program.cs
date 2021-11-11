@@ -53,6 +53,7 @@ builder.Services.AddNpgsql<AppDbContext>(
 
 _ = builder.Services.AddScoped<IAuthDataProvider>( provider => provider.GetService<AppDbContext>() ?? throw new NullReferenceException() );
 _ = builder.Services.AddScoped<IUsersService, UsersService>();
+_ = builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 

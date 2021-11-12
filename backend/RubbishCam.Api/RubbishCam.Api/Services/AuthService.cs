@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using RubbishCam.Api.Exceptions.Auth;
 using RubbishCam.Data;
 using RubbishCam.Domain.Dtos.Token;
 using RubbishCam.Domain.Models;
@@ -10,8 +11,9 @@ namespace RubbishCam.Api.Services;
 
 public interface IAuthService
 {
-	Task<GetTokenDto> LogIn( string username, string password );
+	Task<GetTokenDto> Login( string username, string password );
 	Task<TokenModel?> GetTokenAsync( string token );
+	Task RevokeTokenAsync( string token );
 }
 
 public class AuthService : IAuthService
@@ -23,7 +25,7 @@ public class AuthService : IAuthService
 		_dbContext = dbContext;
 	}
 
-	public async Task<GetTokenDto> LogIn( string username, string password )
+	public async Task<GetTokenDto> Login( string username, string password )
 	{
 		var user = _dbContext.Users
 			.Where( u => u.UserName == username )
@@ -49,15 +51,23 @@ public class AuthService : IAuthService
 	const int tokenValidityMinutes = 10;
 	private async Task<TokenModel> GenerateTokenAsync( UserModel user )
 	{
-		string encoded;
+		string access;
 		do
 		{
 			var guid = Guid.NewGuid();
-			encoded = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
+			access = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
 
-		} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == encoded ) );
+		} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access ) );
 
-		TokenModel token = new( encoded, user.Uuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
+		string refresh;
+		do
+		{
+			var guid = Guid.NewGuid();
+			refresh = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
+
+		} while ( await _dbContext.Tokens.AnyAsync( t => t.RefreshToken == refresh ) );
+
+		TokenModel token = new( access, refresh, user.Uuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
 
 		_ = await _dbContext.Tokens.AddAsync( token );
 
@@ -65,6 +75,25 @@ public class AuthService : IAuthService
 
 		return token;
 	}
+
+
+	public async Task RevokeTokenAsync( string token )
+	{
+		var found = await _dbContext.Tokens
+			.Where( t => t.Token == token )
+			.FirstOrDefaultAsync();
+
+		if ( found is null )
+		{
+			throw new TokenInvalidException();
+		}
+
+		found.Revoked = true;
+
+		_ = await _dbContext.SaveChangesAsync();
+	}
+
+
 
 
 	static readonly SHA512 sha = SHA512.Create();

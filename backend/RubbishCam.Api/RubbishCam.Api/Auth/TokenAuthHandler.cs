@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using RubbishCam.Api.Exceptions.Auth;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Models;
 using System.Security.Claims;
@@ -61,13 +62,29 @@ public class TokenAuthHandler : AuthenticationHandler<TokenOptions>
 			return AuthenticateResult.Fail( new TokenExpiredException() );
 		}
 
+		if ( foundToken.Revoked )
+		{
+			return AuthenticateResult.Fail( new TokenRevokedException() );
+		}
+
 		Claim[] claims = GetClaims( foundToken.User ).ToArray();
 		ClaimsIdentity identity = new( claims, Scheme.Name );
 		ClaimsPrincipal principal = new( identity );
 		AuthenticationTicket ticket = new( principal, Scheme.Name );
 
-		return AuthenticateResult.Success( ticket );
+		var tokenValidatedContext = new TokenValidatedContext( Context, Scheme, Options )
+		{
+			Principal = principal
+		};
 
+		tokenValidatedContext.Properties.StoreTokens( new[]
+		{
+			new AuthenticationToken { Name = "access_token", Value = sentTokenValue }
+		} );
+
+		tokenValidatedContext.Success();
+
+		return tokenValidatedContext.Result;
 	}
 
 	private string? ReadAuthHeader()
@@ -169,28 +186,10 @@ public class TokenAuthHandler : AuthenticationHandler<TokenOptions>
 				"The token is invalid",
 			TokenExpiredException =>
 				"The token is expired",
+			TokenRevokedException =>
+				"The token is revoked",
 			_ => null
 		};
-	}
-
-
-
-	[Serializable]
-	public class TokenInvalidException : Exception
-	{
-		public TokenInvalidException() { }
-		protected TokenInvalidException(
-		  System.Runtime.Serialization.SerializationInfo info,
-		  System.Runtime.Serialization.StreamingContext context ) : base( info, context ) { }
-	}
-
-	[Serializable]
-	public class TokenExpiredException : Exception
-	{
-		public TokenExpiredException() { }
-		protected TokenExpiredException(
-		  System.Runtime.Serialization.SerializationInfo info,
-		  System.Runtime.Serialization.StreamingContext context ) : base( info, context ) { }
 	}
 
 }

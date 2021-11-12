@@ -9,9 +9,10 @@ namespace RubbishCam.Domain.Models;
 
 public class TokenModel
 {
-	public TokenModel( string token, string userUuid, DateTimeOffset validUntil )
+	public TokenModel( string token, string refreshToken, string userUuid, DateTimeOffset validUntil )
 	{
 		Token = token;
+		RefreshToken = refreshToken;
 		UserUuid = userUuid;
 		ValidUntil = validUntil;
 	}
@@ -20,9 +21,12 @@ public class TokenModel
 	public int Id { get; set; }
 
 	public string Token { get; set; }
+	public string RefreshToken { get; set; }
 
 	public string UserUuid { get; set; }
 	public DateTimeOffset ValidUntil { get; set; }
+	
+	public bool Revoked { get; set; }
 
 	public UserModel? User { get; set; }
 }

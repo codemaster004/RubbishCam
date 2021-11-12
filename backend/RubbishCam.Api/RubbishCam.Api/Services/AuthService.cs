@@ -13,6 +13,7 @@ public interface IAuthService
 {
 	Task<GetTokenDto> Login( string username, string password );
 	Task<TokenModel?> GetTokenAsync( string token );
+	Task<GetTokenDto> RefreshTokenAsync( string token );
 	Task RevokeTokenAsync( string token );
 }
 
@@ -48,24 +49,11 @@ public class AuthService : IAuthService
 		return GetTokenDto.FromToken( token );
 	}
 
-	const int tokenValidityMinutes = 10;
+	private const int tokenValidityMinutes = 10;
 	private async Task<TokenModel> GenerateTokenAsync( UserModel user )
 	{
-		string access;
-		do
-		{
-			var guid = Guid.NewGuid();
-			access = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
-
-		} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access ) );
-
-		string refresh;
-		do
-		{
-			var guid = Guid.NewGuid();
-			refresh = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
-
-		} while ( await _dbContext.Tokens.AnyAsync( t => t.RefreshToken == refresh ) );
+		string access = await GenerateAccessToken();
+		string refresh = await GenerateRefreshToken();
 
 		TokenModel token = new( access, refresh, user.Uuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
 
@@ -75,7 +63,28 @@ public class AuthService : IAuthService
 
 		return token;
 	}
+	private async Task<string> GenerateAccessToken()
+	{
+		string access;
+		do
+		{
+			var guid = Guid.NewGuid();
+			access = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
 
+		} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access ) );
+		return access;
+	}
+	private async Task<string> GenerateRefreshToken()
+	{
+		string refresh;
+		do
+		{
+			var guid = Guid.NewGuid();
+			refresh = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
+
+		} while ( await _dbContext.Tokens.AnyAsync( t => t.RefreshToken == refresh ) );
+		return refresh;
+	}
 
 	public async Task RevokeTokenAsync( string token )
 	{
@@ -93,10 +102,32 @@ public class AuthService : IAuthService
 		_ = await _dbContext.SaveChangesAsync();
 	}
 
+	public async Task<GetTokenDto> RefreshTokenAsync( string token )
+	{
+		var found = await _dbContext.Tokens
+			.Where( t => t.Token == token )
+			.FirstOrDefaultAsync();
+
+		if ( found is null )
+		{
+			throw new TokenInvalidException();
+		}
+
+		string access = await GenerateAccessToken();
+		string refresh = await GenerateRefreshToken();
+
+		TokenModel @new = new( access, refresh, found.UserUuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
+
+		_ = await _dbContext.Tokens.AddAsync( @new );
+		found.Revoked = true;
+
+		_ = await _dbContext.SaveChangesAsync();
+
+		return GetTokenDto.FromToken( @new );
+	}
 
 
-
-	static readonly SHA512 sha = SHA512.Create();
+	private static readonly SHA512 sha = SHA512.Create();
 	public static async Task<string> HashPasswordAsync( string password )
 	{
 		await Task.CompletedTask;

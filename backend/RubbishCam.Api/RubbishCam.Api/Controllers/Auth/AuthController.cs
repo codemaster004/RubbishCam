@@ -64,6 +64,30 @@ public class AuthController : ExtendedControllerBase
 		return NoContent();
 	}
 
+	[HttpPost( "refresh" )]
+	public async Task<ActionResult<GetTokenDto>> Refresh()
+	{
+		GetTokenDto? @new;
+		string? token = await HttpContext.GetTokenAsync( "access_token" );
+
+		if ( token is null )
+		{
+			return InternalServerError( "Error occured" );
+			throw new Exception();
+		}
+
+		try
+		{
+			@new = await _authService.RefreshTokenAsync( token );
+		}
+		catch ( TokenInvalidException )
+		{
+			return Unauthorized( "The token is invalid" );
+		}
+
+		return @new;
+	}
+
 #nullable disable warnings
 	public class LoginModel
 	{

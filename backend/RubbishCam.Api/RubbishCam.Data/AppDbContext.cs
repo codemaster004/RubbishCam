@@ -2,7 +2,7 @@
 using RubbishCam.Domain.Models;
 
 namespace RubbishCam.Data;
-public class AppDbContext : DbContext, IAuthDataProvider
+public class AppDbContext : DbContext
 {
 	public AppDbContext( DbContextOptions options ) 
 		: base( options )

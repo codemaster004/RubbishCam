@@ -43,7 +43,7 @@ builder.Services.AddAuthentication( options =>
 	 	options.DefaultAuthenticateScheme = "Bearer";
 	 	options.DefaultChallengeScheme = "Bearer";
 	 } )
-	.AddScheme<TokenOptions, TokenAuthHandler<AppDbContext>>( "Bearer", options => { } );
+	.AddScheme<TokenOptions, TokenAuthHandler>( "Bearer", options => { } );
 
 builder.Services.AddNpgsql<AppDbContext>(
 	 builder.Configuration.GetConnectionString( "postgresConnection" ),
@@ -51,7 +51,6 @@ builder.Services.AddNpgsql<AppDbContext>(
 	 ob => ob.UseLoggerFactory( LoggerFactory.Create( factoryBuilder => factoryBuilder.AddConsole() ) )
 	);
 
-_ = builder.Services.AddScoped<IAuthDataProvider>( provider => provider.GetService<AppDbContext>() ?? throw new NullReferenceException() );
 _ = builder.Services.AddScoped<IUsersService, UsersService>();
 _ = builder.Services.AddScoped<IAuthService, AuthService>();
 

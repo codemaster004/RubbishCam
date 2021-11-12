@@ -11,6 +11,7 @@ namespace RubbishCam.Api.Services;
 public interface IAuthService
 {
 	Task<GetTokenDto> LogIn( string username, string password );
+	Task<TokenModel?> GetTokenAsync( string token );
 }
 
 public class AuthService : IAuthService
@@ -40,13 +41,13 @@ public class AuthService : IAuthService
 			throw new NotAuthorizedException();
 		}
 
-		var token = await GenerateToken( user );
+		var token = await GenerateTokenAsync( user );
 
 		return GetTokenDto.FromToken( token );
 	}
 
 	const int tokenValidityMinutes = 10;
-	private async Task<TokenModel> GenerateToken( UserModel user )
+	private async Task<TokenModel> GenerateTokenAsync( UserModel user )
 	{
 		string encoded;
 		do
@@ -75,6 +76,17 @@ public class AuthService : IAuthService
 		var passwordHash = sha.ComputeHash( Encoding.UTF8.GetBytes( password ) );
 		return Convert.ToBase64String( passwordHash );
 	}
+
+
+	public Task<TokenModel?> GetTokenAsync( string token )
+	{
+		return _dbContext.Tokens
+			.Include( t => t.User! )
+			.ThenInclude( u => u.Roles! )
+			.Where( t => t.Token == token )
+			.FirstOrDefaultAsync();
+	}
+
 
 
 	[Serializable]

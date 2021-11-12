@@ -2,10 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
-using RubbishCam.Data;
+using RubbishCam.Api.Services;
 using RubbishCam.Domain.Models;
 using System.Security.Claims;
 using System.Text;
@@ -13,13 +12,13 @@ using System.Text.Encodings.Web;
 
 namespace RubbishCam.Api.Auth;
 
-public class TokenAuthHandler<T> : AuthenticationHandler<TokenOptions> where T : class, IAuthDataProvider
+public class TokenAuthHandler : AuthenticationHandler<TokenOptions>
 {
-	private readonly IAuthDataProvider _provider;
+	private readonly IAuthService _authService;
 	private readonly ProblemDetailsFactory _detailsFactory;
 	private readonly IActionResultExecutor<ObjectResult> _executor;
 
-	public TokenAuthHandler( IAuthDataProvider provider,
+	public TokenAuthHandler( IAuthService authService,
 						 IActionResultExecutor<ObjectResult> executor,
 						 ProblemDetailsFactory detailsFactory,
 						 IOptionsMonitor<TokenOptions> options,
@@ -28,7 +27,7 @@ public class TokenAuthHandler<T> : AuthenticationHandler<TokenOptions> where T :
 						 ISystemClock clock )
 		: base( options, logger, encoder, clock )
 	{
-		_provider = provider ?? throw new ArgumentNullException( nameof( provider ) );
+		_authService = authService ?? throw new ArgumentNullException( nameof( authService ) );
 		_detailsFactory = detailsFactory ?? throw new ArgumentNullException( nameof( detailsFactory ) );
 		_executor = executor ?? throw new ArgumentNullException( nameof( executor ) );
 	}
@@ -45,11 +44,7 @@ public class TokenAuthHandler<T> : AuthenticationHandler<TokenOptions> where T :
 			return AuthenticateResult.NoResult();
 		}
 
-		TokenModel? foundToken = _provider.Tokens
-			.Include( t => t.User! )
-			.ThenInclude( u => u.Roles! )
-			.Where( t => t.Token == sentTokenValue )
-			.FirstOrDefault();
+		TokenModel? foundToken = await _authService.GetTokenAsync( sentTokenValue );
 
 		if ( foundToken is null )
 		{

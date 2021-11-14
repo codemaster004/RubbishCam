@@ -12,7 +12,7 @@ using RubbishCam.Data;
 namespace RubbishCam.Migrations.Pg.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211114111440_AddedFriends")]
+    [Migration("20211114134415_AddedFriends")]
     partial class AddedFriends
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,7 +67,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
 
                     b.HasIndex("TargetUuid");
 
-                    b.ToTable("FriendshipModel");
+                    b.ToTable("Friendships");
                 });
 
             modelBuilder.Entity("RubbishCam.Domain.Models.RoleModel", b =>

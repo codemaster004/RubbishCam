@@ -98,6 +98,10 @@ public class UserModel
 	public ReadOnlyCollection<FriendshipModel> Friendships => Enumerable.Concat( InitiatedFriendships, TargetingFriendships ).ToList().AsReadOnly();
 
 	[NotMapped]
-	public ReadOnlyCollection<UserModel> Friends => Enumerable.Concat( InitiatedFriends, TargetingFriends ).ToList().AsReadOnly();
+	public ReadOnlyCollection<UserModel> Friends => Enumerable.Concat( 
+		InitiatedFriendships.Where( x => x.Accepted )
+		.Select( x => x.Target! ), 
+		TargetingFriendships.Where( x => x.Accepted )
+		.Select( x => x.Target! ) ).ToList().AsReadOnly();
 
 }

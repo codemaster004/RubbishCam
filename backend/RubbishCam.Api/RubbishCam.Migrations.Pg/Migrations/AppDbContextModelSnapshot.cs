@@ -65,7 +65,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
 
                     b.HasIndex("TargetUuid");
 
-                    b.ToTable("FriendshipModel");
+                    b.ToTable("Friendships");
                 });
 
             modelBuilder.Entity("RubbishCam.Domain.Models.RoleModel", b =>

@@ -10,7 +10,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 			_ = migrationBuilder.CreateTable(
-				name: "FriendshipModel",
+				name: "Friendships",
 				columns: table => new
 				{
 					Id = table.Column<int>( type: "integer", nullable: false )
@@ -22,15 +22,15 @@ namespace RubbishCam.Migrations.Pg.Migrations
 				},
 				constraints: table =>
 				{
-					_ = table.PrimaryKey( "PK_FriendshipModel", x => x.Id );
+					_ = table.PrimaryKey( "PK_Friendships", x => x.Id );
 					_ = table.ForeignKey(
-						name: "FK_FriendshipModel_Users_InitiatorUuid",
+						name: "FK_Friendships_Users_InitiatorUuid",
 						column: x => x.InitiatorUuid,
 						principalTable: "Users",
 						principalColumn: "Uuid",
 						onDelete: ReferentialAction.Cascade );
 					_ = table.ForeignKey(
-						name: "FK_FriendshipModel_Users_TargetUuid",
+						name: "FK_Friendships_Users_TargetUuid",
 						column: x => x.TargetUuid,
 						principalTable: "Users",
 						principalColumn: "Uuid",
@@ -38,20 +38,20 @@ namespace RubbishCam.Migrations.Pg.Migrations
 				} );
 
 			_ = migrationBuilder.CreateIndex(
-				name: "IX_FriendshipModel_InitiatorUuid",
-				table: "FriendshipModel",
+				name: "IX_Friendships_InitiatorUuid",
+				table: "Friendships",
 				column: "InitiatorUuid" );
 
 			_ = migrationBuilder.CreateIndex(
-				name: "IX_FriendshipModel_TargetUuid",
-				table: "FriendshipModel",
+				name: "IX_Friendships_TargetUuid",
+				table: "Friendships",
 				column: "TargetUuid" );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
 			_ = migrationBuilder.DropTable(
-				name: "FriendshipModel" );
+				name: "Friendships" );
         }
     }
 }

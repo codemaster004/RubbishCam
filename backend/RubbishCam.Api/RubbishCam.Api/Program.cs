@@ -53,6 +53,7 @@ builder.Services.AddNpgsql<AppDbContext>(
 
 _ = builder.Services.AddScoped<IUsersService, UsersService>();
 _ = builder.Services.AddScoped<IAuthService, AuthService>();
+_ = builder.Services.AddScoped<IFriendsService, FriendsService>();
 
 var app = builder.Build();
 

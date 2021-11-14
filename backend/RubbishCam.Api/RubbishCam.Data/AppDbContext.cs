@@ -19,6 +19,10 @@ public class AppDbContext : DbContext
 		{
 			throw new NullReferenceException();
 		}
+		if ( Friendships is null )
+		{
+			throw new NullReferenceException();
+		}
 
 	}
 
@@ -37,16 +41,16 @@ public class AppDbContext : DbContext
 			j =>
 			{
 				return j.HasOne( f => f.Initiator )
-							.WithMany( u => u.InitiatedFriendships )
-							.HasForeignKey( f => f.InitiatorUuid )
-							.HasPrincipalKey( u => u.Uuid );
+						.WithMany( u => u.InitiatedFriendships )
+						.HasForeignKey( f => f.InitiatorUuid )
+						.HasPrincipalKey( u => u.Uuid );
 			},
 			j =>
 			{
 				return j.HasOne( f => f.Target )
-				.WithMany( u => u.TargetingFriendships )
-				.HasForeignKey( f => f.TargetUuid )
-				.HasPrincipalKey( u => u.Uuid );
+						.WithMany( u => u.TargetingFriendships )
+						.HasForeignKey( f => f.TargetUuid )
+						.HasPrincipalKey( u => u.Uuid );
 			} );
 
 	}
@@ -56,4 +60,6 @@ public class AppDbContext : DbContext
 	public DbSet<TokenModel> Tokens { get; set; }
 
 	public DbSet<RoleModel> Roles { get; set; }
+
+	public DbSet<FriendshipModel> Friendships { get; set; }
 }

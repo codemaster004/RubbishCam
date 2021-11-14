@@ -4,7 +4,7 @@ using RubbishCam.Domain.Models;
 namespace RubbishCam.Data;
 public class AppDbContext : DbContext
 {
-	public AppDbContext( DbContextOptions options ) 
+	public AppDbContext( DbContextOptions options )
 		: base( options )
 	{
 		if ( Users is null )
@@ -29,6 +29,26 @@ public class AppDbContext : DbContext
 				.WithMany( u => u.Tokens )
 				.HasForeignKey( t => t.UserUuid )
 				.HasPrincipalKey( u => u.Uuid );
+
+		_ = modelBuilder.Entity<UserModel>()
+			.HasMany( u => u.InitiatedFriends )
+			.WithMany( u => u.TargetingFriends )
+			.UsingEntity<FriendshipModel>(
+			j =>
+			{
+				return j.HasOne( f => f.Initiator )
+							.WithMany( u => u.InitiatedFriendships )
+							.HasForeignKey( f => f.InitiatorUuid )
+							.HasPrincipalKey( u => u.Uuid );
+			},
+			j =>
+			{
+				return j.HasOne( f => f.Target )
+				.WithMany( u => u.TargetingFriendships )
+				.HasForeignKey( f => f.TargetUuid )
+				.HasPrincipalKey( u => u.Uuid );
+			} );
+
 	}
 
 	public DbSet<UserModel> Users { get; set; }

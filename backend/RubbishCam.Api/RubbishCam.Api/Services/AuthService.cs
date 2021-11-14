@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using RubbishCam.Api.Exceptions.Auth;
 using RubbishCam.Data;
@@ -52,8 +53,7 @@ public class AuthService : IAuthService
 	private const int tokenValidityMinutes = 10;
 	private async Task<TokenModel> GenerateTokenAsync( UserModel user )
 	{
-		string access = await GenerateAccessToken();
-		string refresh = await GenerateRefreshToken();
+		(string access, string refresh) = await GenerateTokens();
 
 		TokenModel token = new( access, refresh, user.Uuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
 
@@ -63,27 +63,19 @@ public class AuthService : IAuthService
 
 		return token;
 	}
-	private async Task<string> GenerateAccessToken()
+	private async Task<(string access, string refresh)> GenerateTokens()
 	{
+		string refresh;
 		string access;
 		do
 		{
-			var guid = Guid.NewGuid();
-			access = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
+			var accGuid = Guid.NewGuid();
+			access = Base64UrlTextEncoder.Encode( accGuid.ToByteArray() );
+			var refGuid = Guid.NewGuid();
+			refresh = Base64UrlTextEncoder.Encode( refGuid.ToByteArray() );
 
-		} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access ) );
-		return access;
-	}
-	private async Task<string> GenerateRefreshToken()
-	{
-		string refresh;
-		do
-		{
-			var guid = Guid.NewGuid();
-			refresh = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
-
-		} while ( await _dbContext.Tokens.AnyAsync( t => t.RefreshToken == refresh ) );
-		return refresh;
+		} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access || t.RefreshToken == refresh ) );
+		return (refresh, access);
 	}
 
 	public async Task RevokeTokenAsync( string token )
@@ -104,6 +96,7 @@ public class AuthService : IAuthService
 
 	public async Task<GetTokenDto> RefreshTokenAsync( string token )
 	{
+		//todo: add user uuid as parameter, remove following db call
 		var found = await _dbContext.Tokens
 			.Where( t => t.Token == token )
 			.FirstOrDefaultAsync();
@@ -113,8 +106,7 @@ public class AuthService : IAuthService
 			throw new TokenInvalidException();
 		}
 
-		string access = await GenerateAccessToken();
-		string refresh = await GenerateRefreshToken();
+		(string access, string refresh) = await GenerateTokens();
 
 		TokenModel @new = new( access, refresh, found.UserUuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
 
@@ -146,7 +138,7 @@ public class AuthService : IAuthService
 			.Where( t => t.Token == token )
 			.FirstOrDefaultAsync();
 	}
-
+	
 
 
 	[Serializable]

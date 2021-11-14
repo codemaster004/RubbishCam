@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.User;
 using RubbishCam.Domain.Models;
+using System.Security.Claims;
 
 namespace RubbishCam.Api.Controllers;
 
@@ -23,14 +24,16 @@ public class UsersController : ExtendedControllerBase
 
 	// GET: api/<UsersController>
 	[HttpGet]
-	public async Task<ActionResult<GetUserDto[]>> GetAll()
+	[Authorize( Roles = "Admin" )]
+	public async Task<ActionResult<GetUserDto[]>> GetAllUsers()
 	{
 		return await _usersService.GetUsersAsync();
 	}
 
 	// GET api/<UsersController>/5
 	[HttpGet( "{uuid}" )]
-	public async Task<ActionResult<GetUserDetailsDto>> Get( string uuid )
+	[Authorize( Roles = Constants.Auth.AdminRole )]
+	public async Task<ActionResult<GetUserDetailsDto>> GetUser( string uuid )
 	{
 		GetUserDetailsDto? user = await _usersService.GetUserAsync( uuid );
 
@@ -42,9 +45,30 @@ public class UsersController : ExtendedControllerBase
 		return user;
 	}
 
+	// GET api/<UsersController>/current
+	[HttpGet( "current" )]
+	public async Task<ActionResult<GetUserDetailsDto>> GetCurrentUser()
+	{
+		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
+		if ( uuid is null )
+		{
+			return InternalServerError( "Unexpected error occured" );
+		}
+
+		GetUserDetailsDto? user = await _usersService.GetUserAsync( uuid );
+
+		if ( user is null )
+		{
+			return InternalServerError( "Unexpected error occured" );
+		}
+
+		return user;
+	}
+
 	// POST api/<UsersController>
 	[HttpPost]
-	public async Task<ActionResult<GetUserDto>> Create( [FromBody] CreateUserDto dto )
+	[AllowAnonymous]
+	public async Task<ActionResult<GetUserDto>> CreateUser( [FromBody] CreateUserDto dto )
 	{
 		GetUserDto user;
 		try
@@ -56,13 +80,45 @@ public class UsersController : ExtendedControllerBase
 			return InternalServerError( "Unexpected error occured. Try again." );
 		}
 
-		return CreatedAtAction( nameof( Get ), new { user.Uuid }, user );
+		if ( User?.IsInRole( Constants.Auth.AdminRole ) is true )
+		{
+			return CreatedAtAction( nameof( GetUser ), new { user.Uuid }, user );
+
+		}
+		return CreatedAtAction( nameof( GetCurrentUser ), user );
 	}
 
 	// DELETE api/<UsersController>/5
 	[HttpDelete( "{uuid}" )]
-	public async Task<IActionResult> Delete( string uuid )
+	[Authorize( Roles = Constants.Auth.AdminRole )]
+	public async Task<IActionResult> DeleteUser( string uuid )
 	{
+		try
+		{
+			await _usersService.DeleteUserAsync( uuid );
+		}
+		catch ( NotFoundException )
+		{
+			return NotFound( "User not found" );
+		}
+		catch ( Exception )
+		{
+			return InternalServerError( "Unexpected error occured. Try again." );
+		}
+
+		return NoContent();
+	}
+
+	// DELETE api/<UsersController>/5
+	[HttpDelete( "current" )]
+	public async Task<IActionResult> DeleteCurrentUser()
+	{
+		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
+		if ( uuid is null )
+		{
+			return InternalServerError( "Unexpected error occured" );
+		}
+
 		try
 		{
 			await _usersService.DeleteUserAsync( uuid );

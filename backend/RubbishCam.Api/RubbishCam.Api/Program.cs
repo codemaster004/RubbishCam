@@ -1,6 +1,7 @@
 global using RubbishCam.Api.Exceptions;
 using Microsoft.OpenApi.Models;
 using RubbishCam.Api.Auth;
+using RubbishCam.Api.Repositories;
 using RubbishCam.Api.Services;
 using RubbishCam.Data;
 
@@ -54,6 +55,8 @@ builder.Services.AddNpgsql<AppDbContext>(
 _ = builder.Services.AddScoped<IUsersService, UsersService>();
 _ = builder.Services.AddScoped<IAuthService, AuthService>();
 _ = builder.Services.AddScoped<IFriendsService, FriendsService>();
+
+_ = builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();
 

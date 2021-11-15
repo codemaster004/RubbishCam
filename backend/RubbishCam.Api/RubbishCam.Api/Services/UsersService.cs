@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using RubbishCam.Api.Repositories;
 using RubbishCam.Data;
 using RubbishCam.Domain.Dtos.User;
 using RubbishCam.Domain.Models;
@@ -18,19 +19,25 @@ public interface IUsersService
 
 public class UsersService : IUsersService
 {
-	private readonly AppDbContext _dbContext;
+	//private readonly AppDbContext _dbContext;
+	private readonly IUserRepository _userRepo;
 	private readonly ILogger<UsersService> _logger;
-	public UsersService( AppDbContext dbContext, ILogger<UsersService> logger )
+	public UsersService( /*AppDbContext dbContext,*/ ILogger<UsersService> logger, IUserRepository userRepo )
 	{
-		_dbContext = dbContext ?? throw new ArgumentNullException( nameof( dbContext ) );
+		//_dbContext = dbContext ?? throw new ArgumentNullException( nameof( dbContext ) );
 		_logger = logger ?? throw new ArgumentNullException( nameof( logger ) );
+		_userRepo = userRepo;
 	}
 
 	public Task<GetUserDto[]> GetUsersAsync()
 	{
-		return _dbContext.Users
+		return _userRepo.GetUsers()
 			.Select( GetUserDto.FromUserExp )
 			.ToArrayAsync();
+
+		//return _dbContext.Users
+		//	.Select( GetUserDto.FromUserExp )
+		//	.ToArrayAsync();
 	}
 
 	public Task<GetUserDetailsDto?> GetUserAsync( string uuid )
@@ -40,10 +47,15 @@ public class UsersService : IUsersService
 			throw new ArgumentNullException( nameof( uuid ) );
 		}
 
-		return _dbContext.Users
-			.Where( u => u.Uuid == uuid )
+		return _userRepo.GetUsers()
+			.FilterById( uuid )
 			.Select( GetUserDetailsDto.FromUserExp )
 			.FirstOrDefaultAsync();
+
+		//return _dbContext.Users
+		//	.Where( u => u.Uuid == uuid )
+		//	.Select( GetUserDetailsDto.FromUserExp )
+		//	.FirstOrDefaultAsync();
 	}
 
 	public async Task<GetUserDto> CreateUserAsync( CreateUserDto dto )
@@ -57,11 +69,14 @@ public class UsersService : IUsersService
 
 		user.Uuid = await GenerateUuid();
 
-		_ = await _dbContext.Users.AddAsync( user );
+		await _userRepo.AddUserAsync( user );
+
+		//_ = await _dbContext.Users.AddAsync( user );
 
 		try
 		{
-			_ = await _dbContext.SaveChangesAsync();
+			_ = await _userRepo.SaveAsync();
+			//_ = await _dbContext.SaveChangesAsync();
 		}
 		catch ( DbUpdateException e )
 		{
@@ -79,20 +94,27 @@ public class UsersService : IUsersService
 			throw new ArgumentNullException( nameof( uuid ) );
 		}
 
-		var user = await _dbContext.Users
-			.Where( u => u.Uuid == uuid )
+		var user = await _userRepo.GetUsers()
+			.FilterById( uuid )
 			.FirstOrDefaultAsync();
+
+		//var user = await _dbContext.Users
+		//	.Where( u => u.Uuid == uuid )
+		//	.FirstOrDefaultAsync();
 
 		if ( user is null )
 		{
 			throw new NotFoundException();
 		}
 
-		_ = _dbContext.Users.Remove( user );
+		await _userRepo.RemoveUserAsync( user );
+
+		//_ = _dbContext.Users.Remove( user );
 
 		try
 		{
-			_ = await _dbContext.SaveChangesAsync();
+			_ = await _userRepo.SaveAsync();
+			//_ = await _dbContext.SaveChangesAsync();
 		}
 		catch ( DbUpdateException e )
 		{
@@ -110,7 +132,8 @@ public class UsersService : IUsersService
 			var guid = Guid.NewGuid();
 			encoded = Base64UrlTextEncoder.Encode( guid.ToByteArray() );
 
-		} while ( await _dbContext.Users.AnyAsync( u => u.Uuid == encoded ) );
+		} while ( await _userRepo.GetUsers().AnyAsync( u => u.Uuid == encoded ) );
+		//} while ( await _dbContext.Users.AnyAsync( u => u.Uuid == encoded ) );
 
 		return encoded;
 	}

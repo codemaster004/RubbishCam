@@ -50,7 +50,7 @@ public class UsersService : IUsersService
 		return _userRepo.GetUsers()
 			.FilterById( uuid )
 			.Select( GetUserDetailsDto.FromUserExp )
-			.FirstOrDefaultAsync();
+			.FirstOrDefaultAsync( _userRepo );
 
 		//return _dbContext.Users
 		//	.Where( u => u.Uuid == uuid )

@@ -15,6 +15,7 @@ public interface IUserRepository
 	IQueryable<UserModel> WithTokens( IQueryable<UserModel> source );
 	IQueryable<UserModel> WithFriendships( IQueryable<UserModel> source );
 	IQueryable<UserModel> WithFriends( IQueryable<UserModel> source );
+	Task<T?> FirstOrDefaultAsync<T>( IQueryable<T> source );
 
 }
 
@@ -67,6 +68,10 @@ public class UserRepository : IUserRepository
 		return source.Include( u => u.InitiatedFriends )
 			.Include( u => u.TargetingFriends );
 	}
+	public Task<T?> FirstOrDefaultAsync<T>( IQueryable<T> source )
+	{
+		return source.FirstOrDefaultAsync();
+	}
 
 }
 
@@ -92,6 +97,10 @@ public static class UserRepositoryExtensions
 	public static IQueryable<UserModel> WithFriends( this IQueryable<UserModel> source, IUserRepository repository )
 	{
 		return repository.WithFriends( source );
+	}
+	public static Task<T?> FirstOrDefaultAsync<T>( this IQueryable<T> source, IUserRepository repository )
+	{
+		return repository.FirstOrDefaultAsync( source );
 	}
 
 }

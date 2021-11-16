@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RubbishCam.Data", "RubbishC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RubbishCam.Migrations.Pg", "RubbishCam.Migrations.Pg\RubbishCam.Migrations.Pg.csproj", "{7AB41DF9-F289-466F-882C-6ADF336EA5D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubbishCam.Domain", "RubbishCam.Domain\RubbishCam.Domain.csproj", "{1AC59804-834D-4660-AE1C-D3779D6C46C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RubbishCam.Domain", "RubbishCam.Domain\RubbishCam.Domain.csproj", "{1AC59804-834D-4660-AE1C-D3779D6C46C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RubbishCam.UnitTests", "RubbishCam.UnitTests\RubbishCam.UnitTests.csproj", "{4E5C6AFF-19AE-4DD7-AC35-2093E020F457}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1AC59804-834D-4660-AE1C-D3779D6C46C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AC59804-834D-4660-AE1C-D3779D6C46C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1AC59804-834D-4660-AE1C-D3779D6C46C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E5C6AFF-19AE-4DD7-AC35-2093E020F457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E5C6AFF-19AE-4DD7-AC35-2093E020F457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E5C6AFF-19AE-4DD7-AC35-2093E020F457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E5C6AFF-19AE-4DD7-AC35-2093E020F457}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

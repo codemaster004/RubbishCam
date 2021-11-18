@@ -122,7 +122,7 @@ public class AuthService : IAuthService
 		//	.Where( t => t.Token == token )
 		//	.FirstOrDefaultAsync();
 		var found = await _tokenRepo.GetTokens()
-			.FilterByAccessToken( token )
+			.FilterByRefreshToken( token )
 			.FirstOrDefaultAsync( _tokenRepo );
 
 		if ( found is null )

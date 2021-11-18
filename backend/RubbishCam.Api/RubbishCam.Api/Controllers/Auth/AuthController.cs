@@ -64,11 +64,11 @@ public class AuthController : ExtendedControllerBase
 		return NoContent();
 	}
 
+	[AllowAnonymous]
 	[HttpPost( "refresh" )]
-	public async Task<ActionResult<GetTokenDto>> Refresh()
+	public async Task<ActionResult<GetTokenDto>> Refresh( [FromBody] RefreshModel token )
 	{
 		GetTokenDto? @new;
-		string? token = await HttpContext.GetTokenAsync( "access_token" );
 
 		if ( token is null )
 		{
@@ -78,11 +78,11 @@ public class AuthController : ExtendedControllerBase
 
 		try
 		{
-			@new = await _authService.RefreshTokenAsync( token );
+			@new = await _authService.RefreshTokenAsync( token.RefreshToken );
 		}
 		catch ( TokenInvalidException )
 		{
-			return Unauthorized( "The token is invalid" );
+			return Unauthorized( "Invalid refresh token" );
 		}
 
 		return @new;
@@ -95,6 +95,11 @@ public class AuthController : ExtendedControllerBase
 		public string Username { get; set; }
 		[Required]
 		public string Password { get; set; }
+	}
+
+	public class RefreshModel
+	{
+		public string RefreshToken { get; set; }
 	}
 #nullable restore
 

@@ -54,6 +54,10 @@ public static class TokenRepositoryExtensions
 	{
 		return source.Where( t => t.Token == token );
 	}
+	public static IQueryable<TokenModel> FilterByRefreshToken( this IQueryable<TokenModel> source, string token )
+	{
+		return source.Where( t => t.RefreshToken == token );
+	}
 	public static IQueryable<TokenModel> WithUsers( this IQueryable<TokenModel> source, ITokenRepository repository )
 	{
 		return repository.WithUsers( source );

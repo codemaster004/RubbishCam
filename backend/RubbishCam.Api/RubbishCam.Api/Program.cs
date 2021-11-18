@@ -1,9 +1,9 @@
 global using RubbishCam.Api.Exceptions;
 using Microsoft.OpenApi.Models;
 using RubbishCam.Api.Auth;
-using RubbishCam.Api.Repositories;
 using RubbishCam.Api.Services;
 using RubbishCam.Data;
+using RubbishCam.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder( args );
 
@@ -57,6 +57,7 @@ _ = builder.Services.AddScoped<IAuthService, AuthService>();
 _ = builder.Services.AddScoped<IFriendsService, FriendsService>();
 
 _ = builder.Services.AddScoped<IUserRepository, UserRepository>();
+_ = builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
 var app = builder.Build();
 

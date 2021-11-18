@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using RubbishCam.Api.Exceptions;
-using RubbishCam.Api.Repositories;
 using RubbishCam.Api.Services;
+using RubbishCam.Data.Repositories;
 using RubbishCam.Domain.Dtos.User;
 using RubbishCam.Domain.Models;
 using System;
@@ -54,7 +54,7 @@ public class UsersServiceTests
 
 		Assert.NotNull( actual );
 		Assert.Equal( users.Length, actual.Length );
-		foreach ( var (userItem, actualItem) in users.Zip(actual) )
+		foreach ( var (userItem, actualItem) in users.Zip( actual ) )
 		{
 			var expectedItem = GetUserDto.FromUser( userItem );
 			Assert.Equal( expectedItem, actualItem );
@@ -82,8 +82,7 @@ public class UsersServiceTests
 		_ = _userRepoMock.Setup( x => x.GetUsers() )
 			.Returns( users.ToArray().AsQueryable() );
 
-		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<GetUserDetailsDto>>() ) )
-			.Returns( ( IQueryable<GetUserDetailsDto> x ) => Task.FromResult( x.FirstOrDefault() ) );
+		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<GetUserDetailsDto>>() ) ).CallBase();
 
 		// act
 		var actual = await _sut.GetUserAsync( uuid );
@@ -115,8 +114,7 @@ public class UsersServiceTests
 
 		_ = _userRepoMock.Setup( x => x.GetUsers() )
 			.Returns( users.ToArray().AsQueryable() );
-		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<GetUserDetailsDto>>() ) )
-			.Returns( ( IQueryable<GetUserDetailsDto> x ) => Task.FromResult( x.FirstOrDefault() ) );
+		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<GetUserDetailsDto>>() ) ).CallBase();
 
 		// act
 		var actual = await _sut.GetUserAsync( GenerateUuid() );
@@ -129,7 +127,7 @@ public class UsersServiceTests
 	}
 
 	[Fact]
-	public async Task CreateUserAsync_ShouldReturnUser()
+	public async Task CreateUserAsync_ShouldReturnUser_WhenUsernameAvailable()
 	{
 		// arrange 
 		var users = Enumerable.Range( 0, 10 )
@@ -148,8 +146,7 @@ public class UsersServiceTests
 		_ = _userRepoMock.Setup( x => x.GetUsers() )
 			.Returns( users.ToArray().AsQueryable() );
 
-		_ = _userRepoMock.Setup( x => x.AnyAsync( It.IsAny<IQueryable<GetUserDetailsDto>>() ) )
-			.Returns( ( IQueryable<GetUserDetailsDto> x ) => Task.FromResult( x.Any() ) );
+		_ = _userRepoMock.Setup( x => x.AnyAsync( It.IsAny<IQueryable<GetUserDetailsDto>>() ) ).CallBase();
 
 		_ = _userRepoMock.Setup( x => x.AddUserAsync( It.IsAny<UserModel>() ) )
 			.Callback( ( UserModel x ) => { passed = x; called++; } )
@@ -174,7 +171,7 @@ public class UsersServiceTests
 
 		_userRepoMock.Verify( x => x.GetUsers(), Times.Once );
 		_userRepoMock.Verify( x => x.AddUserAsync( It.IsAny<UserModel>() ), Times.Once );
-		_userRepoMock.Verify( x => x.SaveAsync(), Times.AtLeastOnce );
+		_userRepoMock.Verify( x => x.SaveAsync(), Times.Once );
 
 		Assert.NotNull( saved );
 		Assert.Equal( saved!.Uuid, returned.Uuid );
@@ -189,6 +186,14 @@ public class UsersServiceTests
 		Assert.Empty( saved.Friends );
 
 		Assert.DoesNotContain( saved.Uuid, users.Select( u => u.Uuid ) );
+
+	}
+	[Fact]
+	public async Task CreateUserAsync_ShouldFail_WhenUsernameTaken()
+	{
+		// arrange 
+		await Task.CompletedTask;
+		throw new NotImplementedException();
 
 	}
 
@@ -220,8 +225,7 @@ public class UsersServiceTests
 			.Callback( ( UserModel x ) => { passed = x; called++; } )
 			.Returns( Task.CompletedTask );
 
-		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<UserModel>>() ) )
-			.Returns( ( IQueryable<UserModel> x ) => Task.FromResult( x.FirstOrDefault() ) );
+		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<UserModel>>() ) ).CallBase();
 
 		_ = _userRepoMock.Setup( x => x.SaveAsync() )
 			.Callback( () => saved = passed )
@@ -234,7 +238,7 @@ public class UsersServiceTests
 		// assert
 		_userRepoMock.Verify( x => x.GetUsers(), Times.Once );
 		_userRepoMock.Verify( x => x.RemoveUserAsync( It.IsAny<UserModel>() ), Times.Once );
-		_userRepoMock.Verify( x => x.SaveAsync(), Times.AtLeastOnce );
+		_userRepoMock.Verify( x => x.SaveAsync(), Times.Once );
 
 		Assert.NotNull( saved );
 		Assert.Equal( user, saved );
@@ -261,8 +265,7 @@ public class UsersServiceTests
 		_ = _userRepoMock.Setup( x => x.GetUsers() )
 			.Returns( users.ToArray().AsQueryable() );
 
-		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<UserModel>>() ) )
-			.Returns( ( IQueryable<UserModel> x ) => Task.FromResult( x.FirstOrDefault() ) );
+		_ = _userRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<UserModel>>() ) ).CallBase();
 
 		// act
 		var act = () => _sut.DeleteUserAsync( GenerateUuid() );

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using RubbishCam.Api.Repositories;
+using RubbishCam.Data.Repositories;
 using RubbishCam.Domain.Dtos.User;
 
 namespace RubbishCam.Api.Services;

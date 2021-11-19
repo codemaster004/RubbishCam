@@ -18,8 +18,8 @@ namespace RubbishCam.UnitTests.Services;
 public class UsersServiceTests
 {
 	private readonly UsersService _sut;
-	private readonly Mock<IUserRepository> _userRepoMock = new();
-	private readonly Mock<ILogger<UsersService>> _loggerMock = new();
+	private readonly Mock<IUserRepository> _userRepoMock = new( MockBehavior.Strict );
+	private readonly Mock<ILogger<UsersService>> _loggerMock = new( MockBehavior.Strict );
 
 	public UsersServiceTests()
 	{
@@ -146,7 +146,7 @@ public class UsersServiceTests
 		_ = _userRepoMock.Setup( x => x.GetUsers() )
 			.Returns( users.ToArray().AsQueryable() );
 
-		_ = _userRepoMock.Setup( x => x.AnyAsync( It.IsAny<IQueryable<GetUserDetailsDto>>() ) ).CallBase();
+		_ = _userRepoMock.Setup( x => x.AnyAsync( It.IsAny<IQueryable<UserModel>>() ) ).CallBase();
 
 		_ = _userRepoMock.Setup( x => x.AddUserAsync( It.IsAny<UserModel>() ) )
 			.Callback( ( UserModel x ) => { passed = x; called++; } )
@@ -169,7 +169,8 @@ public class UsersServiceTests
 		Assert.Equal( user.LastName, returned.LastName );
 		Assert.Equal( user.UserName, returned.UserName );
 
-		_userRepoMock.Verify( x => x.GetUsers(), Times.Once );
+		_userRepoMock.Verify( x => x.GetUsers(), Times.AtLeastOnce );
+		_userRepoMock.Verify( x => x.GetUsers(), Times.AtMost( 2 ) );
 		_userRepoMock.Verify( x => x.AddUserAsync( It.IsAny<UserModel>() ), Times.Once );
 		_userRepoMock.Verify( x => x.SaveAsync(), Times.Once );
 
@@ -188,12 +189,40 @@ public class UsersServiceTests
 		Assert.DoesNotContain( saved.Uuid, users.Select( u => u.Uuid ) );
 
 	}
+
 	[Fact]
-	public async Task CreateUserAsync_ShouldFail_WhenUsernameTaken()
+	public async Task CreateUserAsync_ShouldThrow_WhenUsernameTaken()
 	{
 		// arrange 
-		await Task.CompletedTask;
-		throw new NotImplementedException();
+		var users = Enumerable.Range( 0, 10 )
+			.Select( x => new UserModel(
+				GenerateUuid(),
+				Faker.Name.First(),
+				Faker.Name.Last(),
+				GenerateHash(),
+				Faker.Internet.UserName() ) )
+			.ToArray();
+
+		UserModel existing = new( GenerateUuid(), "John", "Smith", GenerateHash(), "john1234" );
+		users[users.Length / 2] = existing;
+
+		_ = _userRepoMock.Setup( x => x.GetUsers() )
+			.Returns( users.ToArray().AsQueryable() );
+
+		_ = _userRepoMock.Setup( x => x.AnyAsync( It.IsAny<IQueryable<UserModel>>() ) ).CallBase();
+
+		CreateUserDto @new = new() { FirstName = Faker.Name.First(), LastName = Faker.Name.Last(), Password = "pass#1234ó", UserName = existing.UserName };
+
+		// act
+		var act = () => _sut.CreateUserAsync( @new );
+
+
+		// assert
+		_ = await Assert.ThrowsAsync<ConflictException>( act );
+
+		_userRepoMock.Verify( x => x.GetUsers(), Times.Once );
+		_userRepoMock.Verify( x => x.AddUserAsync( It.IsAny<UserModel>() ), Times.Never );
+		_userRepoMock.Verify( x => x.SaveAsync(), Times.Never );
 
 	}
 
@@ -246,7 +275,7 @@ public class UsersServiceTests
 	}
 
 	[Fact]
-	public async Task DeleteUserAsync_ShouldFail_WhenUserDoesNotExist()
+	public async Task DeleteUserAsync_ShouldThrow_WhenUserDoesNotExist()
 	{
 		// arrange 
 		var users = Enumerable.Range( 0, 10 )

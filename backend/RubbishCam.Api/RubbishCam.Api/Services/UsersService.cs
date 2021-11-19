@@ -50,6 +50,14 @@ public class UsersService : IUsersService
 			throw new ArgumentNullException( nameof( dto ) );
 		}
 
+		var exists = await _userRepo.GetUsers()
+			.FilterByUsername( dto.UserName )
+			.AnyAsync( _userRepo );
+		if ( exists )
+		{
+			throw new ConflictException();
+		}
+
 		var user = await dto.ToUserAsync( AuthService.HashPasswordAsync, GenerateUuid );
 
 		await _userRepo.AddUserAsync( user );

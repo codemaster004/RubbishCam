@@ -33,7 +33,7 @@ public class AuthController : ExtendedControllerBase
 		{
 			return Unauthorized( "Incorrect username" );
 		}
-		catch ( AuthService.NotAuthorizedException )
+		catch ( NotAuthorizedException )
 		{
 			return Unauthorized( "Incorrect password" );
 		}

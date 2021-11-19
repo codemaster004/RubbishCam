@@ -28,6 +28,14 @@ public interface IRepository
 		}
 		return source.Any();
 	}
+	async Task<int> CountAsync<T>( IQueryable<T> source )
+	{
+		if ( source is IAsyncEnumerable<T> )
+		{
+			return await source.CountAsync();
+		}
+		return source.Count();
+	}
 }
 
 public static class RepositoryExtensions
@@ -43,5 +51,9 @@ public static class RepositoryExtensions
 	public static Task<bool> AnyAsync<T>( this IQueryable<T> source, IRepository repository )
 	{
 		return repository.AnyAsync( source );
+	}
+	public static Task<int> CountAsync<T>( this IQueryable<T> source, IRepository repository )
+	{
+		return repository.CountAsync( source );
 	}
 }

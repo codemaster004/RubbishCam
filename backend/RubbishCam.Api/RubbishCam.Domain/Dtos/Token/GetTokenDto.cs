@@ -11,6 +11,8 @@ public class GetTokenDto
 	public string RefreshToken { get; set; }
 	public DateTimeOffset ValidUntil { get; set; }
 
+#nullable restore
+
 	public static Expression<Func<TokenModel, GetTokenDto>> FromTokenExp { get; set; } = role => new GetTokenDto()
 	{
 		Token = role.Token,

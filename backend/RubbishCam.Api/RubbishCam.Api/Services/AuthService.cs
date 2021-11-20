@@ -25,21 +25,16 @@ public class AuthService : IAuthService
 	private readonly ITokenRepository _tokenRepo;
 	private readonly IUserRepository _userRepo;
 	private readonly ILogger<AuthService> _logger;
-	//private readonly AppDbContext _dbContext;
 
-	public AuthService( /*AppDbContext dbContext,*/ ITokenRepository tokenRepo, IUserRepository userRepo, ILogger<AuthService> logger )
+	public AuthService( ITokenRepository tokenRepo, IUserRepository userRepo, ILogger<AuthService> logger )
 	{
-		//_dbContext = dbContext;
-		_tokenRepo = tokenRepo;
-		_userRepo = userRepo;
-		_logger = logger;
+		_tokenRepo = tokenRepo ?? throw new ArgumentNullException( nameof( tokenRepo ) );
+		_userRepo = userRepo ?? throw new ArgumentNullException( nameof( userRepo ) );
+		_logger = logger ?? throw new ArgumentNullException( nameof( logger ) );
 	}
 
 	public async Task<GetTokenDto> Login( string username, string password )
 	{
-		//var user = _dbContext.Users
-		//	.Where( u => u.UserName == username )
-		//	.FirstOrDefault();
 		var user = await _userRepo.GetUsers()
 			.FilterByUsername( username )
 			.FirstOrDefaultAsync( _userRepo );
@@ -68,10 +63,8 @@ public class AuthService : IAuthService
 
 		TokenModel token = new( access, refresh, user.Uuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
 
-		//_ = await _dbContext.Tokens.AddAsync( token );
 		await _tokenRepo.AddTokenAsync( token );
 
-		//_ = await _dbContext.SaveChangesAsync();
 		_ = await _tokenRepo.SaveAsync();
 
 		return token;
@@ -91,16 +84,12 @@ public class AuthService : IAuthService
 			isUsed = await _tokenRepo.GetTokens()
 				.Where( t => t.Token == access || t.RefreshToken == refresh )
 				.AnyAsync( _tokenRepo );
-			//} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access || t.RefreshToken == refresh ) );
 		} while ( isUsed );
 		return (refresh, access);
 	}
 
 	public async Task RevokeTokenAsync( string token )
 	{
-		//var found = await _dbContext.Tokens
-		//	.Where( t => t.Token == token )
-		//	.FirstOrDefaultAsync();
 		var found = await _tokenRepo.GetTokens()
 			.FilterByAccessToken( token )
 			.FirstOrDefaultAsync( _tokenRepo );
@@ -135,10 +124,6 @@ public class AuthService : IAuthService
 
 	public async Task<GetTokenDto> RefreshTokenAsync( string token )
 	{
-		//todo: add user uuid as parameter, remove following db call
-		//var found = await _dbContext.Tokens
-		//	.Where( t => t.Token == token )
-		//	.FirstOrDefaultAsync();
 		var found = await _tokenRepo.GetTokens()
 			.FilterByRefreshToken( token )
 			.FirstOrDefaultAsync( _tokenRepo );
@@ -152,11 +137,9 @@ public class AuthService : IAuthService
 
 		TokenModel @new = new( access, refresh, found.UserUuid, DateTimeOffset.UtcNow.AddMinutes( tokenValidityMinutes ) );
 
-		//_ = await _dbContext.Tokens.AddAsync( @new );
 		await _tokenRepo.AddTokenAsync( @new );
 		found.Revoked = true;
 
-		//_ = await _dbContext.SaveChangesAsync();
 		_ = await _tokenRepo.SaveAsync();
 
 		return GetTokenDto.FromToken( @new );
@@ -176,11 +159,6 @@ public class AuthService : IAuthService
 
 	public Task<TokenModel?> GetTokenAsync( string token )
 	{
-		//return _dbContext.Tokens
-		//	.Include( t => t.User! )
-		//	.ThenInclude( u => u.Roles! )
-		//	.Where( t => t.Token == token )
-		//	.FirstOrDefaultAsync();
 		return _tokenRepo.GetTokens()
 			.WithUsersWithRoles( _tokenRepo )
 			.FilterByAccessToken( token )

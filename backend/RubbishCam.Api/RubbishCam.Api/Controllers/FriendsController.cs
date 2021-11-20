@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.Friendship;
@@ -27,7 +26,7 @@ public class FriendsController : ExtendedControllerBase
 		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
 		if ( uuid is null )
 		{
-			return InternalServerError( "Unexpected error occured" );
+			return InternalServerError();
 		}
 
 		return await _friendsService.GetFriendshipsAsync( uuid );
@@ -40,7 +39,7 @@ public class FriendsController : ExtendedControllerBase
 
 		if ( uuid is null )
 		{
-			return InternalServerError( "Unexpected error occured" );
+			return InternalServerError();
 		}
 
 		return await _friendsService.GetAcceptedFriendshipsAsync( uuid );
@@ -65,7 +64,7 @@ public class FriendsController : ExtendedControllerBase
 		string? initiatorUuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
 		if ( initiatorUuid is null )
 		{
-			return InternalServerError( "Unexpected error occured" );
+			return InternalServerError();
 		}
 
 		GetFriendshipDto friendship;

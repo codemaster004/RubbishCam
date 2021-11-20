@@ -71,7 +71,6 @@ public class TokenAuthHandler : AuthenticationHandler<TokenOptions>
 		Claim[] claims = GetClaims( foundToken.User ).ToArray();
 		ClaimsIdentity identity = new( claims, Scheme.Name );
 		ClaimsPrincipal principal = new( identity );
-		AuthenticationTicket ticket = new( principal, Scheme.Name );
 
 		var tokenValidatedContext = new TokenValidatedContext( Context, Scheme, Options )
 		{
@@ -80,9 +79,9 @@ public class TokenAuthHandler : AuthenticationHandler<TokenOptions>
 
 		tokenValidatedContext.Properties.StoreTokens( new[]
 		{
-			new AuthenticationToken { Name = "access_token", Value = sentTokenValue }
+			new AuthenticationToken { Name = Constants.Auth.TokenName, Value = sentTokenValue }
 		} );
-		tokenValidatedContext.Properties.StoreToken( "access_token", foundToken );
+		tokenValidatedContext.Properties.StoreToken( Constants.Auth.TokenName, foundToken );
 
 		tokenValidatedContext.Success();
 

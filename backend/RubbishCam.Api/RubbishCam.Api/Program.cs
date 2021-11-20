@@ -1,5 +1,6 @@
 global using RubbishCam.Api.Exceptions;
 using Microsoft.OpenApi.Models;
+using RubbishCam.Api;
 using RubbishCam.Api.Auth;
 using RubbishCam.Api.Services;
 using RubbishCam.Data;
@@ -18,7 +19,7 @@ builder.Services.AddSwaggerGen( c =>
 
 	var securityScheme = new OpenApiSecurityScheme
 	{
-		Scheme = "Bearer",
+		Scheme = Constants.Auth.BearerScheme,
 		Name = "Authorization",
 		In = ParameterLocation.Header,
 		Type = SecuritySchemeType.ApiKey,
@@ -26,12 +27,12 @@ builder.Services.AddSwaggerGen( c =>
 
 		Reference = new OpenApiReference
 		{
-			Id = "Bearer",
+			Id = Constants.Auth.BearerScheme,
 			Type = ReferenceType.SecurityScheme
 		}
 	};
 
-	c.AddSecurityDefinition( "Bearer", securityScheme );
+	c.AddSecurityDefinition( Constants.Auth.BearerScheme, securityScheme );
 	c.AddSecurityRequirement( new OpenApiSecurityRequirement()
 	{
 		{ securityScheme, Array.Empty<string>() }
@@ -40,11 +41,11 @@ builder.Services.AddSwaggerGen( c =>
 
 builder.Services.AddAuthentication( options =>
 	 {
-	 	options.DefaultScheme = "Bearer";
-	 	options.DefaultAuthenticateScheme = "Bearer";
-	 	options.DefaultChallengeScheme = "Bearer";
+	 	options.DefaultScheme = Constants.Auth.BearerScheme;
+	 	options.DefaultAuthenticateScheme = Constants.Auth.BearerScheme;
+	 	options.DefaultChallengeScheme = Constants.Auth.BearerScheme;
 	 } )
-	.AddScheme<TokenOptions, TokenAuthHandler>( "Bearer", options => { } );
+	.AddScheme<TokenOptions, TokenAuthHandler>( Constants.Auth.BearerScheme, options => { } );
 
 builder.Services.AddNpgsql<AppDbContext>(
 	 builder.Configuration.GetConnectionString( "postgresConnection" ),

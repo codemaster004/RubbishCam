@@ -37,6 +37,11 @@ public class ExtendedControllerBase : ControllerBase
 
 	#region 5xx
 	[NonAction]
+	public ObjectResult InternalServerError()
+	{
+		return InternalServerError( Constants.Responses.UnexpectedError );
+	}
+	[NonAction]
 	public ObjectResult InternalServerError( string detail )
 	{
 		var problemDetails = ProblemDetailsFactory.CreateProblemDetails( HttpContext, 500, detail: detail );

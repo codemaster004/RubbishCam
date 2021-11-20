@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.User;
-using RubbishCam.Domain.Models;
 using System.Security.Claims;
 
 namespace RubbishCam.Api.Controllers;
@@ -17,8 +16,8 @@ public class UsersController : ExtendedControllerBase
 
 	public UsersController( IUsersService usersService, ILogger<UsersController> logger )
 	{
-		_usersService = usersService ?? throw new ArgumentNullException( nameof( usersService ) );
-		_logger = logger ?? throw new ArgumentNullException( nameof( logger ) );
+		_usersService = usersService;
+		_logger = logger;
 	}
 
 
@@ -52,14 +51,14 @@ public class UsersController : ExtendedControllerBase
 		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
 		if ( uuid is null )
 		{
-			return InternalServerError( "Unexpected error occured" );
+			return InternalServerError();
 		}
 
 		GetUserDetailsDto? user = await _usersService.GetUserAsync( uuid );
 
 		if ( user is null )
 		{
-			return InternalServerError( "Unexpected error occured" );
+			return InternalServerError();
 		}
 
 		return user;
@@ -77,7 +76,7 @@ public class UsersController : ExtendedControllerBase
 		}
 		catch ( Exception )
 		{
-			return InternalServerError( "Unexpected error occured. Try again." );
+			return InternalServerError();
 		}
 
 		if ( User?.IsInRole( Constants.Auth.AdminRole ) is true )
@@ -103,7 +102,7 @@ public class UsersController : ExtendedControllerBase
 		}
 		catch ( Exception )
 		{
-			return InternalServerError( "Unexpected error occured. Try again." );
+			return InternalServerError();
 		}
 
 		return NoContent();
@@ -116,7 +115,7 @@ public class UsersController : ExtendedControllerBase
 		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
 		if ( uuid is null )
 		{
-			return InternalServerError( "Unexpected error occured" );
+			return InternalServerError();
 		}
 
 		try
@@ -129,7 +128,7 @@ public class UsersController : ExtendedControllerBase
 		}
 		catch ( Exception )
 		{
-			return InternalServerError( "Unexpected error occured. Try again." );
+			return InternalServerError();
 		}
 
 		return NoContent();

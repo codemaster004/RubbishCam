@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RubbishCam.Domain.Models;
+﻿namespace RubbishCam.Domain.Models;
 
 public class FriendshipModel
 {

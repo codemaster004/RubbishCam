@@ -19,7 +19,7 @@ public class UsersService : IUsersService
 	private readonly ILogger<UsersService> _logger;
 	public UsersService( IUserRepository userRepo, ILogger<UsersService> logger )
 	{
-		_userRepo = userRepo;
+		_userRepo = userRepo ?? throw new ArgumentNullException( nameof( userRepo ) );
 		_logger = logger ?? throw new ArgumentNullException( nameof( logger ) );
 	}
 

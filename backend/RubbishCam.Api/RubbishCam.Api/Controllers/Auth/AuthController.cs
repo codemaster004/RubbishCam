@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RubbishCam.Api.Exceptions.Auth;
 using RubbishCam.Api.Extensions;
@@ -45,11 +44,11 @@ public class AuthController : ExtendedControllerBase
 	[HttpPost( "logout" )]
 	public async Task<IActionResult> Logout()
 	{
-		var token = await HttpContext.GetTokenAsync<Domain.Models.TokenModel>( "access_token" );
+		var token = await HttpContext.GetTokenAsync<Domain.Models.TokenModel>( Constants.Auth.TokenName );
 
 		if ( token is null )
 		{
-			return InternalServerError( "Error occured" );
+			return InternalServerError();
 			throw new Exception();
 		}
 
@@ -73,7 +72,7 @@ public class AuthController : ExtendedControllerBase
 
 		if ( token is null )
 		{
-			return InternalServerError( "Error occured" );
+			return InternalServerError();
 			throw new Exception();
 		}
 

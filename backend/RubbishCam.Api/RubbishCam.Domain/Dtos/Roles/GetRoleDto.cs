@@ -1,11 +1,6 @@
 ﻿using RubbishCam.Domain.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RubbishCam.Domain.Dtos.Roles;
 
@@ -18,6 +13,8 @@ public record GetRoleDto
 	[Required]
 	[StringLength( 24 )]
 	public string Name { get; set; }
+
+#nullable restore
 
 	public static Expression<Func<RoleModel, GetRoleDto>> FromRoleExp { get; set; } = role => new GetRoleDto()
 	{

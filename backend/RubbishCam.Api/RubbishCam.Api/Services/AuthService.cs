@@ -17,6 +17,7 @@ public interface IAuthService
 	Task<TokenModel?> GetTokenAsync( string token );
 	Task<GetTokenDto> RefreshTokenAsync( string token );
 	Task RevokeTokenAsync( string token );
+	Task RevokeTokenAsync( TokenModel token );
 }
 
 public class AuthService : IAuthService
@@ -90,7 +91,7 @@ public class AuthService : IAuthService
 			isUsed = await _tokenRepo.GetTokens()
 				.Where( t => t.Token == access || t.RefreshToken == refresh )
 				.AnyAsync( _tokenRepo );
-		//} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access || t.RefreshToken == refresh ) );
+			//} while ( await _dbContext.Tokens.AnyAsync( t => t.Token == access || t.RefreshToken == refresh ) );
 		} while ( isUsed );
 		return (refresh, access);
 	}
@@ -109,10 +110,27 @@ public class AuthService : IAuthService
 			throw new TokenInvalidException();
 		}
 
-		found.Revoked = true;
+		await RevokeTokenAsync( found );
+	}
+	public async Task RevokeTokenAsync( TokenModel token )
+	{
+		if ( token is null )
+		{
+			throw new ArgumentNullException( nameof( token ) );
+		}
 
-		//_ = await _dbContext.SaveChangesAsync();
-		_ = await _tokenRepo.SaveAsync();
+		if ( token.Revoked )
+		{
+			return;
+		}
+
+		token.Revoked = true;
+
+		var modified = await _tokenRepo.SaveAsync();
+		if ( modified < 1 )
+		{
+			throw new TokenInvalidException();
+		}
 	}
 
 	public async Task<GetTokenDto> RefreshTokenAsync( string token )

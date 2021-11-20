@@ -230,6 +230,44 @@ public class AuthServiceTests
 	}
 
 	[Fact]
+	public async Task RevokeTokenAsync_ShouldSucceed_WhenAlreadyRevoked()
+	{
+		// arrange
+		var tokens = Enumerable.Range( 1, 11 )
+			.Select( x => new TokenModel(
+				 GenerateToken(),
+				 GenerateToken(),
+				GenerateUuid(),
+				DateTimeOffset.Now.AddMinutes( x ) ) )
+			.ToArray();
+
+
+		string accessToken = GenerateToken();
+		string refreshToken = GenerateToken();
+		string userUuid = GenerateUuid();
+		TokenModel testedToken = new( accessToken, refreshToken, userUuid, DateTimeOffset.Now.AddYears( 1 ) ) { Revoked = true };
+		tokens[tokens.Length / 2] = testedToken;
+
+		_ = _tokenRepoMock.Setup( x => x.GetTokens() )
+			.Returns( () => tokens.ToArray().AsQueryable() );
+
+		_ = _tokenRepoMock.Setup( x => x.FirstOrDefaultAsync( It.IsAny<IQueryable<TokenModel>>() ) ).CallBase();
+
+
+		// act
+		await _sut.RevokeTokenAsync( testedToken.Token );
+
+		// assert
+		_tokenRepoMock.Verify( x => x.GetTokens(), Times.Once );
+
+		Assert.True( testedToken.Revoked );
+		Assert.Equal( userUuid, testedToken.UserUuid );
+		Assert.Equal( accessToken, testedToken.Token );
+		Assert.Equal( refreshToken, testedToken.RefreshToken );
+
+	}
+
+	[Fact]
 	public async Task RevokeTokenAsync_ShouldThrow_WhenInvalidAccessToken()
 	{
 		// arrange
@@ -318,6 +356,103 @@ public class AuthServiceTests
 		Assert.Equal( userUuid, testedToken.UserUuid );
 		Assert.Equal( accessToken, testedToken.Token );
 		Assert.Equal( refreshToken, testedToken.RefreshToken );
+
+	}
+
+	[Fact]
+	public async Task RevokeTokenAsync_ShouldSucceed_WhenExists()
+	{
+		// arrange
+		var tokens = Enumerable.Range( 1, 11 )
+			.Select( x => new TokenModel(
+				 GenerateToken(),
+				 GenerateToken(),
+				GenerateUuid(),
+				DateTimeOffset.Now.AddMinutes( x ) ) )
+			.ToArray();
+
+
+		string accessToken = GenerateToken();
+		string refreshToken = GenerateToken();
+		string userUuid = GenerateUuid();
+		TokenModel testedToken = new( accessToken, refreshToken, userUuid, DateTimeOffset.Now.AddYears( 1 ) );
+		tokens[tokens.Length / 2] = testedToken;
+
+		_ = _tokenRepoMock.Setup( x => x.SaveAsync() )
+			.Returns( Task.FromResult( 1 ) );
+
+
+		// act
+		await _sut.RevokeTokenAsync( testedToken );
+
+		// assert
+		_tokenRepoMock.Verify( x => x.SaveAsync(), Times.Once );
+
+		Assert.True( testedToken.Revoked );
+		Assert.Equal( userUuid, testedToken.UserUuid );
+		Assert.Equal( accessToken, testedToken.Token );
+		Assert.Equal( refreshToken, testedToken.RefreshToken );
+
+	}
+
+	[Fact]
+	public async Task RevokeTokenAsync_ShouldSucceed_WhenAreadyRevoked()
+	{
+		// arrange
+		var tokens = Enumerable.Range( 1, 11 )
+			.Select( x => new TokenModel(
+				 GenerateToken(),
+				 GenerateToken(),
+				GenerateUuid(),
+				DateTimeOffset.Now.AddMinutes( x ) ) )
+			.ToArray();
+
+
+		string accessToken = GenerateToken();
+		string refreshToken = GenerateToken();
+		string userUuid = GenerateUuid();
+		TokenModel testedToken = new( accessToken, refreshToken, userUuid, DateTimeOffset.Now.AddYears( 1 ) ) { Revoked = true };
+		tokens[tokens.Length / 2] = testedToken;
+
+		// act
+		await _sut.RevokeTokenAsync( testedToken );
+
+		// assert
+		Assert.True( testedToken.Revoked );
+		Assert.Equal( userUuid, testedToken.UserUuid );
+		Assert.Equal( accessToken, testedToken.Token );
+		Assert.Equal( refreshToken, testedToken.RefreshToken );
+
+	}
+
+	[Fact]
+	public async Task RevokeTokenAsync_ShouldThrow_WhenDoesNotExist()
+	{
+		// arrange
+		var tokens = Enumerable.Range( 1, 11 )
+			.Select( x => new TokenModel(
+				 GenerateToken(),
+				 GenerateToken(),
+				GenerateUuid(),
+				DateTimeOffset.Now.AddMinutes( x ) ) )
+			.ToArray();
+
+
+		string accessToken = GenerateToken();
+		string refreshToken = GenerateToken();
+		string userUuid = GenerateUuid();
+		TokenModel testedToken = new( accessToken, refreshToken, userUuid, DateTimeOffset.Now.AddYears( 1 ) );
+
+		_ = _tokenRepoMock.Setup( x => x.SaveAsync() )
+			.Returns( Task.FromResult( 0 ) );
+
+
+		// act
+		var act = () => _sut.RevokeTokenAsync( testedToken );
+
+		// assert
+		_ = await Assert.ThrowsAsync<TokenInvalidException>( act );
+		_tokenRepoMock.Verify( x => x.SaveAsync(), Times.AtMostOnce );
 
 	}
 

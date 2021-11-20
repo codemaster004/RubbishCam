@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using RubbishCam.Api.Exceptions.Auth;
+using RubbishCam.Api.Extensions;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Models;
 using System.Security.Claims;
@@ -81,6 +82,7 @@ public class TokenAuthHandler : AuthenticationHandler<TokenOptions>
 		{
 			new AuthenticationToken { Name = "access_token", Value = sentTokenValue }
 		} );
+		tokenValidatedContext.Properties.StoreToken( "access_token", foundToken );
 
 		tokenValidatedContext.Success();
 

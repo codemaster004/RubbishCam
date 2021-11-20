@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RubbishCam.Api.Exceptions.Auth;
+using RubbishCam.Api.Extensions;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.Token;
 using System.ComponentModel.DataAnnotations;
@@ -44,7 +45,7 @@ public class AuthController : ExtendedControllerBase
 	[HttpPost( "logout" )]
 	public async Task<IActionResult> Logout()
 	{
-		string? token = await HttpContext.GetTokenAsync( "access_token" );
+		var token = await HttpContext.GetTokenAsync<Domain.Models.TokenModel>( "access_token" );
 
 		if ( token is null )
 		{

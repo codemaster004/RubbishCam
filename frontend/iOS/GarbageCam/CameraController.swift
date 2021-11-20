@@ -34,7 +34,7 @@ final class CameraViewController: UIViewController {
     
 }
 
-extension CameraViewController : UIViewControllerRepresentable{
+extension CameraViewController : UIViewControllerRepresentable {
     public typealias UIViewControllerType = CameraViewController
     
     public func makeUIViewController(context: UIViewControllerRepresentableContext<CameraViewController>) -> CameraViewController {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RubbishCam.Data;
 using RubbishCam.Data.Repositories;
 using RubbishCam.Domain.Dtos.Friendship;
 using RubbishCam.Domain.Models;

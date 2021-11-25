@@ -7,36 +7,20 @@ public class AppDbContext : DbContext
 	public AppDbContext( DbContextOptions options )
 		: base( options )
 	{
-		if ( Users is null )
-		{
-			throw new NullReferenceException();
-		}
-		if ( Tokens is null )
-		{
-			throw new NullReferenceException();
-		}
-		if ( Roles is null )
-		{
-			throw new NullReferenceException();
-		}
-		if ( Friendships is null )
-		{
-			throw new NullReferenceException();
-		}
-		if ( Points is null )
-		{
-			throw new NullReferenceException();
-		}
-
+		ArgumentNullException.ThrowIfNull( Users );
+		ArgumentNullException.ThrowIfNull( Tokens );
+		ArgumentNullException.ThrowIfNull( Roles );
+		ArgumentNullException.ThrowIfNull( Friendships );
+		ArgumentNullException.ThrowIfNull( Points );
 	}
 
 	protected override void OnModelCreating( ModelBuilder modelBuilder )
 	{
 		_ = modelBuilder.Entity<TokenModel>()
-				.HasOne( t => t.User )
-				.WithMany( u => u.Tokens )
-				.HasForeignKey( t => t.UserUuid )
-				.HasPrincipalKey( u => u.Uuid );
+			.HasOne( t => t.User )
+			.WithMany( u => u.Tokens )
+			.HasForeignKey( t => t.UserUuid )
+			.HasPrincipalKey( u => u.Uuid );
 
 		_ = modelBuilder.Entity<UserModel>()
 			.HasMany( u => u.InitiatedFriends )
@@ -58,20 +42,16 @@ public class AppDbContext : DbContext
 			} );
 
 		_ = modelBuilder.Entity<PointModel>()
-				.HasOne( p=>p.User )
-				.WithMany( u => u.Points )
-				.HasForeignKey( p => p.UserUuid )
-				.HasPrincipalKey( u => u.Uuid );
+			.HasOne( p => p.User )
+			.WithMany( u => u.Points )
+			.HasForeignKey( p => p.UserUuid )
+			.HasPrincipalKey( u => u.Uuid );
 
 	}
 
 	public DbSet<UserModel> Users { get; set; }
-
 	public DbSet<TokenModel> Tokens { get; set; }
-
 	public DbSet<RoleModel> Roles { get; set; }
-
 	public DbSet<FriendshipModel> Friendships { get; set; }
-
 	public DbSet<PointModel> Points { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RubbishCam.Api.Extensions;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.Friendship;
 using System.Security.Claims;
@@ -23,7 +24,7 @@ public class FriendsController : ExtendedControllerBase
 	[HttpGet]
 	public async Task<ActionResult<GetFriendshipDto[]>> GetFriendships()
 	{
-		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
+		string? uuid = User.GetUserUuid();
 		if ( uuid is null )
 		{
 			return InternalServerError();
@@ -35,7 +36,7 @@ public class FriendsController : ExtendedControllerBase
 	[HttpGet( "accepted" )]
 	public async Task<ActionResult<GetFriendshipDto[]>> GetAcceptedFriendships()
 	{
-		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
+		string? uuid = User.GetUserUuid();
 
 		if ( uuid is null )
 		{
@@ -61,7 +62,7 @@ public class FriendsController : ExtendedControllerBase
 	[HttpPost( "{targetUuid}" )]
 	public async Task<ActionResult<GetFriendshipDto>> CreateFriendship( string targetUuid )
 	{
-		string? initiatorUuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
+		string? initiatorUuid = User.GetUserUuid();
 		if ( initiatorUuid is null )
 		{
 			return InternalServerError();

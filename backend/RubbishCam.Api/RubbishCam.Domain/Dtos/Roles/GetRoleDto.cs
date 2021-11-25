@@ -8,15 +8,15 @@ namespace RubbishCam.Domain.Dtos.Roles;
 
 public record GetRoleDto
 {
-	public int Id { get; set; }
+	public int Id { get; init; }
 
 	[Required]
 	[StringLength( 24 )]
-	public string Name { get; set; }
+	public string Name { get; init; }
 
 #nullable restore
 
-	public static Expression<Func<RoleModel, GetRoleDto>> FromRoleExp { get; set; } = role => new GetRoleDto()
+	public static Expression<Func<RoleModel, GetRoleDto>> FromRoleExp { get; } = role => new GetRoleDto()
 	{
 		Id = role.Id,
 		Name = role.Name,

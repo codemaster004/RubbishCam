@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using RubbishCam.Api.Exceptions.Auth;
-using RubbishCam.Data;
 using RubbishCam.Data.Repositories;
 using RubbishCam.Domain.Dtos.Token;
 using RubbishCam.Domain.Models;

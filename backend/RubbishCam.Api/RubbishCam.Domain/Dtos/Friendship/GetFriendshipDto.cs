@@ -5,17 +5,17 @@ namespace RubbishCam.Domain.Dtos.Friendship;
 
 #nullable disable warnings
 
-public class GetFriendshipDto
+public record GetFriendshipDto
 {
-	public int Id { get; set; }
-	public string InitiatorUuid { get; set; }
-	public string TargetUuid { get; set; }
-	public bool Accepted { get; set; }
-	public bool Rejected { get; set; }
+	public int Id { get; init; }
+	public string InitiatorUuid { get; init; }
+	public string TargetUuid { get; init; }
+	public bool Accepted { get; init; }
+	public bool Rejected { get; init; }
 
 #nullable restore
 
-	public static Expression<Func<FriendshipModel, GetFriendshipDto>> FromFriendshipExp { get; set; } = friendship => new GetFriendshipDto()
+	public static Expression<Func<FriendshipModel, GetFriendshipDto>> FromFriendshipExp { get; } = friendship => new GetFriendshipDto()
 	{
 		Id = friendship.Id,
 		InitiatorUuid = friendship.InitiatorUuid,

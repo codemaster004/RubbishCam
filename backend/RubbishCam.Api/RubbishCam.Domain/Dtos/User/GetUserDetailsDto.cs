@@ -11,26 +11,26 @@ public record GetUserDetailsDto
 {
 	[Required]
 	[StringLength( 24 )]
-	public string Uuid { get; set; }
+	public string Uuid { get; init; }
 
 	[Required]
 	[StringLength( 50 )]
-	public string FirstName { get; set; }
+	public string FirstName { get; init; }
 
 	[Required]
 	[StringLength( 50 )]
-	public string LastName { get; set; }
+	public string LastName { get; init; }
 
 	[Required]
 	[StringLength( 32 )]
-	public string UserName { get; set; }
+	public string UserName { get; init; }
 
 
-	public List<GetRoleDto> Roles { get; set; }
+	public List<GetRoleDto> Roles { get; init; }
 
 #nullable restore
 
-	public static Expression<Func<UserModel, GetUserDetailsDto>> FromUserExp { get; set; } = user => new GetUserDetailsDto()
+	public static Expression<Func<UserModel, GetUserDetailsDto>> FromUserExp { get; } = user => new GetUserDetailsDto()
 	{
 		Uuid = user.Uuid,
 		FirstName = user.FirstName,

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RubbishCam.Api.Extensions;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.User;
 using System.Security.Claims;
@@ -48,7 +49,7 @@ public class UsersController : ExtendedControllerBase
 	[HttpGet( "current" )]
 	public async Task<ActionResult<GetUserDetailsDto>> GetCurrentUser()
 	{
-		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
+		string? uuid = User.GetUserUuid();
 		if ( uuid is null )
 		{
 			return InternalServerError();
@@ -112,7 +113,7 @@ public class UsersController : ExtendedControllerBase
 	[HttpDelete( "current" )]
 	public async Task<IActionResult> DeleteCurrentUser()
 	{
-		string? uuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
+		string? uuid = User.GetUserUuid();
 		if ( uuid is null )
 		{
 			return InternalServerError();

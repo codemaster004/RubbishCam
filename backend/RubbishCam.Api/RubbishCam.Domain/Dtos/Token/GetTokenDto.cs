@@ -5,19 +5,19 @@ namespace RubbishCam.Domain.Dtos.Token;
 
 #nullable disable warnings
 
-public class GetTokenDto
+public record GetTokenDto
 {
-	public string Token { get; set; }
-	public string RefreshToken { get; set; }
-	public DateTimeOffset ValidUntil { get; set; }
+	public string Token { get; init; }
+	public string RefreshToken { get; init; }
+	public DateTimeOffset ValidUntil { get; init; }
 
 #nullable restore
 
-	public static Expression<Func<TokenModel, GetTokenDto>> FromTokenExp { get; set; } = role => new GetTokenDto()
+	public static Expression<Func<TokenModel, GetTokenDto>> FromTokenExp { get; } = token => new GetTokenDto()
 	{
-		Token = role.Token,
-		ValidUntil = role.ValidUntil,
-		RefreshToken = role.RefreshToken,
+		Token = token.Token,
+		ValidUntil = token.ValidUntil,
+		RefreshToken = token.RefreshToken,
 	};
 
 	private static readonly Func<TokenModel, GetTokenDto> fromTokenFunc = FromTokenExp.Compile();

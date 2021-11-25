@@ -20,7 +20,8 @@ public class UserModel
 		List<FriendshipModel> initiatedFriendships,
 		List<FriendshipModel> targetingFriendships,
 		List<UserModel> initiatedFriends,
-		List<UserModel> targetingFriends )
+		List<UserModel> targetingFriends,
+		List<PointModel> points )
 	{
 		Uuid = uuid;
 		FirstName = firstName;
@@ -34,6 +35,7 @@ public class UserModel
 		TargetingFriendships = targetingFriendships;
 		InitiatedFriends = initiatedFriends;
 		TargetingFriends = targetingFriends;
+		Points = points;
 	}
 	public UserModel( string uuid,
 		string firstName,
@@ -50,9 +52,12 @@ public class UserModel
 			  new(),
 			  new(),
 			  new(),
-			  new() )
+			  new(),
+			  new())
 	{
 	}
+
+	#region userdata
 
 	[Key]
 	public int Id { get; set; }
@@ -75,10 +80,14 @@ public class UserModel
 	[StringLength( 32 )]
 	public string UserName { get; set; }
 
+	#endregion
+
 
 	public List<TokenModel> Tokens { get; set; }
 
 	public List<RoleModel> Roles { get; set; }
+
+	#region friends
 
 	[InverseProperty( nameof( FriendshipModel.Initiator ) )]
 	public List<FriendshipModel> InitiatedFriendships { get; set; }
@@ -93,10 +102,12 @@ public class UserModel
 	public ReadOnlyCollection<FriendshipModel> Friendships => Enumerable.Concat( InitiatedFriendships, TargetingFriendships ).ToList().AsReadOnly();
 
 	[NotMapped]
-	public ReadOnlyCollection<UserModel> Friends => Enumerable.Concat( 
+	public ReadOnlyCollection<UserModel> Friends => Enumerable.Concat(
 		InitiatedFriendships.Where( x => x.Accepted )
-		.Select( x => x.Target! ), 
+		.Select( x => x.Target! ),
 		TargetingFriendships.Where( x => x.Accepted )
 		.Select( x => x.Target! ) ).ToList().AsReadOnly();
+	#endregion
 
+	public List<PointModel> Points { get; set; }
 }

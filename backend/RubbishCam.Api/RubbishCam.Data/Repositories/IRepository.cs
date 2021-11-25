@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace RubbishCam.Data.Repositories;
 
@@ -36,6 +37,14 @@ public interface IRepository
 		}
 		return source.Count();
 	}
+	async Task<int> SumAsync<T>( IQueryable<T> source, Expression<Func<T, int>> selector )
+	{
+		if ( source is IAsyncEnumerable<T> )
+		{
+			return await source.SumAsync( selector );
+		}
+		return source.Sum( selector );
+	}
 }
 
 public static class RepositoryExtensions
@@ -55,5 +64,9 @@ public static class RepositoryExtensions
 	public static Task<int> CountAsync<T>( this IQueryable<T> source, IRepository repository )
 	{
 		return repository.CountAsync( source );
+	}
+	public static Task<int> SumAsync<T>( this IQueryable<T> source, IRepository repository, Expression<Func<T, int>> selector )
+	{
+		return repository.SumAsync( source, selector );
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace RubbishCam.Api.Extensions;
 
@@ -45,5 +46,10 @@ public static class AuthenticationExtensions
 
 		var tokenKey = TokenKeyPrefix + tokenName;
 		return properties.GetParameter<T>( tokenKey );
+	}
+
+	public static string? GetUserUuid( this ClaimsPrincipal principal )
+	{
+		return principal.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;
 	}
 }

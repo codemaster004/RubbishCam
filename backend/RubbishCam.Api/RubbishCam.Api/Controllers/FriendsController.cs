@@ -58,7 +58,7 @@ public class FriendsController : ExtendedControllerBase
 		return friendship;
 	}
 
-	[HttpPost( "{uuid}" )]
+	[HttpPost( "{targetUuid}" )]
 	public async Task<ActionResult<GetFriendshipDto>> CreateFriendship( string targetUuid )
 	{
 		string? initiatorUuid = User.Claims.Where( c => c.Type == ClaimTypes.Name ).FirstOrDefault()?.Value;

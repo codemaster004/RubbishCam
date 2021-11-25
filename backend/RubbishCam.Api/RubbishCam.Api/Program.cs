@@ -56,9 +56,12 @@ builder.Services.AddNpgsql<AppDbContext>(
 _ = builder.Services.AddScoped<IUsersService, UsersService>();
 _ = builder.Services.AddScoped<IAuthService, AuthService>();
 _ = builder.Services.AddScoped<IFriendsService, FriendsService>();
+_ = builder.Services.AddScoped<IPointsService, PointsService>();
 
 _ = builder.Services.AddScoped<IUserRepository, UserRepository>();
 _ = builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+_ = builder.Services.AddScoped<IFriendshipsRepository, FriendshipsRepository>();
+_ = builder.Services.AddScoped<IPointsRepository, PointsRepository>();
 
 var app = builder.Build();
 

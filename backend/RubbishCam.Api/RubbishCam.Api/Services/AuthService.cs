@@ -56,7 +56,7 @@ public class AuthService : IAuthService
 		return GetTokenDto.FromToken( token );
 	}
 
-	private const int tokenValidityMinutes = 10;
+	private const int tokenValidityMinutes = 1000;
 	private async Task<TokenModel> GenerateTokenAsync( UserModel user )
 	{
 		(string access, string refresh) = await GenerateTokens();

@@ -23,6 +23,10 @@ public class AppDbContext : DbContext
 		{
 			throw new NullReferenceException();
 		}
+		if ( Points is null )
+		{
+			throw new NullReferenceException();
+		}
 
 	}
 
@@ -53,6 +57,12 @@ public class AppDbContext : DbContext
 						.HasPrincipalKey( u => u.Uuid );
 			} );
 
+		_ = modelBuilder.Entity<PointModel>()
+				.HasOne( p=>p.User )
+				.WithMany( u => u.Points )
+				.HasForeignKey( p => p.UserUuid )
+				.HasPrincipalKey( u => u.Uuid );
+
 	}
 
 	public DbSet<UserModel> Users { get; set; }
@@ -62,4 +72,6 @@ public class AppDbContext : DbContext
 	public DbSet<RoleModel> Roles { get; set; }
 
 	public DbSet<FriendshipModel> Friendships { get; set; }
+
+	public DbSet<PointModel> Points { get; set; }
 }

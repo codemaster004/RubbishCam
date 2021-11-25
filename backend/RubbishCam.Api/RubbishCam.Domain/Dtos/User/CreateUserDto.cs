@@ -34,12 +34,6 @@ public record CreateUserDto
 			firstName: FirstName,
 			lastName: LastName,
 			passwordHash: passwordHash,
-			userName: UserName,
-			tokens: new(),
-			roles: new(),
-			initiatedFriendships: new(),
-			targetingFriendships: new(),
-			initiatedFriends: new(),
-			targetingFriends: new() );
+			userName: UserName );
 	}
 }

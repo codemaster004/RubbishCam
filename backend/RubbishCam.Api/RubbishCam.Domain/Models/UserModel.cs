@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RubbishCam.Domain.Relations;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,7 +22,9 @@ public class UserModel
 		List<FriendshipModel> targetingFriendships,
 		List<UserModel> initiatedFriends,
 		List<UserModel> targetingFriends,
-		List<PointModel> points )
+		List<PointModel> points,
+		List<GroupModel> groups,
+		List<GroupMembersRelation> groupsR)
 	{
 		Uuid = uuid;
 		FirstName = firstName;
@@ -31,11 +34,16 @@ public class UserModel
 
 		Tokens = tokens;
 		Roles = roles;
+
 		InitiatedFriendships = initiatedFriendships;
 		TargetingFriendships = targetingFriendships;
 		InitiatedFriends = initiatedFriends;
 		TargetingFriends = targetingFriends;
+
 		Points = points;
+
+		Groups = groups;
+		GroupsR = groupsR;
 	}
 	public UserModel( string uuid,
 		string firstName,
@@ -53,7 +61,9 @@ public class UserModel
 			  new(),
 			  new(),
 			  new(),
-			  new())
+			  new(),
+			  new(),
+			  new() )
 	{
 	}
 
@@ -107,6 +117,13 @@ public class UserModel
 		.Select( x => x.Target! ),
 		TargetingFriendships.Where( x => x.Accepted )
 		.Select( x => x.Target! ) ).ToList().AsReadOnly();
+	#endregion
+
+	#region groups
+
+	public List<GroupModel> Groups { get; set; }
+	public List<GroupMembersRelation> GroupsR { get; set; }
+
 	#endregion
 
 	public List<PointModel> Points { get; set; }

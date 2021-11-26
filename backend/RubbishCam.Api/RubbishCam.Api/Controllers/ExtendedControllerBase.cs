@@ -20,6 +20,13 @@ public class ExtendedControllerBase : ControllerBase
 	}
 
 	[NonAction]
+	public ObjectResult Forbidden( string detail )
+	{
+		var problemDetails = ProblemDetailsFactory.CreateProblemDetails( HttpContext, 403, detail: detail );
+		return Unauthorized( problemDetails );
+	}
+
+	[NonAction]
 	public NotFoundObjectResult NotFound( string detail )
 	{
 		var problemDetails = ProblemDetailsFactory.CreateProblemDetails( HttpContext, 404, detail: detail );

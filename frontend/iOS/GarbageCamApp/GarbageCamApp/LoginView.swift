@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LoginView: View {
     
+    @EnvironmentObject var authState: AuthState
+    
     @State var email: String = ""
     @State var password: String = ""
     
@@ -53,11 +55,21 @@ struct LoginView: View {
                         Text("Sign up")
                             .foregroundColor(Color("MainColor"))
                             .fontWeight(.medium)
+                            .onTapGesture {
+                                withAnimation(.spring()) {
+                                    self.authState.authView = AuthViews.signup
+                                }
+                            }
                     }
                     
                     MainButton(text: "Get Started") {
                         print("Login in")
+                        
                         UIApplication.shared.endEditing()
+                        
+                        withAnimation(.spring()) {
+                            self.authState.authView = AuthViews.none
+                        }
                     }
                 }
             }
@@ -68,6 +80,8 @@ struct LoginView: View {
 }
 
 struct SignUpView: View {
+    
+    @EnvironmentObject var authState: AuthState
     
     @State var email: String = ""
     @State var fullname: String = ""
@@ -111,18 +125,28 @@ struct SignUpView: View {
                 
                 VStack {
                     HStack {
-                        Text("Don't have an account?")
+                        Text("Already have an account?")
                             .foregroundColor(Color("TextSecondary"))
                             .fontWeight(.medium)
                         
-                        Text("Sign up")
+                        Text("Log in")
                             .foregroundColor(Color("MainColor"))
                             .fontWeight(.medium)
+                            .onTapGesture {
+                                withAnimation(.spring()) {
+                                    self.authState.authView = AuthViews.login
+                                }
+                            }
                     }
                     
                     MainButton(text: "Get Started") {
-                        print("Login in")
+                        print("Signed up")
+                        
                         UIApplication.shared.endEditing()
+                        
+                        withAnimation(.spring()) {
+                            self.authState.authView = AuthViews.none
+                        }
                     }
                 }
             }

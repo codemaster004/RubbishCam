@@ -17,6 +17,9 @@ struct LoginView: View {
             
             Color("BgcGray")
                 .ignoresSafeArea()
+                .onTapGesture {
+                    UIApplication.shared.endEditing()
+                }
             
             VStack(spacing: 25) {
                 VStack {
@@ -31,36 +34,42 @@ struct LoginView: View {
                         .font(.system(size: 24))
                 }
                 
+                // Username Input
                 VStack(alignment: .leading, spacing: 7) {
                     Text("Username")
                         .foregroundColor(Color("TextSecondary"))
                         .fontWeight(.medium)
                     
-                    TextField("Enter Your Username", text: $username)
-                        .padding()
-                        .frame(height: 59)
-                        .background(Color.white)
-                        .cornerRadius(15)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color("AccentGrey"), lineWidth: 1)
-                        )
+                    TextField("Enter Your Username", text: $username, onCommit:  {
+                        UIApplication.shared.endEditing()
+                    })
+                    .padding()
+                    .frame(height: 59)
+                    .background(Color.white)
+                    .cornerRadius(15)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color("AccentGrey"), lineWidth: 1)
+                    )
                 }
                 
-                VStack(alignment: .leading) {
+                // Password Input
+                VStack(alignment: .leading, spacing: 7) {
                     Text("Password")
                         .foregroundColor(Color("TextSecondary"))
                         .fontWeight(.medium)
                     
-                    SecureField("Create Password", text: $password)
-                        .padding()
-                        .frame(height: 59)
-                        .background(Color.white)
-                        .cornerRadius(15)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 15)
-                                .stroke(Color("AccentGrey"), lineWidth: 1)
-                        )
+                    SecureField("Create Password", text: $password, onCommit:  {
+                        UIApplication.shared.endEditing()
+                    })
+                        .padding(.horizontal)
+                    .frame(height: 59)
+                    .background(Color.white)
+                    .cornerRadius(15)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color("AccentGrey"), lineWidth: 1)
+                    )
                     
                     HStack {
                         Spacer()
@@ -85,6 +94,7 @@ struct LoginView: View {
                     
                     MainButton(text: "Get Started") {
                         print("Login in")
+                        UIApplication.shared.endEditing()
                     }
                 }
             }
@@ -100,30 +110,37 @@ struct LoginView_Previews: PreviewProvider {
     }
 }
 
+extension UIApplication {
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
 struct MainButton: View {
     
     let text: String
     let action: () -> Void
     
     var body: some View {
-        HStack {
-            Spacer()
+        Button(action: {
+            self.action()
+        }) {
+            HStack {
+                Spacer()
             
-            Button(action: {
-                self.action()
-            }) {
-                Text(text)
-                    .fontWeight(.bold)
-                    .font(.system(size: 20))
-                    .frame(height: 60)
-                    .foregroundColor(Color.white)
+            Text(text)
+                .fontWeight(.bold)
+                .font(.system(size: 20))
+                .frame(height: 60)
+                .foregroundColor(Color.white)
+            
+                
+                Spacer()
             }
-            .buttonStyle(PlainButtonStyle())
-            
-            Spacer()
+            .background(Color("MainColor"))
+            .cornerRadius(10)
+            .shadow(color: Color("MainColor").opacity(0.7), radius: 9, x: 0, y: 4)
         }
-        .background(Color("MainColor"))
-        .cornerRadius(10)
-        .shadow(color: Color("MainColor").opacity(0.7), radius: 9, x: 0, y: 4)
+        .buttonStyle(PlainButtonStyle())
     }
 }

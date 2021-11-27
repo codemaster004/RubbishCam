@@ -8,6 +8,8 @@ namespace RubbishCam.Domain.Dtos.Point;
 public record CreatePointDto
 {
 	[Required]
+	public int GarbageTypeId { get; set; }
+	[Required]
 	public double Longitude { get; set; }
 	[Required]
 	public double Latitude { get; set; }
@@ -24,8 +26,7 @@ public record CreatePointDto
 	public PointModel ToPoint( string uuid )
 	{
 		return new PointModel(
-			type: Type,
-			value: Value,
+			garbageTypeId: GarbageTypeId,
 			userUuid: uuid,
 			longitude: Longitude,
 			latitude: Latitude,

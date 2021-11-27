@@ -15,6 +15,7 @@ public class AppDbContext : DbContext
 		ArgumentNullException.ThrowIfNull( Points );
 		ArgumentNullException.ThrowIfNull( Groups );
 		ArgumentNullException.ThrowIfNull( GroupsMembers );
+		ArgumentNullException.ThrowIfNull( GarbageTypes );
 	}
 
 	protected override void OnModelCreating( ModelBuilder modelBuilder )
@@ -122,4 +123,5 @@ public class AppDbContext : DbContext
 	public DbSet<PointModel> Points { get; set; }
 	public DbSet<GroupModel> Groups { get; set; }
 	public DbSet<GroupMembersRelation> GroupsMembers { get; set; }
+	public DbSet<GarbageTypeModel> GarbageTypes{ get; set; }
 }

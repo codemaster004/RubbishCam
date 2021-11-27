@@ -34,7 +34,7 @@ public class PointsService : IPointsService
 	{
 		return _pointRepo.GetPoints()
 			.FilterByUserUuid( uuid )
-			.SumAsync( _pointRepo, p => p.Value );
+			.SumAsync( _pointRepo, p => p.GarbageType!.PointsPerItem );
 	}
 
 	public async Task<GetPointDetailsDto> CreatePoint( CreatePointDto dto, string uuid )

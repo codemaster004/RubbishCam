@@ -1,4 +1,5 @@
-﻿using RubbishCam.Domain.Models;
+﻿using RubbishCam.Domain.Dtos.GarbageType;
+using RubbishCam.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
@@ -14,10 +15,7 @@ public record GetPointDetailsDto
 	[Required]
 	public double Latitude { get; init; }
 	[Required]
-	[StringLength( 50 )]
-	public string Type { get; init; }
-	[Required]
-	public int Value { get; init; }
+	public GetGarbageTypeDto GarbageTypeId { get; init; }
 	[Required]
 	public DateTimeOffset DateScored { get; init; }
 	[Required]
@@ -30,8 +28,7 @@ public record GetPointDetailsDto
 		Id = point.Id,
 		Latitude = point.Latitude,
 		Longitude = point.Longitude,
-		Type = point.Type,
-		Value = point.Value,
+		GarbageTypeId = GetGarbageTypeDto.FromGarbageType( point.GarbageType! ),
 		DateScored = point.DateScored,
 		UserUuid = point.UserUuid,
 	};

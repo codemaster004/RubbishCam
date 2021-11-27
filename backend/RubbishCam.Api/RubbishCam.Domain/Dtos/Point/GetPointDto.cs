@@ -10,10 +10,7 @@ public record GetPointDto
 {
 	public int Id { get; init; }
 	[Required]
-	[StringLength( 50 )]
-	public string Type { get; init; }
-	[Required]
-	public int Value { get; init; }
+	public int GarbageTypeId { get; init; }
 	[Required]
 	public DateTimeOffset DateScored { get; init; }
 	[Required]
@@ -24,8 +21,7 @@ public record GetPointDto
 	public static Expression<Func<PointModel, GetPointDto>> FromPointExp { get; } = point => new GetPointDto()
 	{
 		Id = point.Id,
-		Type = point.Type,
-		Value = point.Value,
+		GarbageTypeId = point.GarbageTypeId,
 		DateScored = point.DateScored,
 		UserUuid = point.UserUuid,
 	};

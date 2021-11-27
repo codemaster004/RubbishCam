@@ -5,8 +5,7 @@ namespace RubbishCam.Domain.Models;
 
 public class PointModel
 {
-	public PointModel( string type,
-		int value,
+	public PointModel( int garbageTypeId,
 		string userUuid,
 		double longitude,
 		double latitude,
@@ -14,8 +13,7 @@ public class PointModel
 		List<GroupModel> groups,
 		List<GroupPointsRelation> groupsR )
 	{
-		Type = type;
-		Value = value;
+		GarbageTypeId = garbageTypeId;
 		UserUuid = userUuid;
 		Longitude = longitude;
 		Latitude = latitude;
@@ -23,14 +21,14 @@ public class PointModel
 		Groups = groups;
 		GroupsR = groupsR;
 	}
-	public PointModel( string type,
-		int value,
+	public PointModel(
+		int garbageTypeId,
 		string userUuid,
 		double longitude,
 		double latitude,
 		DateTimeOffset dateScored )
-		: this( type,
-			  value,
+		: this(
+			  garbageTypeId,
 			  userUuid,
 			  longitude,
 			  latitude,
@@ -46,12 +44,12 @@ public class PointModel
 	[Required]
 	public double Latitude { get; set; }
 	[Required]
-	[StringLength( 50 )]
-	public string Type { get; set; } //todo: extract to separate table, alongside with PointModel.Value
-	[Required]
-	public int Value { get; set; }
-	[Required]
 	public DateTimeOffset DateScored { get; set; }
+
+	[Required]
+	public int GarbageTypeId { get; set; }
+	public GarbageTypeModel? GarbageType { get; set; }
+
 	[Required]
 	public string UserUuid { get; set; }
 	public UserModel? User { get; set; }

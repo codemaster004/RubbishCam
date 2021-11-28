@@ -1,4 +1,4 @@
-﻿namespace RubbishCam.Domain.Models.ChallangeRequirements;
+﻿namespace RubbishCam.Domain.Models.ChallengeRequirements;
 
 public abstract class ChallengeRequirementModel
 {

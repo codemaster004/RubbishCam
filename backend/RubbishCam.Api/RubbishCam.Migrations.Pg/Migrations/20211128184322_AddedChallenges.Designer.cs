@@ -12,7 +12,7 @@ using RubbishCam.Data;
 namespace RubbishCam.Migrations.Pg.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211128161223_AddedChallenges")]
+    [Migration("20211128184322_AddedChallenges")]
     partial class AddedChallenges
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,24 +23,6 @@ namespace RubbishCam.Migrations.Pg.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("PointModelUserChallengeRelation", b =>
-                {
-                    b.Property<int>("RelatedPointsId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("RelatedChallengesChallengeId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("RelatedChallengesUserUuid")
-                        .HasColumnType("character varying(24)");
-
-                    b.HasKey("RelatedPointsId", "RelatedChallengesChallengeId", "RelatedChallengesUserUuid");
-
-                    b.HasIndex("RelatedChallengesChallengeId", "RelatedChallengesUserUuid");
-
-                    b.ToTable("PointModelUserChallengeRelation");
-                });
 
             modelBuilder.Entity("RoleModelUserModel", b =>
                 {
@@ -57,7 +39,28 @@ namespace RubbishCam.Migrations.Pg.Migrations
                     b.ToTable("RoleModelUserModel");
                 });
 
-            modelBuilder.Entity("RubbishCam.Domain.Models.ChallangeRequirements.ChallengeRequirementModel", b =>
+            modelBuilder.Entity("RubbishCam.Domain.Models.ChallengeModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Challenges");
+                });
+
+            modelBuilder.Entity("RubbishCam.Domain.Models.ChallengeRequirements.ChallengeRequirementModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,27 +86,6 @@ namespace RubbishCam.Migrations.Pg.Migrations
                     b.ToTable("ChallengeRequirements");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("ChallengeRequirementModel");
-                });
-
-            modelBuilder.Entity("RubbishCam.Domain.Models.ChallengeModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Challenges");
                 });
 
             modelBuilder.Entity("RubbishCam.Domain.Models.FriendshipModel", b =>
@@ -338,13 +320,31 @@ namespace RubbishCam.Migrations.Pg.Migrations
                     b.ToTable("GroupPointsRelation");
                 });
 
-            modelBuilder.Entity("RubbishCam.Domain.Relations.UserChallengeRelation", b =>
+            modelBuilder.Entity("RubbishCam.Domain.Relations.UserChallengePointRelation", b =>
                 {
-                    b.Property<int>("ChallengeId")
+                    b.Property<int>("PointId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserUuid")
-                        .HasColumnType("character varying(24)");
+                    b.Property<int>("UserChallengeId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("PointId", "UserChallengeId");
+
+                    b.HasIndex("UserChallengeId");
+
+                    b.ToTable("UsersChallengesPoints");
+                });
+
+            modelBuilder.Entity("RubbishCam.Domain.Relations.UserChallengeRelation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChallengeId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset?>("DateCompleted")
                         .HasColumnType("timestamp with time zone");
@@ -352,16 +352,22 @@ namespace RubbishCam.Migrations.Pg.Migrations
                     b.Property<DateTimeOffset>("DateStarted")
                         .HasColumnType("timestamp with time zone");
 
-                    b.HasKey("ChallengeId", "UserUuid");
+                    b.Property<string>("UserUuid")
+                        .IsRequired()
+                        .HasColumnType("character varying(24)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChallengeId");
 
                     b.HasIndex("UserUuid");
 
                     b.ToTable("UsersChallenges");
                 });
 
-            modelBuilder.Entity("RubbishCam.Domain.Models.ChallangeRequirements.CollectXItemsRequirement", b =>
+            modelBuilder.Entity("RubbishCam.Domain.Models.ChallengeRequirements.CollectXItemsRequirement", b =>
                 {
-                    b.HasBaseType("RubbishCam.Domain.Models.ChallangeRequirements.ChallengeRequirementModel");
+                    b.HasBaseType("RubbishCam.Domain.Models.ChallengeRequirements.ChallengeRequirementModel");
 
                     b.Property<int>("GarbageTypeId")
                         .HasColumnType("integer");
@@ -372,21 +378,6 @@ namespace RubbishCam.Migrations.Pg.Migrations
                     b.HasIndex("GarbageTypeId");
 
                     b.HasDiscriminator().HasValue("CollectXItemsRequirement");
-                });
-
-            modelBuilder.Entity("PointModelUserChallengeRelation", b =>
-                {
-                    b.HasOne("RubbishCam.Domain.Models.PointModel", null)
-                        .WithMany()
-                        .HasForeignKey("RelatedPointsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RubbishCam.Domain.Relations.UserChallengeRelation", null)
-                        .WithMany()
-                        .HasForeignKey("RelatedChallengesChallengeId", "RelatedChallengesUserUuid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("RoleModelUserModel", b =>
@@ -404,7 +395,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RubbishCam.Domain.Models.ChallangeRequirements.ChallengeRequirementModel", b =>
+            modelBuilder.Entity("RubbishCam.Domain.Models.ChallengeRequirements.ChallengeRequirementModel", b =>
                 {
                     b.HasOne("RubbishCam.Domain.Models.ChallengeModel", null)
                         .WithMany("Requirements")
@@ -503,9 +494,28 @@ namespace RubbishCam.Migrations.Pg.Migrations
                     b.Navigation("Point");
                 });
 
+            modelBuilder.Entity("RubbishCam.Domain.Relations.UserChallengePointRelation", b =>
+                {
+                    b.HasOne("RubbishCam.Domain.Models.PointModel", "Point")
+                        .WithMany("RelatedChallengesR")
+                        .HasForeignKey("PointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RubbishCam.Domain.Relations.UserChallengeRelation", "UserChallenge")
+                        .WithMany("RelatedPointsR")
+                        .HasForeignKey("UserChallengeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Point");
+
+                    b.Navigation("UserChallenge");
+                });
+
             modelBuilder.Entity("RubbishCam.Domain.Relations.UserChallengeRelation", b =>
                 {
-                    b.HasOne("RubbishCam.Domain.Models.ChallengeModel", "Challange")
+                    b.HasOne("RubbishCam.Domain.Models.ChallengeModel", "Challenge")
                         .WithMany("UsersR")
                         .HasForeignKey("ChallengeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -518,12 +528,12 @@ namespace RubbishCam.Migrations.Pg.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Challange");
+                    b.Navigation("Challenge");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("RubbishCam.Domain.Models.ChallangeRequirements.CollectXItemsRequirement", b =>
+            modelBuilder.Entity("RubbishCam.Domain.Models.ChallengeRequirements.CollectXItemsRequirement", b =>
                 {
                     b.HasOne("RubbishCam.Domain.Models.GarbageTypeModel", "GarbageType")
                         .WithMany()
@@ -556,6 +566,8 @@ namespace RubbishCam.Migrations.Pg.Migrations
             modelBuilder.Entity("RubbishCam.Domain.Models.PointModel", b =>
                 {
                     b.Navigation("GroupsR");
+
+                    b.Navigation("RelatedChallengesR");
                 });
 
             modelBuilder.Entity("RubbishCam.Domain.Models.UserModel", b =>
@@ -571,6 +583,11 @@ namespace RubbishCam.Migrations.Pg.Migrations
                     b.Navigation("TargetingFriendships");
 
                     b.Navigation("Tokens");
+                });
+
+            modelBuilder.Entity("RubbishCam.Domain.Relations.UserChallengeRelation", b =>
+                {
+                    b.Navigation("RelatedPointsR");
                 });
 #pragma warning restore 612, 618
         }

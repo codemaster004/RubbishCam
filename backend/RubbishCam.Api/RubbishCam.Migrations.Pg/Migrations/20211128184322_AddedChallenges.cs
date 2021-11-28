@@ -56,6 +56,8 @@ namespace RubbishCam.Migrations.Pg.Migrations
 				name: "UsersChallenges",
 				columns: table => new
 				{
+					Id = table.Column<int>( type: "integer", nullable: false )
+						.Annotation( "Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn ),
 					UserUuid = table.Column<string>( type: "character varying(24)", nullable: false ),
 					ChallengeId = table.Column<int>( type: "integer", nullable: false ),
 					DateStarted = table.Column<DateTimeOffset>( type: "timestamp with time zone", nullable: false ),
@@ -63,7 +65,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
 				},
 				constraints: table =>
 				{
-					_ = table.PrimaryKey( "PK_UsersChallenges", x => new { x.ChallengeId, x.UserUuid } );
+					_ = table.PrimaryKey( "PK_UsersChallenges", x => x.Id );
 					_ = table.ForeignKey(
 						name: "FK_UsersChallenges_Challenges_ChallengeId",
 						column: x => x.ChallengeId,
@@ -79,27 +81,26 @@ namespace RubbishCam.Migrations.Pg.Migrations
 				} );
 
 			_ = migrationBuilder.CreateTable(
-				name: "PointModelUserChallengeRelation",
+				name: "UsersChallengesPoints",
 				columns: table => new
 				{
-					RelatedPointsId = table.Column<int>( type: "integer", nullable: false ),
-					RelatedChallengesChallengeId = table.Column<int>( type: "integer", nullable: false ),
-					RelatedChallengesUserUuid = table.Column<string>( type: "character varying(24)", nullable: false )
+					PointId = table.Column<int>( type: "integer", nullable: false ),
+					UserChallengeId = table.Column<int>( type: "integer", nullable: false )
 				},
 				constraints: table =>
 				{
-					_ = table.PrimaryKey( "PK_PointModelUserChallengeRelation", x => new { x.RelatedPointsId, x.RelatedChallengesChallengeId, x.RelatedChallengesUserUuid } );
+					_ = table.PrimaryKey( "PK_UsersChallengesPoints", x => new { x.PointId, x.UserChallengeId } );
 					_ = table.ForeignKey(
-						name: "FK_PointModelUserChallengeRelation_Points_RelatedPointsId",
-						column: x => x.RelatedPointsId,
+						name: "FK_UsersChallengesPoints_Points_PointId",
+						column: x => x.PointId,
 						principalTable: "Points",
 						principalColumn: "Id",
 						onDelete: ReferentialAction.Cascade );
 					_ = table.ForeignKey(
-						name: "FK_PointModelUserChallengeRelation_UsersChallenges_RelatedChal~",
-						columns: x => new { x.RelatedChallengesChallengeId, x.RelatedChallengesUserUuid },
+						name: "FK_UsersChallengesPoints_UsersChallenges_UserChallengeId",
+						column: x => x.UserChallengeId,
 						principalTable: "UsersChallenges",
-						principalColumns: new[] { "ChallengeId", "UserUuid" },
+						principalColumn: "Id",
 						onDelete: ReferentialAction.Cascade );
 				} );
 
@@ -114,14 +115,19 @@ namespace RubbishCam.Migrations.Pg.Migrations
 				column: "GarbageTypeId" );
 
 			_ = migrationBuilder.CreateIndex(
-				name: "IX_PointModelUserChallengeRelation_RelatedChallengesChallengeI~",
-				table: "PointModelUserChallengeRelation",
-				columns: new[] { "RelatedChallengesChallengeId", "RelatedChallengesUserUuid" } );
+				name: "IX_UsersChallenges_ChallengeId",
+				table: "UsersChallenges",
+				column: "ChallengeId" );
 
 			_ = migrationBuilder.CreateIndex(
 				name: "IX_UsersChallenges_UserUuid",
 				table: "UsersChallenges",
 				column: "UserUuid" );
+
+			_ = migrationBuilder.CreateIndex(
+				name: "IX_UsersChallengesPoints_UserChallengeId",
+				table: "UsersChallengesPoints",
+				column: "UserChallengeId" );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -130,7 +136,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
 				name: "ChallengeRequirements" );
 
 			_ = migrationBuilder.DropTable(
-				name: "PointModelUserChallengeRelation" );
+				name: "UsersChallengesPoints" );
 
 			_ = migrationBuilder.DropTable(
 				name: "UsersChallenges" );

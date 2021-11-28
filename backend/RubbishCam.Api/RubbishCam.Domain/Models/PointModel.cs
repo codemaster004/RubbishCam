@@ -11,7 +11,9 @@ public class PointModel
 		double latitude,
 		DateTimeOffset dateScored,
 		List<GroupModel> groups,
-		List<GroupPointsRelation> groupsR )
+		List<GroupPointsRelation> groupsR,
+		List<UserChallengeRelation> relatedChallenges,
+		List<UserChallengePointRelation> relatedChallengesR )
 	{
 		GarbageTypeId = garbageTypeId;
 		UserUuid = userUuid;
@@ -20,6 +22,8 @@ public class PointModel
 		DateScored = dateScored;
 		Groups = groups;
 		GroupsR = groupsR;
+		RelatedChallenges = relatedChallenges;
+		RelatedChallengesR = relatedChallengesR;
 	}
 	public PointModel(
 		int garbageTypeId,
@@ -33,6 +37,8 @@ public class PointModel
 			  longitude,
 			  latitude,
 			  dateScored,
+			  new(),
+			  new(),
 			  new(),
 			  new() )
 	{
@@ -59,6 +65,7 @@ public class PointModel
 
 
 	public List<UserChallengeRelation> RelatedChallenges { get; set; }
+	public List<UserChallengePointRelation> RelatedChallengesR { get; set; }
 
 
 }

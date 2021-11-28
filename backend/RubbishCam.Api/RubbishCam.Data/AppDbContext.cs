@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RubbishCam.Domain.Models;
-using RubbishCam.Domain.Models.ChallangeRequirements;
+using RubbishCam.Domain.Models.ChallengeRequirements;
 using RubbishCam.Domain.Relations;
 
 namespace RubbishCam.Data;
@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
 		ArgumentNullException.ThrowIfNull( GarbageTypes );
 		ArgumentNullException.ThrowIfNull( Challenges );
 		ArgumentNullException.ThrowIfNull( UsersChallenges );
+		ArgumentNullException.ThrowIfNull( UsersChallengesPoints );
 		ArgumentNullException.ThrowIfNull( ChallengeRequirements );
 		ArgumentNullException.ThrowIfNull( CollectXItemsRequirements );
 	}
@@ -99,14 +100,14 @@ public class AppDbContext : DbContext
 						.HasPrincipalKey( g => g.Id );
 			} );
 
-		// user <= _ => challenge
+		// user <= userchallenge => challenge
 		_ = modelBuilder.Entity<UserModel>()
 			.HasMany( u => u.Challenges )
 			.WithMany( c => c.Users )
 			.UsingEntity<UserChallengeRelation>(
 			j =>
 			{
-				return j.HasOne( uc => uc.Challange )
+				return j.HasOne( uc => uc.Challenge )
 						.WithMany( c => c.UsersR )
 						.HasForeignKey( uc => uc.ChallengeId )
 						.HasPrincipalKey( c => c.Id );
@@ -117,6 +118,26 @@ public class AppDbContext : DbContext
 						.WithMany( u => u.ChallengesR )
 						.HasForeignKey( uc => uc.UserUuid )
 						.HasPrincipalKey( u => u.Uuid );
+			} );
+
+		// userchallenge <= _ => points
+		_ = modelBuilder.Entity<UserChallengeRelation>()
+			.HasMany( uc => uc.RelatedPoints )
+			.WithMany( c => c.RelatedChallenges )
+			.UsingEntity<UserChallengePointRelation>(
+			j =>
+			{
+				return j.HasOne( ucp => ucp.Point )
+						.WithMany( p => p.RelatedChallengesR )
+						.HasForeignKey( ucp => ucp.PointId )
+						.HasPrincipalKey( p => p.Id );
+			},
+			j =>
+			{
+				return j.HasOne( ucp => ucp.UserChallenge )
+						.WithMany( uc => uc.RelatedPointsR )
+						.HasForeignKey( ucp => ucp.UserChallengeId )
+						.HasPrincipalKey( uc => uc.Id );
 			} );
 
 	}
@@ -130,12 +151,13 @@ public class AppDbContext : DbContext
 	public DbSet<GarbageTypeModel> GarbageTypes { get; set; }
 
 	public DbSet<PointModel> Points { get; set; }
-	
+
 	public DbSet<GroupModel> Groups { get; set; }
 	public DbSet<GroupMembersRelation> GroupsMembers { get; set; }
 
 	public DbSet<ChallengeModel> Challenges { get; set; }
 	public DbSet<UserChallengeRelation> UsersChallenges { get; set; }
+	public DbSet<UserChallengePointRelation> UsersChallengesPoints { get; set; }
 	public DbSet<ChallengeRequirementModel> ChallengeRequirements { get; set; }
 	public DbSet<CollectXItemsRequirement> CollectXItemsRequirements { get; set; }
 }

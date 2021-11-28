@@ -8,9 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var authState: AuthState
+    
     var body: some View {
         
-        Home()
+        ZStack {
+            if self.authState.authView == .login {
+                LoginView()
+            } else if self.authState.authView == .signup {
+                SignUpView()
+            } else {
+                Home()
+            }
+        }
+        .onAppear() {
+            self.authState.authView = .signup
+        }
         
     }
 }

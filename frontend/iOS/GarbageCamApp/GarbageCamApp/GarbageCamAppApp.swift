@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct GarbageCamAppApp: App {
+    
+    @StateObject var authState = AuthState()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(authState)
         }
     }
 }

@@ -24,7 +24,9 @@ public class UserModel
 		List<UserModel> targetingFriends,
 		List<PointModel> points,
 		List<GroupModel> groups,
-		List<GroupMembersRelation> groupsR)
+		List<GroupMembersRelation> groupsR,
+		List<ChallengeModel> challenges,
+		List<UserChallengeRelation> challengesR )
 	{
 		Uuid = uuid;
 		FirstName = firstName;
@@ -44,6 +46,9 @@ public class UserModel
 
 		Groups = groups;
 		GroupsR = groupsR;
+
+		Challenges = challenges;
+		ChallengesR = challengesR;
 	}
 	public UserModel( string uuid,
 		string firstName,
@@ -55,6 +60,8 @@ public class UserModel
 			  lastName,
 			  passwordHash,
 			  userName,
+			  new(),
+			  new(),
 			  new(),
 			  new(),
 			  new(),
@@ -127,4 +134,12 @@ public class UserModel
 	#endregion
 
 	public List<PointModel> Points { get; set; }
+
+	#region challenges
+
+	public List<ChallengeModel> Challenges { get; set; }
+	public List<UserChallengeRelation> ChallengesR { get; set; }
+
+	#endregion
+
 }

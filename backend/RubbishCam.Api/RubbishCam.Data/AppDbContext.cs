@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RubbishCam.Domain.Models;
+using RubbishCam.Domain.Models.ChallangeRequirements;
 using RubbishCam.Domain.Relations;
 
 namespace RubbishCam.Data;
@@ -16,6 +17,10 @@ public class AppDbContext : DbContext
 		ArgumentNullException.ThrowIfNull( Groups );
 		ArgumentNullException.ThrowIfNull( GroupsMembers );
 		ArgumentNullException.ThrowIfNull( GarbageTypes );
+		ArgumentNullException.ThrowIfNull( Challenges );
+		ArgumentNullException.ThrowIfNull( UsersChallenges );
+		ArgumentNullException.ThrowIfNull( ChallengeRequirements );
+		ArgumentNullException.ThrowIfNull( CollectXItemsRequirements );
 	}
 
 	protected override void OnModelCreating( ModelBuilder modelBuilder )
@@ -67,26 +72,6 @@ public class AppDbContext : DbContext
 						.HasPrincipalKey( u => u.Uuid );
 			} );
 
-		//// user <= _ => owned groups
-		//_ = modelBuilder.Entity<UserModel>()
-		//	.HasMany( u => u.OwnedGroups )
-		//	.WithMany( g => g.Owners )
-		//	.UsingEntity<GroupOwnersRelation>(
-		//	j =>
-		//	{
-		//		return j.HasOne( go => go.Group )
-		//				.WithMany( g => g.OwnersR )
-		//				.HasForeignKey( go => go.GroupId )
-		//				.HasPrincipalKey( g => g.Id );
-		//	},
-		//	j =>
-		//	{
-		//		return j.HasOne( go => go.User )
-		//				.WithMany( u => u.OwnedGroupsR )
-		//				.HasForeignKey( go => go.UserUuid )
-		//				.HasPrincipalKey( u => u.Uuid );
-		//	} );
-
 		// user <= point
 		_ = modelBuilder.Entity<UserModel>()
 			.HasMany( u => u.Points )
@@ -101,7 +86,7 @@ public class AppDbContext : DbContext
 			.UsingEntity<GroupPointsRelation>(
 			j =>
 			{
-				return j.HasOne( gp => gp.Point)
+				return j.HasOne( gp => gp.Point )
 						.WithMany( p => p.GroupsR )
 						.HasForeignKey( gp => gp.PointId )
 						.HasPrincipalKey( p => p.Id );
@@ -114,14 +99,43 @@ public class AppDbContext : DbContext
 						.HasPrincipalKey( g => g.Id );
 			} );
 
+		// user <= _ => challenge
+		_ = modelBuilder.Entity<UserModel>()
+			.HasMany( u => u.Challenges )
+			.WithMany( c => c.Users )
+			.UsingEntity<UserChallengeRelation>(
+			j =>
+			{
+				return j.HasOne( uc => uc.Challange )
+						.WithMany( c => c.UsersR )
+						.HasForeignKey( uc => uc.ChallengeId )
+						.HasPrincipalKey( c => c.Id );
+			},
+			j =>
+			{
+				return j.HasOne( uc => uc.User )
+						.WithMany( u => u.ChallengesR )
+						.HasForeignKey( uc => uc.UserUuid )
+						.HasPrincipalKey( u => u.Uuid );
+			} );
+
 	}
 
 	public DbSet<UserModel> Users { get; set; }
 	public DbSet<TokenModel> Tokens { get; set; }
 	public DbSet<RoleModel> Roles { get; set; }
+
 	public DbSet<FriendshipModel> Friendships { get; set; }
+
+	public DbSet<GarbageTypeModel> GarbageTypes { get; set; }
+
 	public DbSet<PointModel> Points { get; set; }
+	
 	public DbSet<GroupModel> Groups { get; set; }
 	public DbSet<GroupMembersRelation> GroupsMembers { get; set; }
-	public DbSet<GarbageTypeModel> GarbageTypes{ get; set; }
+
+	public DbSet<ChallengeModel> Challenges { get; set; }
+	public DbSet<UserChallengeRelation> UsersChallenges { get; set; }
+	public DbSet<ChallengeRequirementModel> ChallengeRequirements { get; set; }
+	public DbSet<CollectXItemsRequirement> CollectXItemsRequirements { get; set; }
 }

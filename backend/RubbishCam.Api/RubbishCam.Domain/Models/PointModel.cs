@@ -56,4 +56,9 @@ public class PointModel
 
 	public List<GroupModel> Groups { get; set; }
 	public List<GroupPointsRelation> GroupsR { get; set; }
+
+
+	public List<UserChallengeRelation> RelatedChallenges { get; set; }
+
+
 }

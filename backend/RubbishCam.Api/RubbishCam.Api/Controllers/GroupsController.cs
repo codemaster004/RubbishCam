@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RubbishCam.Api.Extensions;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.Group;
+using RubbishCam.Domain.Dtos.Group.Membership;
 
 namespace RubbishCam.Api.Controllers;
 
@@ -28,7 +29,7 @@ public class GroupsController : ExtendedControllerBase
 			return InternalServerError();
 		}
 
-		return await _groupsService.GetGroups( uuid );
+		return await _groupsService.GetGroupsAsync( uuid );
 	}
 
 	[HttpGet( "owned" )]
@@ -40,7 +41,7 @@ public class GroupsController : ExtendedControllerBase
 			return InternalServerError();
 		}
 
-		return await _groupsService.GetOwnedGroups( uuid );
+		return await _groupsService.GetOwnedGroupsAsync( uuid );
 	}
 
 	[HttpGet( "{id}" )]
@@ -55,7 +56,7 @@ public class GroupsController : ExtendedControllerBase
 		GetGroupDetailsDto? group;
 		try
 		{
-			group = await _groupsService.GetGroup( id, uuid );
+			group = await _groupsService.GetGroupAsync( id, uuid );
 		}
 		catch ( NotAuthorizedException )
 		{
@@ -79,9 +80,90 @@ public class GroupsController : ExtendedControllerBase
 			return InternalServerError();
 		}
 
-		var group = await _groupsService.CreateGroup( dto, uuid );
+		var group = await _groupsService.CreateGroupAsync( dto, uuid );
 
 		return CreatedAtAction( nameof( GetGroup ), new { group.Id }, group );
+	}
+
+	[HttpGet("{id}/members")]
+	public async Task<ActionResult<GetGroupMembershipDto[]>> GetMembers( int id )
+	{
+		var uuid = User.GetUserUuid();
+		if ( uuid is null )
+		{
+			return InternalServerError();
+		}
+
+		try
+		{
+			return await _groupsService.GetGroupMembersAsync( id, uuid );
+		}
+		catch ( NotAuthorizedException )
+		{
+			return Forbidden( "You do not have permission to access to this group" );
+		}
+		catch ( NotFoundException )
+		{
+			return NotFound( "Group does not exist" );
+		}
+	}
+
+	[HttpPost( "{id}/members/add" )]
+	public async Task<IActionResult> AddMember( int id, [FromBody] string targetUuid )
+	{
+		var uuid = User.GetUserUuid();
+		if ( uuid is null )
+		{
+			return InternalServerError();
+		}
+
+		try
+		{
+			await _groupsService.AddToGroupAsync( id, targetUuid, uuid );
+		}
+		catch ( NotAuthorizedException )
+		{
+			return Forbidden( "You do not have permission to add users to this group" );
+		}
+		catch ( ConflictException )
+		{
+			return Conflict( "Given user is already member of this group" );
+		}
+		catch ( NotFoundException )
+		{
+			return NotFound( "Group or user does not exist" );
+		}
+
+		return NoContent();
+	}
+
+	[HttpPost( "{id}/members/remove" )]
+	public async Task<IActionResult> RemoveMember( int id, [FromBody] string targetUuid )
+	{
+		var uuid = User.GetUserUuid();
+		if ( uuid is null )
+		{
+			return InternalServerError();
+		}
+
+		try
+		{
+			await _groupsService.RemoveFromGroupAsync( id, targetUuid, uuid );
+		}
+		catch ( NotAuthorizedException )
+		{
+			return Forbidden( "You do not have permission to remove users from this group" );
+		}
+		catch ( ConflictException )
+		{
+			return Conflict( "Given user is not member of this group" );
+		}
+		catch ( NotFoundException )
+		{
+			return NotFound( "Group does not exist" );
+		}
+
+		return NoContent();
 	}
 
 

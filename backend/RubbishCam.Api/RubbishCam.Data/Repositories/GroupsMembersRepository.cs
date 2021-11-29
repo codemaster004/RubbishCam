@@ -4,8 +4,9 @@ namespace RubbishCam.Data.Repositories;
 
 public interface IGroupsMembersRepository : IRepository
 {
-	Task AddGroupMemberAsync( GroupMembersRelation group );
-	IQueryable<GroupMembersRelation> GetGroupsMembers();
+	Task AddGroupMemberAsync( GroupMembersRelation membership );
+	IQueryable<GroupMembersRelation> GetGroupsMembersAsync();
+	Task RemoveGroupMemberAsync( GroupMembersRelation membership );
 	Task<int> SaveAsync();
 }
 
@@ -18,14 +19,20 @@ public class GroupsMembersRepository : IGroupsMembersRepository
 		_dbContext = dbContext;
 	}
 
-	public IQueryable<GroupMembersRelation> GetGroupsMembers()
+	public IQueryable<GroupMembersRelation> GetGroupsMembersAsync()
 	{
 		return _dbContext.GroupsMembers;
 	}
 
-	public async Task AddGroupMemberAsync( GroupMembersRelation group )
+	public async Task AddGroupMemberAsync( GroupMembersRelation membership )
 	{
-		_ = await _dbContext.GroupsMembers.AddAsync( group );
+		_ = await _dbContext.GroupsMembers.AddAsync( membership );
+	}
+
+	public async Task RemoveGroupMemberAsync( GroupMembersRelation membership )
+	{
+		await Task.CompletedTask;
+		_ = _dbContext.GroupsMembers.Remove( membership );
 	}
 
 	public Task<int> SaveAsync()

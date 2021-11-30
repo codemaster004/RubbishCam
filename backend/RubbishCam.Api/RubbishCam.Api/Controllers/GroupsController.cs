@@ -85,6 +85,7 @@ public class GroupsController : ExtendedControllerBase
 		return CreatedAtAction( nameof( GetGroup ), new { group.Id }, group );
 	}
 
+
 	[HttpGet("{id}/members")]
 	public async Task<ActionResult<GetGroupMembershipDto[]>> GetMembers( int id )
 	{
@@ -154,13 +155,91 @@ public class GroupsController : ExtendedControllerBase
 		{
 			return Forbidden( "You do not have permission to remove users from this group" );
 		}
-		catch ( ConflictException )
+		catch ( NotFoundException )
 		{
-			return Conflict( "Given user is not member of this group" );
+			return NotFound( "Given user is not member of this group" );
+		}
+
+		return NoContent();
+	}
+
+
+	[HttpGet("{id}/owners")]
+	public async Task<ActionResult<GetGroupMembershipDto[]>> GetOwners( int id )
+	{
+		var uuid = User.GetUserUuid();
+		if ( uuid is null )
+		{
+			return InternalServerError();
+		}
+
+		try
+		{
+			return await _groupsService.GetOwnersAsync( id, uuid );
+		}
+		catch ( NotAuthorizedException )
+		{
+			return Forbidden( "You do not have permission to access to this group" );
 		}
 		catch ( NotFoundException )
 		{
 			return NotFound( "Group does not exist" );
+		}
+	}
+
+	[HttpPost( "{id}/owners/add" )]
+	public async Task<IActionResult> AddAsOwner( int id, [FromBody] string targetUuid )
+	{
+		var uuid = User.GetUserUuid();
+		if ( uuid is null )
+		{
+			return InternalServerError();
+		}
+
+		try
+		{
+			await _groupsService.AddAsOwner( id, targetUuid, uuid );
+		}
+		catch ( NotAuthorizedException )
+		{
+			return Forbidden( "You do not have permission to modify this group" );
+		}
+		catch ( ConflictException )
+		{
+			return Conflict( "Given user is already owner of this group" );
+		}
+		catch ( NotFoundException )
+		{
+			return NotFound( "Given user is not member of this group" );
+		}
+
+		return NoContent();
+	}
+
+	[HttpPost( "{id}/owners/remove" )]
+	public async Task<IActionResult> RemoveAsOwner( int id, [FromBody] string targetUuid )
+	{
+		var uuid = User.GetUserUuid();
+		if ( uuid is null )
+		{
+			return InternalServerError();
+		}
+
+		try
+		{
+			await _groupsService.RemoveAsOwner( id, targetUuid, uuid );
+		}
+		catch ( NotAuthorizedException )
+		{
+			return Forbidden( "You do not have permission to modify this group" );
+		}
+		catch ( ConflictException )
+		{
+			return Conflict( "Given user is not owner of this group" );
+		}
+		catch ( NotFoundException )
+		{
+			return NotFound( "Given user is not member of this group" );
 		}
 
 		return NoContent();

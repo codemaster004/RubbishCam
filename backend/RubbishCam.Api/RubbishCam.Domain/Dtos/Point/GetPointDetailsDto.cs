@@ -15,7 +15,7 @@ public record GetPointDetailsDto
 	[Required]
 	public double Latitude { get; init; }
 	[Required]
-	public GetGarbageTypeDto GarbageTypeId { get; init; }
+	public int GarbageTypeId { get; init; }
 	[Required]
 	public DateTimeOffset DateScored { get; init; }
 	[Required]
@@ -28,7 +28,7 @@ public record GetPointDetailsDto
 		Id = point.Id,
 		Latitude = point.Latitude,
 		Longitude = point.Longitude,
-		GarbageTypeId = GetGarbageTypeDto.FromGarbageType( point.GarbageType! ),
+		GarbageTypeId = point.GarbageTypeId,
 		DateScored = point.DateScored,
 		UserUuid = point.UserUuid,
 	};

@@ -13,11 +13,11 @@ public record CreatePointDto
 	public double Longitude { get; set; }
 	[Required]
 	public double Latitude { get; set; }
-	[Required( AllowEmptyStrings = false )]
-	[StringLength( 50 )]
-	public string Type { get; set; }
-	[Required]
-	public int Value { get; set; }
+	//[Required( AllowEmptyStrings = false )]
+	//[StringLength( 50 )]
+	//public string Type { get; set; }
+	//[Required]
+	//public int Value { get; set; }
 	[Required]
 	public DateTimeOffset DateScored { get; set; }
 

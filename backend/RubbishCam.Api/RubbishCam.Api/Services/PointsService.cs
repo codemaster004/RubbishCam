@@ -25,6 +25,7 @@ public class PointsService : IPointsService
 	public Task<GetPointDetailsDto[]> GetPointsAsync( string uuid )
 	{
 		return _pointRepo.GetPoints()
+			.WithTypes( _pointRepo )
 			.FilterByUserUuid( uuid )
 			.Select( GetPointDetailsDto.FromPointExp )
 			.ToArrayAsync( _pointRepo );

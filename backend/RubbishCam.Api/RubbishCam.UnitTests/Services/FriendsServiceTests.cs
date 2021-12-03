@@ -584,14 +584,11 @@ public class FriendsServiceTests
 		_friendshipsRepoMock.SetupGet();
 		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
 
-		_ = _friendshipsRepoMock.Setup( x => x.SaveAsync() ).Returns( () => Task.FromResult( 1 ) );
-
 		// act
 		await _sut.RejectFriendshipAsync( id );
 
 		// assert
 		_friendshipsRepoMock.Verify( x => x.GetFriendships(), Times.Once );
-		_friendshipsRepoMock.Verify( x => x.SaveAsync(), Times.Once );
 
 		Assert.Equal( id, friendship.Id );
 		Assert.Equal( initiatorUuid, friendship.InitiatorUuid );

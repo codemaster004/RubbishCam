@@ -99,6 +99,11 @@ public class FriendsService : IFriendsService
 			throw new NotFoundException();
 		}
 
+		if ( friendship.Accepted )
+		{
+			return;
+		}
+
 		friendship.Rejected = false;
 		friendship.Accepted = true;
 
@@ -118,7 +123,10 @@ public class FriendsService : IFriendsService
 		{
 			throw new ConflictException();
 		}
-
+		if ( friendship.Rejected )
+		{
+			return;
+		}
 		friendship.Rejected = true;
 
 		_ = await _friendshipsRepo.SaveAsync();

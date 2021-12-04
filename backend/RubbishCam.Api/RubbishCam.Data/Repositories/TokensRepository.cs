@@ -3,7 +3,7 @@ using RubbishCam.Domain.Models;
 
 namespace RubbishCam.Data.Repositories;
 
-public interface ITokenRepository : IRepository
+public interface ITokensRepository : IRepository
 {
 	IQueryable<TokenModel> GetTokens();
 	Task AddTokenAsync( TokenModel token );
@@ -13,11 +13,11 @@ public interface ITokenRepository : IRepository
 	IQueryable<TokenModel> WithUsersWithRoles( IQueryable<TokenModel> source );
 }
 
-public class TokenRepository : ITokenRepository
+public class TokensRepository : ITokensRepository
 {
 	private readonly AppDbContext _dbContext;
 
-	public TokenRepository( AppDbContext dbContext )
+	public TokensRepository( AppDbContext dbContext )
 	{
 		_dbContext = dbContext;
 	}
@@ -48,7 +48,7 @@ public class TokenRepository : ITokenRepository
 
 }
 
-public static class TokenRepositoryExtensions
+public static class TokensRepositoryExtensions
 {
 	public static IQueryable<TokenModel> FilterByAccessToken( this IQueryable<TokenModel> source, string token )
 	{
@@ -58,11 +58,11 @@ public static class TokenRepositoryExtensions
 	{
 		return source.Where( t => t.RefreshToken == token );
 	}
-	public static IQueryable<TokenModel> WithUsers( this IQueryable<TokenModel> source, ITokenRepository repository )
+	public static IQueryable<TokenModel> WithUsers( this IQueryable<TokenModel> source, ITokensRepository repository )
 	{
 		return repository.WithUsers( source );
 	}
-	public static IQueryable<TokenModel> WithUsersWithRoles( this IQueryable<TokenModel> source, ITokenRepository repository )
+	public static IQueryable<TokenModel> WithUsersWithRoles( this IQueryable<TokenModel> source, ITokensRepository repository )
 	{
 		return repository.WithUsersWithRoles( source );
 	}

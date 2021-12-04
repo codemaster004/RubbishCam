@@ -3,7 +3,7 @@ using RubbishCam.Domain.Models;
 
 namespace RubbishCam.Data.Repositories;
 
-public interface IUserRepository : IRepository
+public interface IUsersRepository : IRepository
 {
 	IQueryable<UserModel> GetUsers();
 	Task AddUserAsync( UserModel user );
@@ -17,11 +17,11 @@ public interface IUserRepository : IRepository
 
 }
 
-public class UserRepository : IUserRepository
+public class UsersRepository : IUsersRepository
 {
 	private readonly AppDbContext _dbContext;
 
-	public UserRepository( AppDbContext dbContext )
+	public UsersRepository( AppDbContext dbContext )
 	{
 		_dbContext = dbContext;
 	}
@@ -69,7 +69,7 @@ public class UserRepository : IUserRepository
 
 }
 
-public static class UserRepositoryExtensions
+public static class UsersRepositoryExtensions
 {
 	public static IQueryable<UserModel> FilterById( this IQueryable<UserModel> source, string uuid )
 	{
@@ -80,19 +80,19 @@ public static class UserRepositoryExtensions
 		return source.Where( u => u.UserName == username );
 	}
 
-	public static IQueryable<UserModel> WithRoles( this IQueryable<UserModel> source, IUserRepository repository )
+	public static IQueryable<UserModel> WithRoles( this IQueryable<UserModel> source, IUsersRepository repository )
 	{
 		return repository.WithRoles( source );
 	}
-	public static IQueryable<UserModel> WithTokens( this IQueryable<UserModel> source, IUserRepository repository )
+	public static IQueryable<UserModel> WithTokens( this IQueryable<UserModel> source, IUsersRepository repository )
 	{
 		return repository.WithTokens( source );
 	}
-	public static IQueryable<UserModel> WithFriendships( this IQueryable<UserModel> source, IUserRepository repository )
+	public static IQueryable<UserModel> WithFriendships( this IQueryable<UserModel> source, IUsersRepository repository )
 	{
 		return repository.WithFriendships( source );
 	}
-	public static IQueryable<UserModel> WithFriends( this IQueryable<UserModel> source, IUserRepository repository )
+	public static IQueryable<UserModel> WithFriends( this IQueryable<UserModel> source, IUsersRepository repository )
 	{
 		return repository.WithFriends( source );
 	}

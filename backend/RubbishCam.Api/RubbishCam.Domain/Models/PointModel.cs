@@ -11,7 +11,7 @@ public class PointModel
 		double latitude,
 		DateTimeOffset dateScored,
 		List<GroupModel> groups,
-		List<GroupPointsRelation> groupsR,
+		List<GroupPointRelation> groupsR,
 		List<UserChallengeRelation> relatedChallenges,
 		List<UserChallengePointRelation> relatedChallengesR )
 	{
@@ -61,7 +61,7 @@ public class PointModel
 	public UserModel? User { get; set; }
 
 	public List<GroupModel> Groups { get; set; }
-	public List<GroupPointsRelation> GroupsR { get; set; }
+	public List<GroupPointRelation> GroupsR { get; set; }
 
 
 	public List<UserChallengeRelation> RelatedChallenges { get; set; }

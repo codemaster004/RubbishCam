@@ -1,4 +1,4 @@
-﻿using RubbishCam.Domain.Models.ChallengeRequirements;
+﻿using RubbishCam.Domain.Models.ChallangeRequirements;
 using RubbishCam.Domain.Relations;
 
 namespace RubbishCam.Domain.Models;

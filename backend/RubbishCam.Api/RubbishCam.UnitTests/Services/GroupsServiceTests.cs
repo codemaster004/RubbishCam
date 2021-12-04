@@ -69,7 +69,7 @@ public class GroupsServiceTests
 			.ToArray();
 
 		var memberships = containing.Select( ( x, i ) =>
-			new GroupMembersRelation( uuid )
+			new GroupMembershipRelation( uuid )
 			{
 				GroupId = x.Id,
 				User = requestor,
@@ -109,7 +109,7 @@ public class GroupsServiceTests
 			.ToArray();
 
 		var memberships = containing.Select( ( x, i ) =>
-			new GroupMembersRelation( uuid )
+			new GroupMembershipRelation( uuid )
 			{
 				GroupId = x.Id,
 				User = requestor,
@@ -147,7 +147,7 @@ public class GroupsServiceTests
 			.Select( x => new GroupModel( Faker.Company.Name() ) { Id = x, Members = _usersRepoMock.Users.ToList() } )
 			.ToArray();
 
-		var memberships = owned.Select( x => new GroupMembersRelation( uuid ) { GroupId = x.Id, User = requestor, Group = x } );
+		var memberships = owned.Select( x => new GroupMembershipRelation( uuid ) { GroupId = x.Id, User = requestor, Group = x } );
 		_membersRepoMock.AddManyKnownMemberships( memberships );
 
 		_membersRepoMock.SetupGet();
@@ -199,7 +199,7 @@ public class GroupsServiceTests
 		GroupModel group = new( "HelloThere" ) { Id = groupId, Members = _usersRepoMock.Users.ToList() };
 		_ = _groupsRepoMock.AddKnownGroup( group );
 
-		GroupMembersRelation membership = new( uuid ) { GroupId = groupId, User = requestor, Group = group };
+		GroupMembershipRelation membership = new( uuid ) { GroupId = groupId, User = requestor, Group = group };
 		_ = _membersRepoMock.AddKnownMembership( membership );
 
 		_usersRepoMock.SetupGet();
@@ -208,7 +208,7 @@ public class GroupsServiceTests
 
 		_usersRepoMock.SetupFirstOrDefault<UserModel>();
 		_groupsRepoMock.SetupFirstOrDefault<GetGroupDetailsDto>();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var actual = await _sut.GetGroupAsync( groupId, uuid );
@@ -229,7 +229,7 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupGet();
 		_groupsRepoMock.SetupFirstOrDefault<GetGroupDetailsDto>();
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var actual = await _sut.GetGroupAsync( 321, GenerateUuid() );
@@ -260,7 +260,7 @@ public class GroupsServiceTests
 
 		_usersRepoMock.SetupFirstOrDefault<UserModel>();
 		_groupsRepoMock.SetupFirstOrDefault<GetGroupDetailsDto>();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.GetGroupAsync( groupId, uuid );
@@ -294,7 +294,7 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 		var memberships = members.Select( ( x, i ) =>
-			new GroupMembersRelation( x.Uuid )
+			new GroupMembershipRelation( x.Uuid )
 			{
 				GroupId = groupId,
 				User = x,
@@ -305,7 +305,7 @@ public class GroupsServiceTests
 
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 		_membersRepoMock.SetupToArray<GetGroupMembershipDto>();
 
 		// act
@@ -365,7 +365,7 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 		var memberships = members.Select( ( x, i ) =>
-			new GroupMembersRelation( x.Uuid )
+			new GroupMembershipRelation( x.Uuid )
 			{
 				GroupId = groupId,
 				User = x,
@@ -376,7 +376,7 @@ public class GroupsServiceTests
 
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.GetGroupMembersAsync( groupId, requestorUuid );
@@ -413,7 +413,7 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 		var memberships = members.Select( ( x, i ) =>
-			new GroupMembersRelation( x.Uuid )
+			new GroupMembershipRelation( x.Uuid )
 			{
 				GroupId = groupId,
 				User = x,
@@ -424,7 +424,7 @@ public class GroupsServiceTests
 
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 		_membersRepoMock.SetupToArray<GetGroupMembershipDto>();
 
 		// act
@@ -464,7 +464,7 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 		var memberships = members.Select( ( x, i ) =>
-			new GroupMembersRelation( x.Uuid )
+			new GroupMembershipRelation( x.Uuid )
 			{
 				GroupId = groupId,
 				User = x,
@@ -475,7 +475,7 @@ public class GroupsServiceTests
 
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 		_membersRepoMock.SetupToArray<GetGroupMembershipDto>();
 
 		// act
@@ -535,7 +535,7 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 		var memberships = members.Select( ( x, i ) =>
-			new GroupMembersRelation( x.Uuid )
+			new GroupMembershipRelation( x.Uuid )
 			{
 				GroupId = groupId,
 				User = x,
@@ -546,7 +546,7 @@ public class GroupsServiceTests
 
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.GetOwnersAsync( groupId, requestorUuid );
@@ -632,11 +632,11 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		_membersRepoMock.SetupAdd();
 
@@ -677,11 +677,11 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 
 		// act
@@ -715,11 +715,11 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.AddToGroupAsync( groupId, targetUuid, requestorUuid );
@@ -755,14 +755,14 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.AddToGroupAsync( groupId, targetUuid, requestorUuid );
@@ -823,15 +823,15 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		_membersRepoMock.SetupDelete();
 
@@ -867,14 +867,14 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = isTargetOwner };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = isTargetOwner };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.RemoveFromGroupAsync( groupId, targetUuid, requestorUuid );
@@ -905,12 +905,12 @@ public class GroupsServiceTests
 		_groupsRepoMock.SetupAny<GroupModel>();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.RemoveFromGroupAsync( groupId, targetUuid, requestorUuid );
@@ -955,15 +955,15 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = false };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = false };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		_ = _membersRepoMock.Setup( x => x.SaveAsync() ).Returns( Task.FromResult( 1 ) );
 
@@ -990,15 +990,15 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = isTargetOwner };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = isTargetOwner };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.AddAsOwnerAsync( groupId, targetUuid, requestorUuid );
@@ -1024,15 +1024,15 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.AddAsOwnerAsync( groupId, targetUuid, requestorUuid );
@@ -1058,12 +1058,12 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		_ = _membersRepoMock.Setup( x => x.SaveAsync() ).Returns( Task.FromResult( 1 ) );
 
@@ -1088,15 +1088,15 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		_ = _membersRepoMock.Setup( x => x.SaveAsync() ).Returns( Task.FromResult( 1 ) );
 
@@ -1123,15 +1123,15 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = false };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = isTargetOwner };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = isTargetOwner };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.RemoveAsOwnerAsync( groupId, targetUuid, requestorUuid );
@@ -1157,15 +1157,15 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
-		GroupMembersRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = false };
+		GroupMembershipRelation targetMembership = new( targetUuid ) { GroupId = groupId, IsOwner = false };
 		_ = _membersRepoMock.AddKnownMembership( targetMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		// act
 		var act = () => _sut.RemoveAsOwnerAsync( groupId, targetUuid, requestorUuid );
@@ -1191,12 +1191,12 @@ public class GroupsServiceTests
 		string requestorUuid = GenerateUuid();
 
 
-		GroupMembersRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
+		GroupMembershipRelation requestorMembership = new( requestorUuid ) { GroupId = groupId, IsOwner = true };
 		_ = _membersRepoMock.AddKnownMembership( requestorMembership );
 
 		_membersRepoMock.SetupGet();
-		_membersRepoMock.SetupAny<GroupMembersRelation>();
-		_membersRepoMock.SetupFirstOrDefault<GroupMembersRelation>();
+		_membersRepoMock.SetupAny<GroupMembershipRelation>();
+		_membersRepoMock.SetupFirstOrDefault<GroupMembershipRelation>();
 
 		_ = _membersRepoMock.Setup( x => x.SaveAsync() ).Returns( Task.FromResult( 1 ) );
 

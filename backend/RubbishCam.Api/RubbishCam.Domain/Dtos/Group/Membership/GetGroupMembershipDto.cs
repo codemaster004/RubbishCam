@@ -14,7 +14,7 @@ public record GetGroupMembershipDto
 
 #nullable restore warnings
 
-	public static Expression<Func<GroupMembersRelation, GetGroupMembershipDto>> FromGroupMembersRelationExp { get; } = groupMember => new GetGroupMembershipDto()
+	public static Expression<Func<GroupMembershipRelation, GetGroupMembershipDto>> FromGroupMembersRelationExp { get; } = groupMember => new GetGroupMembershipDto()
 	{
 		GroupId = groupMember.GroupId,
 		IsOwner = groupMember.IsOwner,
@@ -22,8 +22,8 @@ public record GetGroupMembershipDto
 		UserName=groupMember.User!.UserName
 	};
 
-	private static readonly Func<GroupMembersRelation, GetGroupMembershipDto> fromGroupMembersRelationFunc = FromGroupMembersRelationExp.Compile();
-	public static GetGroupMembershipDto FromGroupMembersRelation( GroupMembersRelation group )
+	private static readonly Func<GroupMembershipRelation, GetGroupMembershipDto> fromGroupMembersRelationFunc = FromGroupMembersRelationExp.Compile();
+	public static GetGroupMembershipDto FromGroupMembersRelation( GroupMembershipRelation group )
 	{
 		return fromGroupMembersRelationFunc( group );
 	}

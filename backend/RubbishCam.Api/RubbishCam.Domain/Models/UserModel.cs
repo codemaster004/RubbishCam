@@ -18,13 +18,13 @@ public class UserModel
 		string userName,
 		List<TokenModel> tokens,
 		List<RoleModel> roles,
-		List<FriendshipModel> initiatedFriendships,
-		List<FriendshipModel> targetingFriendships,
+		List<FriendshipRelation> initiatedFriendships,
+		List<FriendshipRelation> targetingFriendships,
 		List<UserModel> initiatedFriends,
 		List<UserModel> targetingFriends,
 		List<PointModel> points,
 		List<GroupModel> groups,
-		List<GroupMembersRelation> groupsR,
+		List<GroupMembershipRelation> groupsR,
 		List<ChallengeModel> challenges,
 		List<UserChallengeRelation> challengesR )
 	{
@@ -106,17 +106,17 @@ public class UserModel
 
 	#region friends
 
-	[InverseProperty( nameof( FriendshipModel.Initiator ) )]
-	public List<FriendshipModel> InitiatedFriendships { get; set; }
+	[InverseProperty( nameof( FriendshipRelation.Initiator ) )]
+	public List<FriendshipRelation> InitiatedFriendships { get; set; }
 
-	[InverseProperty( nameof( FriendshipModel.Target ) )]
-	public List<FriendshipModel> TargetingFriendships { get; set; }
+	[InverseProperty( nameof( FriendshipRelation.Target ) )]
+	public List<FriendshipRelation> TargetingFriendships { get; set; }
 
 	public List<UserModel> InitiatedFriends { get; set; }
 	public List<UserModel> TargetingFriends { get; set; }
 
 	[NotMapped]
-	public ReadOnlyCollection<FriendshipModel> Friendships => Enumerable.Concat( InitiatedFriendships, TargetingFriendships ).ToList().AsReadOnly();
+	public ReadOnlyCollection<FriendshipRelation> Friendships => Enumerable.Concat( InitiatedFriendships, TargetingFriendships ).ToList().AsReadOnly();
 
 	[NotMapped]
 	public ReadOnlyCollection<UserModel> Friends => Enumerable.Concat(
@@ -129,7 +129,7 @@ public class UserModel
 	#region groups
 
 	public List<GroupModel> Groups { get; set; }
-	public List<GroupMembersRelation> GroupsR { get; set; }
+	public List<GroupMembershipRelation> GroupsR { get; set; }
 
 	#endregion
 

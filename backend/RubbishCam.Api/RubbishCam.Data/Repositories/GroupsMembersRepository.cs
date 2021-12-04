@@ -4,9 +4,9 @@ namespace RubbishCam.Data.Repositories;
 
 public interface IGroupsMembersRepository : IRepository
 {
-	Task AddGroupMemberAsync( GroupMembersRelation membership );
-	IQueryable<GroupMembersRelation> GetGroupsMembersAsync();
-	Task RemoveGroupMemberAsync( GroupMembersRelation membership );
+	Task AddGroupMemberAsync( GroupMembershipRelation membership );
+	IQueryable<GroupMembershipRelation> GetGroupsMembersAsync();
+	Task RemoveGroupMemberAsync( GroupMembershipRelation membership );
 	Task<int> SaveAsync();
 }
 
@@ -19,20 +19,20 @@ public class GroupsMembersRepository : IGroupsMembersRepository
 		_dbContext = dbContext;
 	}
 
-	public IQueryable<GroupMembersRelation> GetGroupsMembersAsync()
+	public IQueryable<GroupMembershipRelation> GetGroupsMembersAsync()
 	{
-		return _dbContext.GroupsMembers;
+		return _dbContext.GroupsMemberships;
 	}
 
-	public async Task AddGroupMemberAsync( GroupMembersRelation membership )
+	public async Task AddGroupMemberAsync( GroupMembershipRelation membership )
 	{
-		_ = await _dbContext.GroupsMembers.AddAsync( membership );
+		_ = await _dbContext.GroupsMemberships.AddAsync( membership );
 	}
 
-	public async Task RemoveGroupMemberAsync( GroupMembersRelation membership )
+	public async Task RemoveGroupMemberAsync( GroupMembershipRelation membership )
 	{
 		await Task.CompletedTask;
-		_ = _dbContext.GroupsMembers.Remove( membership );
+		_ = _dbContext.GroupsMemberships.Remove( membership );
 	}
 
 	public Task<int> SaveAsync()
@@ -43,15 +43,15 @@ public class GroupsMembersRepository : IGroupsMembersRepository
 
 public static class GroupsMembersRepositoryExtensions
 {
-	public static IQueryable<GroupMembersRelation> FilterByUserUuid( this IQueryable<GroupMembersRelation> source, string uuid )
+	public static IQueryable<GroupMembershipRelation> FilterByUserUuid( this IQueryable<GroupMembershipRelation> source, string uuid )
 	{
 		return source.Where( gm => gm.UserUuid == uuid );
 	}
-	public static IQueryable<GroupMembersRelation> FilterByOwnerships( this IQueryable<GroupMembersRelation> source, bool isOwnership )
+	public static IQueryable<GroupMembershipRelation> FilterByOwnerships( this IQueryable<GroupMembershipRelation> source, bool isOwnership )
 	{
 		return source.Where( gm => gm.IsOwner == isOwnership );
 	}
-	public static IQueryable<GroupMembersRelation> FilterGroupId( this IQueryable<GroupMembersRelation> source, int id )
+	public static IQueryable<GroupMembershipRelation> FilterGroupId( this IQueryable<GroupMembershipRelation> source, int id )
 	{
 		return source.Where( gm => gm.GroupId == id );
 	}

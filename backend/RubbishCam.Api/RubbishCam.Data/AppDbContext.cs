@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RubbishCam.Domain.Models;
-using RubbishCam.Domain.Models.ChallengeRequirements;
+using RubbishCam.Domain.Models.ChallangeRequirements;
 using RubbishCam.Domain.Relations;
 
 namespace RubbishCam.Data;
@@ -15,7 +15,7 @@ public class AppDbContext : DbContext
 		ArgumentNullException.ThrowIfNull( Friendships );
 		ArgumentNullException.ThrowIfNull( Points );
 		ArgumentNullException.ThrowIfNull( Groups );
-		ArgumentNullException.ThrowIfNull( GroupsMembers );
+		ArgumentNullException.ThrowIfNull( GroupsMemberships );
 		ArgumentNullException.ThrowIfNull( GarbageTypes );
 		ArgumentNullException.ThrowIfNull( Challenges );
 		ArgumentNullException.ThrowIfNull( UsersChallenges );
@@ -37,7 +37,7 @@ public class AppDbContext : DbContext
 		_ = modelBuilder.Entity<UserModel>()
 			.HasMany( u => u.InitiatedFriends )
 			.WithMany( u => u.TargetingFriends )
-			.UsingEntity<FriendshipModel>(
+			.UsingEntity<FriendshipRelation>(
 			j =>
 			{
 				return j.HasOne( f => f.Initiator )
@@ -57,7 +57,7 @@ public class AppDbContext : DbContext
 		_ = modelBuilder.Entity<UserModel>()
 			.HasMany( u => u.Groups )
 			.WithMany( g => g.Members )
-			.UsingEntity<GroupMembersRelation>(
+			.UsingEntity<GroupMembershipRelation>(
 			j =>
 			{
 				return j.HasOne( gm => gm.Group )
@@ -84,7 +84,7 @@ public class AppDbContext : DbContext
 		_ = modelBuilder.Entity<GroupModel>()
 			.HasMany( g => g.Points )
 			.WithMany( p => p.Groups )
-			.UsingEntity<GroupPointsRelation>(
+			.UsingEntity<GroupPointRelation>(
 			j =>
 			{
 				return j.HasOne( gp => gp.Point )
@@ -146,14 +146,15 @@ public class AppDbContext : DbContext
 	public DbSet<TokenModel> Tokens { get; set; }
 	public DbSet<RoleModel> Roles { get; set; }
 
-	public DbSet<FriendshipModel> Friendships { get; set; }
+	public DbSet<FriendshipRelation> Friendships { get; set; }
 
 	public DbSet<GarbageTypeModel> GarbageTypes { get; set; }
 
 	public DbSet<PointModel> Points { get; set; }
 
 	public DbSet<GroupModel> Groups { get; set; }
-	public DbSet<GroupMembersRelation> GroupsMembers { get; set; }
+	public DbSet<GroupMembershipRelation> GroupsMemberships { get; set; }
+	public DbSet<GroupPointRelation> GroupsPoints { get; set; }
 
 	public DbSet<ChallengeModel> Challenges { get; set; }
 	public DbSet<UserChallengeRelation> UsersChallenges { get; set; }

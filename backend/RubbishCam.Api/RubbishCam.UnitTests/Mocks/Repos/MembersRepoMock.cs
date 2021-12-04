@@ -16,11 +16,11 @@ internal class MembersRepoMock : Mock<IGroupsMembersRepository>
 	{
 	}
 
-	public GroupMembersRelation[] Memberships { get; private set; } = Array.Empty<GroupMembersRelation>();
-	private static IEnumerable<GroupMembersRelation> GenerateMemberships( int start, int count )
+	public GroupMembershipRelation[] Memberships { get; private set; } = Array.Empty<GroupMembershipRelation>();
+	private static IEnumerable<GroupMembershipRelation> GenerateMemberships( int start, int count )
 	{
 		return Enumerable.Range( start, count )
-			.Select( x => new GroupMembersRelation( Helper.GenerateUuid() ) );
+			.Select( x => new GroupMembershipRelation( Helper.GenerateUuid() ) );
 	}
 
 	public void InitializeMemberships()
@@ -28,7 +28,7 @@ internal class MembersRepoMock : Mock<IGroupsMembersRepository>
 		Memberships = GenerateMemberships( 0, 10 )
 			.ToArray();
 	}
-	public int AddKnownMembership( GroupMembersRelation membership )
+	public int AddKnownMembership( GroupMembershipRelation membership )
 	{
 		var index = Memberships!.Length;
 		Memberships = Memberships.Append( membership )
@@ -37,7 +37,7 @@ internal class MembersRepoMock : Mock<IGroupsMembersRepository>
 
 		return index;
 	}
-	public void AddManyKnownMemberships( IEnumerable<GroupMembersRelation> memberships )
+	public void AddManyKnownMemberships( IEnumerable<GroupMembershipRelation> memberships )
 	{
 		foreach ( var membership in memberships )
 		{
@@ -68,23 +68,23 @@ internal class MembersRepoMock : Mock<IGroupsMembersRepository>
 	}
 
 
-	public GroupMembersRelation[] AddPassed { get; private set; } = Array.Empty<GroupMembersRelation>();
-	public GroupMembersRelation[] AddSaved { get; private set; } = Array.Empty<GroupMembersRelation>();
+	public GroupMembershipRelation[] AddPassed { get; private set; } = Array.Empty<GroupMembershipRelation>();
+	public GroupMembershipRelation[] AddSaved { get; private set; } = Array.Empty<GroupMembershipRelation>();
 	public void SetupAdd()
 	{
-		_ = this.Setup( x => x.AddGroupMemberAsync( It.IsAny<GroupMembersRelation>() ) )
-			.Callback( ( GroupMembersRelation x ) => AddPassed = AddPassed.Append( x ).ToArray() )
+		_ = this.Setup( x => x.AddGroupMemberAsync( It.IsAny<GroupMembershipRelation>() ) )
+			.Callback( ( GroupMembershipRelation x ) => AddPassed = AddPassed.Append( x ).ToArray() )
 			.Returns( Task.CompletedTask );
 
 		SetupSave();
 	}
 
-	public GroupMembersRelation[] DeletePassed { get; private set; } = Array.Empty<GroupMembersRelation>();
-	public GroupMembersRelation[] DeleteSaved { get; private set; } = Array.Empty<GroupMembersRelation>();
+	public GroupMembershipRelation[] DeletePassed { get; private set; } = Array.Empty<GroupMembershipRelation>();
+	public GroupMembershipRelation[] DeleteSaved { get; private set; } = Array.Empty<GroupMembershipRelation>();
 	public void SetupDelete()
 	{
-		_ = this.Setup( x => x.RemoveGroupMemberAsync( It.IsAny<GroupMembersRelation>() ) )
-			.Callback( ( GroupMembersRelation x ) => DeletePassed = DeletePassed.Append( x ).ToArray() )
+		_ = this.Setup( x => x.RemoveGroupMemberAsync( It.IsAny<GroupMembershipRelation>() ) )
+			.Callback( ( GroupMembershipRelation x ) => DeletePassed = DeletePassed.Append( x ).ToArray() )
 			.Returns( Task.CompletedTask );
 
 		SetupSave();

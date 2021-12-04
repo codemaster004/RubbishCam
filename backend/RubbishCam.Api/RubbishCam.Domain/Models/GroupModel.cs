@@ -8,8 +8,8 @@ public class GroupModel
 	public GroupModel( string name,
 		List<UserModel> members,
 		List<PointModel> points,
-		List<GroupPointsRelation> pointsR,
-		List<GroupMembersRelation> membersR )
+		List<GroupPointRelation> pointsR,
+		List<GroupMembershipRelation> membersR )
 	{
 		Name = name;
 		Members = members;
@@ -32,8 +32,8 @@ public class GroupModel
 	[Required]
 	public DateTimeOffset TimeCreated { get; set; }
 	public List<PointModel> Points { get; set; }
-	public List<GroupPointsRelation> PointsR { get; set; }
+	public List<GroupPointRelation> PointsR { get; set; }
 	public List<UserModel> Members { get; set; }
-	public List<GroupMembersRelation> MembersR { get; set; }
+	public List<GroupMembershipRelation> MembersR { get; set; }
 
 }

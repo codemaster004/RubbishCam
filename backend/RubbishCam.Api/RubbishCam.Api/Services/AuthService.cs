@@ -20,11 +20,11 @@ public interface IAuthService
 
 public class AuthService : IAuthService
 {
-	private readonly ITokenRepository _tokenRepo;
-	private readonly IUserRepository _userRepo;
+	private readonly ITokensRepository _tokenRepo;
+	private readonly IUsersRepository _userRepo;
 	private readonly ILogger<AuthService> _logger;
 
-	public AuthService( ITokenRepository tokenRepo, IUserRepository userRepo, ILogger<AuthService> logger )
+	public AuthService( ITokensRepository tokenRepo, IUsersRepository userRepo, ILogger<AuthService> logger )
 	{
 		_tokenRepo = tokenRepo ?? throw new ArgumentNullException( nameof( tokenRepo ) );
 		_userRepo = userRepo ?? throw new ArgumentNullException( nameof( userRepo ) );

@@ -1,8 +1,10 @@
-﻿namespace RubbishCam.Domain.Models;
+﻿using RubbishCam.Domain.Models;
 
-public class FriendshipModel
+namespace RubbishCam.Domain.Relations;
+
+public class FriendshipRelation
 {
-	public FriendshipModel( string initiatorUuid, string targetUuid )
+	public FriendshipRelation( string initiatorUuid, string targetUuid )
 	{
 		InitiatorUuid = initiatorUuid;
 		TargetUuid = targetUuid;

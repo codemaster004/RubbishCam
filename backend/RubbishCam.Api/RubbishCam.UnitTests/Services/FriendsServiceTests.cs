@@ -4,6 +4,7 @@ using RubbishCam.Api.Exceptions;
 using RubbishCam.Api.Services;
 using RubbishCam.Domain.Dtos.Friendship;
 using RubbishCam.Domain.Models;
+using RubbishCam.Domain.Relations;
 using RubbishCam.UnitTests.Mocks.Repos;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,10 +35,10 @@ public class FriendsServiceTests
 		// arrange
 		var uuid = GenerateUuid();
 		var initiated = Enumerable.Range( 0, 3 )
-			.Select( x => new FriendshipModel( uuid, GenerateUuid() ) { Accepted = ( x & 1 ) > 0 } )
+			.Select( x => new FriendshipRelation( uuid, GenerateUuid() ) { Accepted = ( x & 1 ) > 0 } )
 			.ToArray();
 		var targeting = Enumerable.Range( 0, 4 )
-			.Select( x => new FriendshipModel( GenerateUuid(), uuid ) { Accepted = ( x & 1 ) > 0 } )
+			.Select( x => new FriendshipRelation( GenerateUuid(), uuid ) { Accepted = ( x & 1 ) > 0 } )
 			.ToArray();
 
 		_friendshipsRepoMock.AddManyKnownFriendships( targeting );
@@ -80,10 +81,10 @@ public class FriendsServiceTests
 		// arrange
 		var uuid = GenerateUuid();
 		var initiated = Enumerable.Range( 0, 4 )
-			.Select( x => new FriendshipModel( uuid, GenerateUuid() ) { Accepted = ( x & 1 ) > 0 } )
+			.Select( x => new FriendshipRelation( uuid, GenerateUuid() ) { Accepted = ( x & 1 ) > 0 } )
 			.ToArray();
 		var targeting = Enumerable.Range( 0, 4 )
-			.Select( x => new FriendshipModel( GenerateUuid(), uuid ) { Accepted = ( x & 1 ) > 0 } )
+			.Select( x => new FriendshipRelation( GenerateUuid(), uuid ) { Accepted = ( x & 1 ) > 0 } )
 			.ToArray();
 
 		_friendshipsRepoMock.AddManyKnownFriendships( targeting );
@@ -125,7 +126,7 @@ public class FriendsServiceTests
 	{
 		// arrange
 		int id = 317;
-		FriendshipModel friendship = new( GenerateUuid(), GenerateUuid() ) { Id = id };
+		FriendshipRelation friendship = new( GenerateUuid(), GenerateUuid() ) { Id = id };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
@@ -172,7 +173,7 @@ public class FriendsServiceTests
 		// arrange
 		string initiator = GenerateUuid();
 		string target = GenerateUuid();
-		FriendshipModel friendship = new( initiator, target );
+		FriendshipRelation friendship = new( initiator, target );
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
@@ -199,7 +200,7 @@ public class FriendsServiceTests
 		// arrange
 		string initiator = GenerateUuid();
 		string target = GenerateUuid();
-		FriendshipModel friendship = new( initiator, target );
+		FriendshipRelation friendship = new( initiator, target );
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
@@ -266,7 +267,7 @@ public class FriendsServiceTests
 
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupAny<FriendshipModel>();
+		_friendshipsRepoMock.SetupAny<FriendshipRelation>();
 
 		_friendshipsRepoMock.SetupAdd();
 
@@ -280,7 +281,7 @@ public class FriendsServiceTests
 		Assert.Equal( targetUuid, returned.TargetUuid );
 
 		_friendshipsRepoMock.Verify( x => x.GetFriendships(), Times.Once );
-		_friendshipsRepoMock.Verify( x => x.AddFriendshipsAsync( It.IsAny<FriendshipModel>() ), Times.Once );
+		_friendshipsRepoMock.Verify( x => x.AddFriendshipsAsync( It.IsAny<FriendshipRelation>() ), Times.Once );
 		_friendshipsRepoMock.Verify( x => x.SaveAsync(), Times.Once );
 		_usersRepoMock.Verify( x => x.GetUsers(), Times.Once );
 
@@ -368,11 +369,11 @@ public class FriendsServiceTests
 		_usersRepoMock.SetupCount<UserModel>();
 
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid );
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid );
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupAny<FriendshipModel>();
+		_friendshipsRepoMock.SetupAny<FriendshipRelation>();
 
 		// act
 		var act = () => _sut.CreateFriendshipAsync( initiatorUuid, targetUuid );
@@ -410,11 +411,11 @@ public class FriendsServiceTests
 		_usersRepoMock.SetupCount<UserModel>();
 
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid );
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid );
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupAny<FriendshipModel>();
+		_friendshipsRepoMock.SetupAny<FriendshipRelation>();
 
 		// act
 		var act = () => _sut.CreateFriendshipAsync( targetUuid, initiatorUuid );
@@ -434,12 +435,12 @@ public class FriendsServiceTests
 		string targetUuid = GenerateUuid();
 		int id = 317;
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid ) { Id = id };
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid ) { Id = id };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
 
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		_ = _friendshipsRepoMock.Setup( x => x.SaveAsync() ).Returns( () => Task.FromResult( 1 ) );
 
@@ -467,12 +468,12 @@ public class FriendsServiceTests
 		string targetUuid = GenerateUuid();
 		int id = 317;
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid ) { Id = id, Accepted = true };
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid ) { Id = id, Accepted = true };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
 
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		// act
 		await _sut.AcceptFriendshipAsync( id );
@@ -496,12 +497,12 @@ public class FriendsServiceTests
 		string targetUuid = GenerateUuid();
 		int id = 317;
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid ) { Id = id, Rejected = true };
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid ) { Id = id, Rejected = true };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
 
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		_ = _friendshipsRepoMock.Setup( x => x.SaveAsync() ).Returns( () => Task.FromResult( 1 ) );
 
@@ -528,7 +529,7 @@ public class FriendsServiceTests
 		int id = 317;
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		// act
 		var act = () => _sut.AcceptFriendshipAsync( id );
@@ -546,11 +547,11 @@ public class FriendsServiceTests
 		string targetUuid = GenerateUuid();
 		int id = 317;
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid ) { Id = id };
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid ) { Id = id };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		_ = _friendshipsRepoMock.Setup( x => x.SaveAsync() ).Returns( () => Task.FromResult( 1 ) );
 
@@ -578,11 +579,11 @@ public class FriendsServiceTests
 		string targetUuid = GenerateUuid();
 		int id = 317;
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid ) { Id = id, Rejected = true };
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid ) { Id = id, Rejected = true };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		// act
 		await _sut.RejectFriendshipAsync( id );
@@ -606,11 +607,11 @@ public class FriendsServiceTests
 		string targetUuid = GenerateUuid();
 		int id = 317;
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid ) { Id = id, Accepted = true };
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid ) { Id = id, Accepted = true };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		// act
 		var act = () => _sut.RejectFriendshipAsync( id );
@@ -627,7 +628,7 @@ public class FriendsServiceTests
 		int id = 317;
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		// act
 		var act = () => _sut.RejectFriendshipAsync( id );
@@ -645,11 +646,11 @@ public class FriendsServiceTests
 		string targetUuid = GenerateUuid();
 		int id = 317;
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid ) { Id = id };
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid ) { Id = id };
 		_ = _friendshipsRepoMock.AddKnownFriendship( friendship );
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		_friendshipsRepoMock.SetupDelete();
 
@@ -658,7 +659,7 @@ public class FriendsServiceTests
 
 		// assert
 		_friendshipsRepoMock.Verify( x => x.GetFriendships(), Times.Once );
-		_friendshipsRepoMock.Verify( x => x.RemoveFriendshipsAsync( It.IsAny<FriendshipModel>() ), Times.Once );
+		_friendshipsRepoMock.Verify( x => x.RemoveFriendshipsAsync( It.IsAny<FriendshipRelation>() ), Times.Once );
 		_friendshipsRepoMock.Verify( x => x.SaveAsync(), Times.Once );
 
 		var actual = Assert.Single( _friendshipsRepoMock.DeleteSaved );
@@ -673,7 +674,7 @@ public class FriendsServiceTests
 		int id = 317;
 
 		_friendshipsRepoMock.SetupGet();
-		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipModel>();
+		_friendshipsRepoMock.SetupFirstOrDefault<FriendshipRelation>();
 
 		// act
 		var act = () => _sut.DeleteFriendshipAsync( id );

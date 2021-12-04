@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RubbishCam.Data;
@@ -11,9 +12,10 @@ using RubbishCam.Data;
 namespace RubbishCam.Migrations.Pg.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211204150600_NamingUnification1_1")]
+    partial class NamingUnification1_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,7 +302,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
 
                     b.HasIndex("UserUuid");
 
-                    b.ToTable("GroupsMemberships");
+                    b.ToTable("GroupsMembers");
                 });
 
             modelBuilder.Entity("RubbishCam.Domain.Relations.GroupPointRelation", b =>
@@ -315,7 +317,7 @@ namespace RubbishCam.Migrations.Pg.Migrations
 
                     b.HasIndex("PointId");
 
-                    b.ToTable("GroupsPoints");
+                    b.ToTable("GroupPointsRelation");
                 });
 
             modelBuilder.Entity("RubbishCam.Domain.Relations.UserChallengePointRelation", b =>

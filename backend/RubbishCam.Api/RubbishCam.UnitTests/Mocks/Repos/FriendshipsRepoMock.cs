@@ -1,6 +1,6 @@
 ﻿using Moq;
 using RubbishCam.Data.Repositories;
-using RubbishCam.Domain.Models;
+using RubbishCam.Domain.Relations;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -16,11 +16,11 @@ internal class FriendshipsRepoMock : Mock<IFriendshipsRepository>
 	{
 	}
 
-	public FriendshipModel[] Friendships { get; private set; } = Array.Empty<FriendshipModel>();
-	private static IEnumerable<FriendshipModel> GenerateFriendships( int start, int count )
+	public FriendshipRelation[] Friendships { get; private set; } = Array.Empty<FriendshipRelation>();
+	private static IEnumerable<FriendshipRelation> GenerateFriendships( int start, int count )
 	{
 		return Enumerable.Range( start, count )
-			.Select( x => new FriendshipModel( Helper.GenerateUuid(), Helper.GenerateUuid() ) { Accepted = ( x & 1 ) > 0 } );
+			.Select( x => new FriendshipRelation( Helper.GenerateUuid(), Helper.GenerateUuid() ) { Accepted = ( x & 1 ) > 0 } );
 	}
 
 	public void InitializeFriendships()
@@ -28,7 +28,7 @@ internal class FriendshipsRepoMock : Mock<IFriendshipsRepository>
 		Friendships = GenerateFriendships( 0, 10 )
 			.ToArray();
 	}
-	public int AddKnownFriendship( FriendshipModel friendship )
+	public int AddKnownFriendship( FriendshipRelation friendship )
 	{
 		var index = Friendships!.Length;
 		Friendships = Friendships.Append( friendship )
@@ -37,7 +37,7 @@ internal class FriendshipsRepoMock : Mock<IFriendshipsRepository>
 
 		return index;
 	}
-	public void AddManyKnownFriendships( IEnumerable<FriendshipModel> friendships )
+	public void AddManyKnownFriendships( IEnumerable<FriendshipRelation> friendships )
 	{
 		foreach ( var friendship in friendships )
 		{
@@ -67,23 +67,23 @@ internal class FriendshipsRepoMock : Mock<IFriendshipsRepository>
 		_ = this.Setup( x => x.AnyAsync( It.IsAny<IQueryable<T>>() ) ).CallBase();
 	}
 
-	public FriendshipModel[] AddPassed { get; private set; } = Array.Empty<FriendshipModel>();
-	public FriendshipModel[] AddSaved { get; private set; } = Array.Empty<FriendshipModel>();
+	public FriendshipRelation[] AddPassed { get; private set; } = Array.Empty<FriendshipRelation>();
+	public FriendshipRelation[] AddSaved { get; private set; } = Array.Empty<FriendshipRelation>();
 	public void SetupAdd()
 	{
-		_ = this.Setup( x => x.AddFriendshipsAsync( It.IsAny<FriendshipModel>() ) )
-			.Callback( ( FriendshipModel x ) => AddPassed = AddPassed.Append( x ).ToArray() )
+		_ = this.Setup( x => x.AddFriendshipsAsync( It.IsAny<FriendshipRelation>() ) )
+			.Callback( ( FriendshipRelation x ) => AddPassed = AddPassed.Append( x ).ToArray() )
 			.Returns( Task.CompletedTask );
 
 		SetupSave();
 	}
 
-	public FriendshipModel[] DeletePassed { get; private set; } = Array.Empty<FriendshipModel>();
-	public FriendshipModel[] DeleteSaved { get; private set; } = Array.Empty<FriendshipModel>();
+	public FriendshipRelation[] DeletePassed { get; private set; } = Array.Empty<FriendshipRelation>();
+	public FriendshipRelation[] DeleteSaved { get; private set; } = Array.Empty<FriendshipRelation>();
 	public void SetupDelete()
 	{
-		_ = this.Setup( x => x.RemoveFriendshipsAsync( It.IsAny<FriendshipModel>() ) )
-			.Callback( ( FriendshipModel x ) => DeletePassed = DeletePassed.Append( x ).ToArray() )
+		_ = this.Setup( x => x.RemoveFriendshipsAsync( It.IsAny<FriendshipRelation>() ) )
+			.Callback( ( FriendshipRelation x ) => DeletePassed = DeletePassed.Append( x ).ToArray() )
 			.Returns( Task.CompletedTask );
 
 		SetupSave();

@@ -23,10 +23,10 @@ public class GroupsService : IGroupsService
 {
 	private readonly IGroupsRepository _groupsRepo;
 	private readonly IGroupsMembersRepository _grMeRepo;
-	private readonly IUserRepository _userRepo;
+	private readonly IUsersRepository _userRepo;
 	private readonly ILogger<GroupsService> _logger;
 
-	public GroupsService( IGroupsRepository groupsRepo, IGroupsMembersRepository grMeRepo, IUserRepository userRepo, ILogger<GroupsService> logger )
+	public GroupsService( IGroupsRepository groupsRepo, IGroupsMembersRepository grMeRepo, IUsersRepository userRepo, ILogger<GroupsService> logger )
 	{
 		_groupsRepo = groupsRepo;
 		_grMeRepo = grMeRepo;

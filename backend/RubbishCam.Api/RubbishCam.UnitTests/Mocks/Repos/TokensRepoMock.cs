@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RubbishCam.UnitTests.Mocks.Repos;
 
-internal class TokensRepoMock : Mock<ITokenRepository>
+internal class TokensRepoMock : Mock<ITokensRepository>
 {
 	public TokensRepoMock( MockBehavior behavior )
 		: base( behavior )

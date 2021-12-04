@@ -2,9 +2,9 @@
 
 namespace RubbishCam.Domain.Relations;
 
-public class GroupMembersRelation
+public class GroupMembershipRelation
 {
-	public GroupMembersRelation( string userUuid )
+	public GroupMembershipRelation( string userUuid )
 	{
 		UserUuid = userUuid;
 	}

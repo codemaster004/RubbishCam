@@ -1,8 +1,8 @@
-﻿namespace RubbishCam.Domain.Models.ChallengeRequirements;
+﻿namespace RubbishCam.Domain.Models.ChallangeRequirements;
 
 public class CollectXItemsRequirement : ChallengeRequirementModel
 {
-	public CollectXItemsRequirement( string name ) 
+	public CollectXItemsRequirement( string name )
 		: base( name )
 	{
 	}

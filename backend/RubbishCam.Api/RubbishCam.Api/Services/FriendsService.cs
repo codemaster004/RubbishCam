@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RubbishCam.Data.Repositories;
 using RubbishCam.Domain.Dtos.Friendship;
-using RubbishCam.Domain.Models;
+using RubbishCam.Domain.Relations;
 
 namespace RubbishCam.Api.Services;
 
@@ -20,10 +20,10 @@ public interface IFriendsService
 public class FriendsService : IFriendsService
 {
 	private readonly IFriendshipsRepository _friendshipsRepo;
-	private readonly IUserRepository _usersRepo;
+	private readonly IUsersRepository _usersRepo;
 	private readonly ILogger<FriendsService> _logger;
 
-	public FriendsService( IFriendshipsRepository friendshipRepo, IUserRepository usersRepo, ILogger<FriendsService> logger )
+	public FriendsService( IFriendshipsRepository friendshipRepo, IUsersRepository usersRepo, ILogger<FriendsService> logger )
 	{
 		_friendshipsRepo = friendshipRepo ?? throw new ArgumentNullException( nameof( friendshipRepo ) );
 		_usersRepo = usersRepo ?? throw new ArgumentNullException( nameof( usersRepo ) );
@@ -80,7 +80,7 @@ public class FriendsService : IFriendsService
 			throw new ConflictException();
 		}
 
-		FriendshipModel friendship = new( initiatorUuid, targetUuid );
+		FriendshipRelation friendship = new( initiatorUuid, targetUuid );
 
 		await _friendshipsRepo.AddFriendshipsAsync( friendship );
 		_ = await _friendshipsRepo.SaveAsync();

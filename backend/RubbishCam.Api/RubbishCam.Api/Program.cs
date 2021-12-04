@@ -59,8 +59,8 @@ _ = builder.Services.AddScoped<IFriendsService, FriendsService>();
 _ = builder.Services.AddScoped<IPointsService, PointsService>();
 _ = builder.Services.AddScoped<IGroupsService, GroupsService>();
 
-_ = builder.Services.AddScoped<IUserRepository, UserRepository>();
-_ = builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+_ = builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+_ = builder.Services.AddScoped<ITokensRepository, TokensRepository>();
 _ = builder.Services.AddScoped<IFriendshipsRepository, FriendshipsRepository>();
 _ = builder.Services.AddScoped<IPointsRepository, PointsRepository>();
 _ = builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();

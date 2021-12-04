@@ -15,9 +15,9 @@ public interface IUsersService
 
 public class UsersService : IUsersService
 {
-	private readonly IUserRepository _userRepo;
+	private readonly IUsersRepository _userRepo;
 	private readonly ILogger<UsersService> _logger;
-	public UsersService( IUserRepository userRepo, ILogger<UsersService> logger )
+	public UsersService( IUsersRepository userRepo, ILogger<UsersService> logger )
 	{
 		_userRepo = userRepo ?? throw new ArgumentNullException( nameof( userRepo ) );
 		_logger = logger ?? throw new ArgumentNullException( nameof( logger ) );

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RubbishCam.UnitTests.Mocks.Repos;
 
-internal class UsersRepoMock : Mock<IUserRepository>
+internal class UsersRepoMock : Mock<IUsersRepository>
 {
 	public UsersRepoMock( MockBehavior behavior )
 		: base( behavior )

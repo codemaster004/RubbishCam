@@ -1,4 +1,4 @@
-﻿using RubbishCam.Domain.Models;
+﻿using RubbishCam.Domain.Relations;
 using System.Linq.Expressions;
 
 namespace RubbishCam.Domain.Dtos.Friendship;
@@ -15,7 +15,7 @@ public record GetFriendshipDto
 
 #nullable restore
 
-	public static Expression<Func<FriendshipModel, GetFriendshipDto>> FromFriendshipExp { get; } = friendship => new GetFriendshipDto()
+	public static Expression<Func<FriendshipRelation, GetFriendshipDto>> FromFriendshipExp { get; } = friendship => new GetFriendshipDto()
 	{
 		Id = friendship.Id,
 		InitiatorUuid = friendship.InitiatorUuid,
@@ -24,8 +24,8 @@ public record GetFriendshipDto
 		Rejected = friendship.Rejected,
 	};
 
-	private static readonly Func<FriendshipModel, GetFriendshipDto> fromFriendshipFunc = FromFriendshipExp.Compile();
-	public static GetFriendshipDto FromFriendship( FriendshipModel user )
+	private static readonly Func<FriendshipRelation, GetFriendshipDto> fromFriendshipFunc = FromFriendshipExp.Compile();
+	public static GetFriendshipDto FromFriendship( FriendshipRelation user )
 	{
 		return fromFriendshipFunc( user );
 	}

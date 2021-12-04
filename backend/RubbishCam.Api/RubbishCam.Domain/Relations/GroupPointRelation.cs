@@ -2,7 +2,7 @@
 
 namespace RubbishCam.Domain.Relations;
 
-public class GroupPointsRelation
+public class GroupPointRelation
 {
 	public int GroupId { get; set; }
 	public GroupModel? Group { get; set; }

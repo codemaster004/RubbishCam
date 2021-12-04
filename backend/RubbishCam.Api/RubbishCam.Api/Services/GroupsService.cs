@@ -15,8 +15,8 @@ public interface IGroupsService
 	Task AddToGroupAsync( int groupId, string targetUuid, string requestorUuid );
 	Task RemoveFromGroupAsync( int groupId, string targetUuid, string requestorUuid );
 	Task<GetGroupMembershipDto[]> GetOwnersAsync( int groupId, string requestorUuid );
-	Task AddAsOwner( int groupId, string targetUuid, string requestorUuid );
-	Task RemoveAsOwner( int groupId, string targetUuid, string requestorUuid );
+	Task AddAsOwnerAsync( int groupId, string targetUuid, string requestorUuid );
+	Task RemoveAsOwnerAsync( int groupId, string targetUuid, string requestorUuid );
 }
 
 public class GroupsService : IGroupsService
@@ -24,12 +24,14 @@ public class GroupsService : IGroupsService
 	private readonly IGroupsRepository _groupsRepo;
 	private readonly IGroupsMembersRepository _grMeRepo;
 	private readonly IUserRepository _userRepo;
+	private readonly ILogger<GroupsService> _logger;
 
-	public GroupsService( IGroupsRepository groupsRepo, IGroupsMembersRepository grMeRepo, IUserRepository userRepo )
+	public GroupsService( IGroupsRepository groupsRepo, IGroupsMembersRepository grMeRepo, IUserRepository userRepo, ILogger<GroupsService> logger )
 	{
 		_groupsRepo = groupsRepo;
 		_grMeRepo = grMeRepo;
 		_userRepo = userRepo;
+		_logger = logger;
 	}
 
 	public Task<GetGroupDto[]> GetGroupsAsync()
@@ -65,6 +67,11 @@ public class GroupsService : IGroupsService
 			.Select( GetGroupDetailsDto.FromGroupExp )
 			.FirstOrDefaultAsync( _groupsRepo );
 
+		if ( group is null )
+		{
+			return null;
+		}
+
 		var permited = await _grMeRepo.GetGroupsMembersAsync()
 			.FilterGroupId( id )
 			.FilterByUserUuid( userUuid )
@@ -80,15 +87,15 @@ public class GroupsService : IGroupsService
 
 	public async Task<GetGroupDetailsDto> CreateGroupAsync( CreateGroupDto dto, string userUuid )
 	{
-		var user = await _userRepo.GetUsers()
+		var userExicts = await _userRepo.GetUsers()
 			.FilterById( userUuid )
-			.FirstOrDefaultAsync( _userRepo );
-		if ( user is null )
+			.AnyAsync( _userRepo );
+		if ( !userExicts )
 		{
 			throw new NotFoundException();
 		}
 
-		var group = dto.ToGroup( user.Uuid );
+		var group = dto.ToGroup( userUuid );
 
 		await _groupsRepo.AddGroupAsync( group );
 		_ = await _groupsRepo.SaveAsync();
@@ -102,7 +109,7 @@ public class GroupsService : IGroupsService
 		var groupExists = await _groupsRepo.GetGroups()
 			.FilterById( groupId )
 			.AnyAsync( _groupsRepo );
-		if ( groupExists )
+		if ( !groupExists )
 		{
 			throw new NotFoundException();
 		}
@@ -154,7 +161,7 @@ public class GroupsService : IGroupsService
 
 		var userExists = await _userRepo.GetUsers()
 			.Where( um => um.Uuid == targetUuid )
-			.AnyAsync( _grMeRepo );
+			.AnyAsync( _userRepo );
 		if ( !userExists )
 		{
 			throw new NotFoundException();
@@ -170,7 +177,7 @@ public class GroupsService : IGroupsService
 		var groupExists = await _groupsRepo.GetGroups()
 			.FilterById( groupId )
 			.AnyAsync( _groupsRepo );
-		if ( groupExists )
+		if ( !groupExists )
 		{
 			throw new NotFoundException();
 		}
@@ -191,7 +198,7 @@ public class GroupsService : IGroupsService
 			.FirstOrDefaultAsync( _grMeRepo );
 		if ( membership is null )
 		{
-			throw new NotFoundException();
+			throw new ConflictException();
 		}
 
 		await _grMeRepo.RemoveGroupMemberAsync( membership );
@@ -202,16 +209,16 @@ public class GroupsService : IGroupsService
 
 	public async Task<GetGroupMembershipDto[]> GetOwnersAsync( int groupId, string requestorUuid )
 	{
-		var group = await _groupsRepo.GetGroups()
+		var groupExists = await _groupsRepo.GetGroups()
 			.FilterById( groupId )
-			.FirstOrDefaultAsync( _groupsRepo );
-		if ( group is null )
+			.AnyAsync( _groupsRepo );
+		if ( !groupExists )
 		{
 			throw new NotFoundException();
 		}
 
 		var isMember = await _grMeRepo.GetGroupsMembersAsync()
-			.Where( um => um.GroupId == group.Id )
+			.Where( um => um.GroupId == groupId )
 			.Where( um => um.UserUuid == requestorUuid )
 			.AnyAsync( _grMeRepo );
 		if ( !isMember )
@@ -220,13 +227,13 @@ public class GroupsService : IGroupsService
 		}
 
 		return await _grMeRepo.GetGroupsMembersAsync()
-			.Where( um => um.GroupId == group.Id )
+			.Where( um => um.GroupId == groupId )
 			.Where( um => um.IsOwner )
 			.Select( GetGroupMembershipDto.FromGroupMembersRelationExp )
 			.ToArrayAsync( _grMeRepo );
 	}
 
-	public async Task AddAsOwner( int groupId, string targetUuid, string requestorUuid )
+	public async Task AddAsOwnerAsync( int groupId, string targetUuid, string requestorUuid )
 	{
 		var isOwner = await _grMeRepo.GetGroupsMembersAsync()
 			.Where( um => um.GroupId == groupId )
@@ -257,7 +264,7 @@ public class GroupsService : IGroupsService
 		_ = await _grMeRepo.SaveAsync();
 	}
 
-	public async Task RemoveAsOwner( int groupId, string targetUuid, string requestorUuid )
+	public async Task RemoveAsOwnerAsync( int groupId, string targetUuid, string requestorUuid )
 	{
 		var isOwner = await _grMeRepo.GetGroupsMembersAsync()
 			.Where( um => um.GroupId == groupId )

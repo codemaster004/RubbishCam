@@ -198,7 +198,7 @@ public class GroupsController : ExtendedControllerBase
 
 		try
 		{
-			await _groupsService.AddAsOwner( id, targetUuid, uuid );
+			await _groupsService.AddAsOwnerAsync( id, targetUuid, uuid );
 		}
 		catch ( NotAuthorizedException )
 		{
@@ -227,7 +227,7 @@ public class GroupsController : ExtendedControllerBase
 
 		try
 		{
-			await _groupsService.RemoveAsOwner( id, targetUuid, uuid );
+			await _groupsService.RemoveAsOwnerAsync( id, targetUuid, uuid );
 		}
 		catch ( NotAuthorizedException )
 		{

@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
 		ArgumentNullException.ThrowIfNull( Points );
 		ArgumentNullException.ThrowIfNull( Groups );
 		ArgumentNullException.ThrowIfNull( GroupsMemberships );
+		ArgumentNullException.ThrowIfNull( GroupsPoints );
 		ArgumentNullException.ThrowIfNull( GarbageTypes );
 		ArgumentNullException.ThrowIfNull( Challenges );
 		ArgumentNullException.ThrowIfNull( UsersChallenges );

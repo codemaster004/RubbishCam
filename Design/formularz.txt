@@ -12,6 +12,6 @@ Udoskonalenie wersji mobilnej aplikacji o możliwość wklejenia zdjęcia nieleg
 5. Problem śmieci, nielegalnych wysypisk śmieci i ogólnie zaśmiecania naszej planety jest bardzo powszechny. Nasza aplikacja to krok w stronę czystych ulic, lasów i wszystkich miejsc, o których można sobie pomyśleś. Ma ona także cel edukacyjny, który pozwoli ludziom zapoznać się z zasadami segregacji śmieci. Jest ona także dobrym rozwiązaniem ułatwiającym segregowanie odpadów. Bardzo się rozwinęliśmy jako grupa. Nauczyliśmy się rodzielania pracy i wyznaczania zadań, nasz projekt choć jest dopiero w pierwszej fazie (jest już świetny) ma wiele możliwości na dalszy rozwój. Uważamy że nasza aplikacja jest bardzo łatwa może być wykożystana przez zwykłego kowalskiego, który kompletnie się nie zna na komputerach
 
 
-Filip Dąbkowski - szef projektu, programista
+Filip Dąbkowski - programista
 Przemysław Urbanek - programista
 Franciszek Łuczkiewicz - projektant, grafik
